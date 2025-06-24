@@ -73,12 +73,39 @@ void printVector(const vector<T> &v)
 #define debug(x)
 #endif
 
-//------------------------------------------------------------------------------------------------------------//
-//                                          Here you go
-
+//------------------------------------------------------------------------------------------
+//                  Here you go
 
 void solve() {
+    ll n,p;
+    cin >> n>>p;
+    vector<pair<ll,ll>>a(n);
+    rep2(i,0,n){
+        cin >> a[i].second;
+    }
+    rep2(i,0,n){
+        cin >> a[i].first;
+    }
+
+    sort(a.begin(),a.end());
+
+    ll cost = p;
+    ll total = 1;
     
+    rep2(i,0,n){
+        if(total == n){
+            break;
+        }
+        if(a[i].first >= p){
+            break;
+        }
+        cost += min((a[i].first * a[i].second) ,((n-total)*a[i].first));
+        total += min(a[i].second , (n-total));
+    }
+    cost += (n-total)*p;
+    cout<<cost<<endl;
+
+
 }
 int main()
 {

@@ -78,7 +78,18 @@ void printVector(const vector<T> &v)
 
 
 void solve() {
-    
+    int x,y;
+    cin >> x>>y;
+    if(x==y){
+        cout<<2*x<<endl;
+        return ;
+    }
+    if(x>y){
+        cout<< (2*y) + (x-y-1)*2 + 1<<endl;
+    }
+    else{
+         cout<< (2*x) + (y-x-1)*2 + 1<<endl;
+    }
 }
 int main()
 {
