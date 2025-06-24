@@ -10,13 +10,25 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
-#define prime(n) ([](int num) {if (num <= 1) return false;if (num == 2) return true;if (num % 2 == 0) return false;for (int i = 3; i <= std::sqrt(num); i += 2) {if (num % i == 0) return false;}return true; })(n)
 #define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
 #define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
+inline bool prime(int num)
+{
+    if (num <= 1)
+        return false;
+    if (num == 2)
+        return true;
+    if (num % 2 == 0)
+        return false;
+    for (int i = 3; i * i <= num; i += 2)
+        if (num % i == 0)
+            return false;
+    return true;
+}
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -35,12 +47,41 @@ typedef unordered_map<int, int> umap;
 
 const int MOD = 100000;
 
-void solve()
+template <typename T>
+void printVector(const T &val)
 {
+    cerr << val;
+}
 
+template <typename T>
+void printVector(const vector<T> &v)
+{
+    cerr << "[ ";
+    for (const auto &elem : v)
+    {
+        printVector(elem);
+        cerr << " ";
+    }
+    cerr << "]";
+}
+#ifndef ONLINE_JUDGE
+#define debug(x)       \
+    cerr << #x << " "; \
+    printVector(x);    \
+    cerr << endl;
+#else
+#define debug(x)
+#endif
+
+void solve() {
+    
 }
 int main()
 {
+
+#ifndef ONLINE_JUDGE
+    freopen("Error.txt", "w", stderr);
+#endif
 
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
