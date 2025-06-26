@@ -10,8 +10,6 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
-#define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
-#define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
@@ -29,6 +27,19 @@ inline bool prime(int num)
             return false;
     return true;
 }
+inline int gcd(int a, int b) {
+    while (b != 0) {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+inline int lcm(int a, int b) {
+    return a / gcd(a, b) * b;
+}
+
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -75,7 +86,7 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
- 
+
 
 void solve() {
     
