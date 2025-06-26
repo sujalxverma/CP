@@ -78,7 +78,39 @@ void printVector(const vector<T> &v)
  
 
 void solve() {
-    
+      ll x, y;
+    cin >> x >> y;
+    ll z, c;
+    cin >> z >> c;
+    if(x==y){
+        cout<<0<<endl;
+        return ;
+    }
+
+    // in 2 steps at cost of 2c it can be done, but may not be optimal
+
+    set < ll > divisors;
+    ll maxi = max(x, y);
+    ll mini = min(x, y);
+    ll cost = 2 * c;
+    if (maxi % mini != 0) {
+        cout << cost << endl;
+        return;
+    }
+    rep2(i, 1, sqrt(max(x, y)) + 1) {
+        if (maxi % i == 0) {
+            divisors.insert(i);
+            divisors.insert(maxi / i);
+        }
+    }
+
+    for (auto val: divisors) {
+        if (val % mini == 0) {
+            cost = min(abs(val - z) + c, cost);
+        }
+    }
+    cout << cost << endl;
+
 }
 int main()
 {

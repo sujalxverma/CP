@@ -76,9 +76,46 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
  
+/*
+    1. The vector is of the form 1 1 2 1 2 1 2.... or 2 2 1 2 1 2... 
+    2. the starting 2 should be equal and rest alternating.
+    3. if we find an index such that two are equal,then we reverse to that index.
+    4. and check again for prefix[i]%3 == 0, if found then NO , else YES
+
+    In these types of questions, check if the solution hase a specific sequence as answer.
+*/
 
 void solve() {
-    
+    int n;
+    cin >> n;
+    vi a(n);
+    rep(i, 0, n) cin >> a[i];
+
+    int index = -1;
+    rep(i, 0, n - 1) {
+        if (a[i] == a[i + 1]) {
+            index = i + 1;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        cout << (n == 1 ? "YES" : "NO") << endl;
+        return;
+    }
+
+    reverse(a.begin(), a.begin() + index + 1);
+
+    ll sum = 0;
+    rep(i, 0, n) {
+        sum += a[i];
+        if (sum % 3 == 0) {
+            no;
+            return;
+        }
+    }
+
+    yes;
 }
 int main()
 {
