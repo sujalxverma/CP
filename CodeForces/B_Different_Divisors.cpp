@@ -1,121 +1,67 @@
 #include "bits/stdc++.h"
 using namespace std;
+
 typedef long long ll;
-typedef vector<int> vi;
-typedef vector<long long> vl;
-#define rep(i, a, b) for (int i = a; i < b; i++)
-#define rep2(i, a, b) for (long long i = a; i < b; i++)
-typedef unordered_map<int, int> umap;
-#define yes cout << "YES" << endl
-#define no cout << "NO" << endl
-#define even(a) (((a) % 2) == 0 ? 1 : 0)
-#define rev(v) reverse(v.begin(), v.end())
-#define sorting(v) sort(v.begin(), v.end())
-#define line cout << endl
-#define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
-#define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-inline bool prime(int num)
-{
-    if (num <= 1)
-        return false;
-    if (num == 2)
-        return true;
-    if (num % 2 == 0)
-        return false;
-    for (int i = 3; i * i <= num; i += 2)
-        if (num % i == 0)
-            return false;
-    return true;
-}
-inline int gcd(int a, int b)
-{
-    while (b != 0)
-    {
-        int temp = b;
-        b = a % b;
-        a = temp;
+typedef vector<ll> vl;
+#define fast_io ios::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr)
+
+// Global vector to hold primes
+vl primes;
+
+// Sieve of Eratosthenes up to 1e6
+void sieveOfEratosthenes(ll n) {
+    vector<bool> is_prime(n + 1, true);
+    is_prime[0] = is_prime[1] = false;
+
+    for (ll i = 2; i * i <= n; ++i) {
+        if (is_prime[i]) {
+            for (ll j = i * i; j <= n; j += i) {
+                is_prime[j] = false;
+            }
+        }
     }
-    return a;
-}
 
-inline int lcm(int a, int b)
-{
-    return a / gcd(a, b) * b;
-}
-
-#define ROTATE_VEC(v, k)                                 \
-    do                                                   \
-    {                                                    \
-        int __n = (int)(v).size();                       \
-        if (__n > 0)                                     \
-        {                                                \
-            int __k = (k) % __n;                         \
-            if (__k != 0)                                \
-            {                                            \
-                reverse((v).begin(), (v).end());         \
-                reverse((v).begin(), (v).begin() + __k); \
-                reverse((v).begin() + __k, (v).end());   \
-            }                                            \
-        }                                                \
-    } while (0)
-
-const int MOD = 100000;
-
-template <typename T>
-void printVector(const T &val)
-{
-    cerr << val;
-}
-
-template <typename T>
-void printVector(const vector<T> &v)
-{
-    cerr << "[ ";
-    for (const auto &elem : v)
-    {
-        printVector(elem);
-        cerr << " ";
+    for (ll i = 2; i <= n; ++i) {
+        if (is_prime[i]) {
+            primes.push_back(i);
+        }
     }
-    cerr << "]";
 }
-#ifndef ONLINE_JUDGE
-#define debug(x)       \
-    cerr << #x << " "; \
-    printVector(x);    \
-    cerr << endl;
-#else
-#define debug(x)
-#endif
 
-//------------------------------------------------------------------------------------------------------------//
-//                                          Here you go
-void solve()
-{
+/*
+    1. first we calculate all the primes upto 1e6 , but we can go upto 1e4 aswell.
+    2. now primes are stored in vector in sorted oreder, then we use lower bound.
+    3. then we find 2 primes.
+    4. p1 which is >= (1+d), d is addes b/c we need minimum gap b/w 2 primes to be d.
+    4. p2 which is >= (p+d), d is addes b/c we need minimum gap b/w 2 primes to be d.
+    5. We pick p1 as the smallest prime ≥ 1 + d, to ensure p1 - 1 ≥ d
+    6. Then p2 as the smallest prime ≥ p1 + d, to ensure p2 - p1 ≥ d
+*/
+
+
+void solve() {
     ll d;
     cin >> d;
-    ll a = 1;
-    ll c = 1+d;
-    rep(i,0,2){
-        a*=c;
-        c+=d;
-    }
-    cout<<a<<endl;
+
+   auto p1 = *lower_bound(primes.begin(),primes.end(),1+d);
+   auto p2 = *lower_bound(primes.begin(),primes.end(),p1+d);
+    cout << p1 * p2 << "\n";
 }
 
-int main()
-{
-
+int main() {
 #ifndef ONLINE_JUDGE
     freopen("Error.txt", "w", stderr);
 #endif
 
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
+    fast_io;
+
+    sieveOfEratosthenes(1e6);  // Precompute all primes up to 1e6
+
     ll t;
     cin >> t;
-    while (t--)
-    {
+    while (t--) {
         solve();
     }
+
+    return 0;
 }
