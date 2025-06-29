@@ -10,11 +10,12 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
+#define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
+#define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-
 const int MOD = 1e9 + 7;
 
 inline bool prime(int num)
@@ -30,19 +31,6 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b) {
-    while (b != 0) {
-        int temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
-}
-
-inline int lcm(int a, int b) {
-    return a / gcd(a, b) * b;
-}
-
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -58,7 +46,7 @@ inline int lcm(int a, int b) {
             }                                            \
         }                                                \
     } while (0)
-
+    
 template <typename T>
 void printVector(const T &val)
 {
@@ -87,10 +75,39 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
+ 
+/*
+    1. pre compute all the factorial upto 1e6 + 1.
+    2. then take sum of factorial(a[i]) with modulus.
+*/
+
+vector<ll>dp(1e6+1,-1);
+void precompute_factorials() {
+    dp[0] = 1;
+    for (int i = 1; i <= 1e6; ++i) {
+        dp[i] = (dp[i - 1] * i) % MOD;
+    }
+}
 
 
 void solve() {
+    ll n ;
+    cin >> n;
+    vl a(n+1);
+    rep2(i,1,n+1){
+        cin >> a[i];
+    }
+    ll sum = 0;
+    rep2(i,1,n+1){
+        sum = ((sum%MOD) + (dp[a[i]] % MOD))%MOD;
+    }
+    cout<<sum<<endl;
+
     
+
+
+
+
 }
 int main()
 {
@@ -104,6 +121,7 @@ int main()
     cout.tie(nullptr);
     ll t;
     cin >> t;
+    precompute_factorials();
     while (t--)
     {
         solve();

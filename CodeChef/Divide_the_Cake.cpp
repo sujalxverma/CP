@@ -10,12 +10,13 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
+#define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
+#define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-
-const int MOD = 1e9 + 7;
+const int MOD = 1e7 + 7;
 
 inline bool prime(int num)
 {
@@ -30,19 +31,6 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b) {
-    while (b != 0) {
-        int temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
-}
-
-inline int lcm(int a, int b) {
-    return a / gcd(a, b) * b;
-}
-
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -58,7 +46,7 @@ inline int lcm(int a, int b) {
             }                                            \
         }                                                \
     } while (0)
-
+    
 template <typename T>
 void printVector(const T &val)
 {
@@ -87,10 +75,39 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-
-
+ 
+/*
+fo third condition
+Here we check first the maximum sum that we can get,
+ if we keep each number distinct starting from 1..2..3...4....... . 
+ By using n*(n-1)/2 we get the sum of all the natural number up to n. 
+ we got that for n=26 sum of n is 351 which the last number less than 360.
+*/
 void solve() {
-    
+   int n;
+   cin >> n;
+   if(360%n == 0){
+    cout<<"y"<<" ";
+   }
+   else{
+     cout<<"n"<<" ";
+   }
+   if(n<=360 && n!= 0){
+ cout<<"y"<<" ";
+   }
+   else{
+     cout<<"n"<<" ";
+   }
+   
+    if(n<27){
+ cout<<"y"<<" ";
+    }
+    else{
+        cout<<"n"<<" ";
+    }
+    line;
+
+
 }
 int main()
 {
