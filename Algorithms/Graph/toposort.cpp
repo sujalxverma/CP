@@ -1,5 +1,4 @@
-#include "bits/stdc++.h"
-using namespace std;
+
 
 // Toposort using stack and DFS.
 void dfsTopoSort(vector<vector<int>> &graph, vector<bool> &visited, stack<int> &container, int start)

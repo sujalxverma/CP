@@ -1,5 +1,20 @@
 {
     "files.associations": {
         "string": "cpp"
+    },
+     "editor.tokenColorCustomizations": {
+  "textMateRules": [
+    {
+      "scope": [
+        "comment",
+        "comment.line",
+        "comment.line.double-slash",
+        "punctuation.definition.comment"
+      ],
+      "settings": {
+        "foreground": "#FF0000"  // bright red
+      }
     }
+  ]
+}
 }

@@ -1,5 +1,3 @@
-#include "bits/stdc++.h"
-using namespace std;
 
 // uses PQ.
 void dijkstra(vector<vector<pair<int, int>>> &graph, int source)
@@ -44,7 +42,7 @@ void dijkstra(vector<vector<pair<int, int>>> &graph, int source)
          We cannot remove outdated pair in PQ.
   */
 
-  
+
 // uses Set instead of PQ.
 void dijkstra(const vector<vector<pair<int, int>>> &graph, int source)
 {
