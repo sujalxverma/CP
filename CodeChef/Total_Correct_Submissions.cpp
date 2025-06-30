@@ -16,6 +16,8 @@ typedef unordered_map<int, int> umap;
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
+const int MOD = 1e7 + 7;
+
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -44,9 +46,7 @@ inline bool prime(int num)
             }                                            \
         }                                                \
     } while (0)
-
-const int MOD = 100000;
-
+    
 template <typename T>
 void printVector(const T &val)
 {
@@ -76,22 +76,33 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+void solve() {
+  ll n;
+  cin >> n;
 
-void solve(){
-   int n;
-   cin >> n;
-   string s;
-   cin >> s;
-//    int index = 0;
-    rep(i,0,n-1){
-        if(s[i] > s[i+1]){
-            yes;
-            // swap(s[i],s[i+1]);
-            cout<<i+1<<" "<<i+2<<endl;
-            return ;
-        }
-    }
-    no;
+
+    unordered_map<string,ll>mp;
+  rep2(i,0,n*3){
+    string s ;
+    cin >> s;
+    ll val ;
+    cin >> val ;
+    mp[s] += val;
+  }
+
+  vector<ll>ans;
+  for(auto it : mp){
+    ans.push_back(it.second);
+  }
+  sort(ans.begin(),ans.end());
+  rep2(i,0,ans.size()){
+    cout<<ans[i]<<" ";
+  }
+  line;
+
+
+
+
 
 }
 int main()
@@ -104,10 +115,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    // ll t;
-    // cin >> t;
-    // while (t--)
-    // {
+    ll t;
+    cin >> t;
+    while (t--)
+    {
         solve();
-    // }
+    }
 }

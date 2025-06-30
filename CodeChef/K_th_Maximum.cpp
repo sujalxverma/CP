@@ -16,6 +16,8 @@ typedef unordered_map<int, int> umap;
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
+const int MOD = 1e7 + 7;
+
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -44,9 +46,7 @@ inline bool prime(int num)
             }                                            \
         }                                                \
     } while (0)
-
-const int MOD = 100000;
-
+    
 template <typename T>
 void printVector(const T &val)
 {
@@ -76,48 +76,40 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
-    std::string s;
-    std::cin >> s;
-
-    std::string ans;
-    int n = s.size();
-    int L = -1, R = -1;
-    for (int r = 0; r < n; r++)
-    {
-        auto t = s;
-        int i = r;
-        for (int l = r; l >= 0; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-                if (t[n - 1 - (r - l)] == '1')
-                {
-                    i = l;
-                }
-            }
-        }
-        t = s;
-        for (int l = r; l >= i; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-            }
-        }
-        if (t > ans)
-        {
-            ans = t;
-            L = i;
-            R = r;
+/*
+    1. The length of subsequence shoul be atleast k.
+    2. then we store all index values where max element of array is present.
+    3. now we scan through stored indexes.
+    4. if indexValue >= k , then combinations possible are n-k+1.
+    5. eg if indexValue is 6 and n = 10 then range = 10 - 6 + 1, ie. 5 :  (6,7,8,9,10), starting from index 1.
+    7. we want the kth element of the sequence to be max, so we found at this index then we can elongate this sequence upto n.
+*/
+ 
+void solve() {
+    
+    ll n,k;
+    cin >> n >> k;
+    // 1 based indexing
+    vl a(n+1);
+    rep2(i,1,n+1){
+        cin >> a[i];
+    }
+    auto maxElement = *max_element(a.begin(),a.end());
+    vl index;
+    rep2(i,1,n+1){
+        if(a[i] == maxElement){
+            index.push_back(i);
         }
     }
+    ll result = 0;
+    for(auto val : index){
+        if(val >= k){
+            result += n-val+1;
+        }
+    }
+    cout<<result<<endl;
 
-    std::cout << 1 << " " << n << " " << L + 1 << " " << R + 1 << "\n";
 }
-
 
 int main()
 {

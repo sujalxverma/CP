@@ -16,6 +16,8 @@ typedef unordered_map<int, int> umap;
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
+const int MOD = 1e7 + 7;
+
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -44,8 +46,6 @@ inline bool prime(int num)
             }                                            \
         }                                                \
     } while (0)
-
-const int MOD = 100000;
 
 template <typename T>
 void printVector(const T &val)
@@ -76,48 +76,49 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
-    std::string s;
-    std::cin >> s;
+/*
+    1. Precompute primes upto 1e6.
+    2. then count number of distinct primes for current level.
+*/
 
-    std::string ans;
-    int n = s.size();
-    int L = -1, R = -1;
-    for (int r = 0; r < n; r++)
-    {
-        auto t = s;
-        int i = r;
-        for (int l = r; l >= 0; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-                if (t[n - 1 - (r - l)] == '1')
-                {
-                    i = l;
-                }
+const ll MAX = 1000000;
+std::vector<ll> spf(MAX + 1); // Smallest Prime Factor for every number
+
+// Precompute SPF using Sieve
+void computeSPF() {
+    for (ll i = 1; i <= MAX; ++i) spf[i] = i; // Initialize with self
+
+    for (ll i = 2; i * i <= MAX; ++i) {
+        if (spf[i] == i) { // i is prime
+            for (ll j = i * i; j <= MAX; j += i) {
+                if (spf[j] == j)
+                    spf[j] = i;
             }
-        }
-        t = s;
-        for (int l = r; l >= i; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-            }
-        }
-        if (t > ans)
-        {
-            ans = t;
-            L = i;
-            R = r;
         }
     }
-
-    std::cout << 1 << " " << n << " " << L + 1 << " " << R + 1 << "\n";
 }
 
+// Function to get prime factors of a number using spf[]
+ll getPrimeFactors(int x) {
+    std::unordered_set<ll> factors;
+    while (x != 1) {
+        factors.insert(spf[x]);
+        x /= spf[x];
+    }
+    return factors.size();
+}
+
+void solve()
+{
+    ll n,m;
+    cin >> n >> m;
+    ll count = 0;
+    rep(i,n,m){
+        count += getPrimeFactors(i);
+    }
+
+    cout<<count<<endl;
+}
 
 int main()
 {
@@ -131,6 +132,7 @@ int main()
     cout.tie(nullptr);
     ll t;
     cin >> t;
+    computeSPF();
     while (t--)
     {
         solve();

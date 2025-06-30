@@ -10,8 +10,6 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
-#define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
-#define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
@@ -29,6 +27,22 @@ inline bool prime(int num)
             return false;
     return true;
 }
+inline int gcd(int a, int b)
+{
+    while (b != 0)
+    {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+inline int lcm(int a, int b)
+{
+    return a / gcd(a, b) * b;
+}
+
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -78,46 +92,47 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
-    std::string s;
-    std::cin >> s;
-
-    std::string ans;
-    int n = s.size();
-    int L = -1, R = -1;
-    for (int r = 0; r < n; r++)
-    {
-        auto t = s;
-        int i = r;
-        for (int l = r; l >= 0; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-                if (t[n - 1 - (r - l)] == '1')
-                {
-                    i = l;
-                }
-            }
+   
+    int n;
+    cin >> n;
+    vector<pair<int,int>>a(n);
+    rep(i,0,n){
+        cin >> a[i].first;
+    }
+    rep(i,0,n){
+        cin >> a[i].second;
+    }
+    sort(a.begin(),a.end());
+    int count = 0;
+    int mini_gap = INT_MAX;
+    int maxi_gap = INT_MAX;
+    rep(i,0,n){
+        if(a[i].second - a[i].first > 0){
+            maxi_gap = min(maxi_gap,a[i].second - a[i].first);
+            count++;
         }
-        t = s;
-        for (int l = r; l >= i; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-            }
-        }
-        if (t > ans)
-        {
-            ans = t;
-            L = i;
-            R = r;
+        else{
+            mini_gap = min(mini_gap , a[i].first - a[i].second);
         }
     }
+    if(count == 0){
+        yes;
+        return ;
+    }
+    if(count > 1){
+        no;
+        return ;
+    }
+    if(maxi_gap > mini_gap){
+        no;
+        return ;
+    }
+    yes;
 
-    std::cout << 1 << " " << n << " " << L + 1 << " " << R + 1 << "\n";
+    
+    
+   
 }
-
 
 int main()
 {

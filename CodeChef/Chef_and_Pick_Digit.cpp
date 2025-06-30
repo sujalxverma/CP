@@ -16,6 +16,8 @@ typedef unordered_map<int, int> umap;
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
+const int MOD = 1e7 + 7;
+
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -44,8 +46,6 @@ inline bool prime(int num)
             }                                            \
         }                                                \
     } while (0)
-
-const int MOD = 100000;
 
 template <typename T>
 void printVector(const T &val)
@@ -76,48 +76,56 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    1. check for each alphabet that if it can be made with the available numbers.
+    2. if yes, append it to string : ans.
+    
+*/
+
 void solve()
 {
-    std::string s;
-    std::cin >> s;
-
-    std::string ans;
-    int n = s.size();
-    int L = -1, R = -1;
-    for (int r = 0; r < n; r++)
+    string n;
+    cin >> n;
+    unordered_map<int, int> mp;
+    string ans = "";
+    rep(i, 0, n.length())
     {
-        auto t = s;
-        int i = r;
-        for (int l = r; l >= 0; l--)
+        int ch = (n[i] - '0');
+        mp[ch]++;
+    }
+    for (char ch = 'A'; ch <= 'Z'; ch++)
+    {
+        int asciiValue = static_cast<int>(ch);
+        bool present = false;
+        int digit1 = asciiValue % 10;
+        asciiValue /= 10;
+        int digit2 = asciiValue % 10;
+
+        if ((digit1 == digit2 )&& (mp[digit1] > 1))
         {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-                if (t[n - 1 - (r - l)] == '1')
-                {
-                    i = l;
-                }
-            }
+            present = true;
         }
-        t = s;
-        for (int l = r; l >= i; l--)
+        else if (digit1 == digit2 && mp[digit1] < 2)
         {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-            }
+            present = false;
         }
-        if (t > ans)
+        else if (mp[digit1] >= 1 && mp[digit2] >= 1)
         {
-            ans = t;
-            L = i;
-            R = r;
+            present = true;
+        }
+        else
+        {
+            present = false;
+        }
+
+        if (present)
+        {
+            ans += ch;
         }
     }
-
-    std::cout << 1 << " " << n << " " << L + 1 << " " << R + 1 << "\n";
+    sort(ans.begin(), ans.end());
+    cout << ans <<endl;
 }
-
 
 int main()
 {

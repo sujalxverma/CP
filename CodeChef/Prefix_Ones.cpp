@@ -16,6 +16,8 @@ typedef unordered_map<int, int> umap;
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
+const int MOD = 1e7 + 7;
+
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -44,9 +46,7 @@ inline bool prime(int num)
             }                                            \
         }                                                \
     } while (0)
-
-const int MOD = 100000;
-
+    
 template <typename T>
 void printVector(const T &val)
 {
@@ -76,48 +76,69 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
-    std::string s;
-    std::cin >> s;
 
-    std::string ans;
-    int n = s.size();
-    int L = -1, R = -1;
-    for (int r = 0; r < n; r++)
-    {
-        auto t = s;
-        int i = r;
-        for (int l = r; l >= 0; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-                if (t[n - 1 - (r - l)] == '1')
-                {
-                    i = l;
-                }
+ 
+void solve() {
+    
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    if(s[0] == 0){
+        // find longest sequence of 1.
+        int maxOne = 0;
+        int count = 0;
+        bool one = false;
+        rep(i,0,n){
+            if(s[i] == '1' && !one){
+                count++;
+                one = true;
             }
-        }
-        t = s;
-        for (int l = r; l >= i; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
+            else if(s[i] == '1' && one){
+                count++;
             }
+            else{
+                maxOne = max(maxOne,count);
+                count = 0;
+                one = false;
+            }
+
         }
-        if (t > ans)
-        {
-            ans = t;
-            L = i;
-            R = r;
+        cout<<max(maxOne,count)<<endl;
+        return ;
+    }
+    int index = 0;
+    // fimd first occurence of one from start.
+    rep(i,0,n){
+        if(s[i] == '0'){
+            index = i;
+            break;
         }
     }
+    int onesPresent = index - 0;
+      int maxOne = 0;
+        int count = 0;
+        bool one = false;
+        rep(i,index,n){
+            if(s[i] == '1' && !one){
+                count++;
+                one = true;
+            }
+            else if(s[i] == '1' && one){
+                count++;
+            }
+            else{
+                maxOne = max(maxOne,count);
+                count = 0;
+                one = false;
+            }
 
-    std::cout << 1 << " " << n << " " << L + 1 << " " << R + 1 << "\n";
+        }
+        cout<< onesPresent + max(maxOne,count)<<endl;
+        return ;
+
+    
 }
-
 
 int main()
 {

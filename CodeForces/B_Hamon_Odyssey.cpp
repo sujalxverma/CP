@@ -10,8 +10,6 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
-#define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
-#define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
@@ -29,6 +27,22 @@ inline bool prime(int num)
             return false;
     return true;
 }
+inline int gcd(int a, int b)
+{
+    while (b != 0)
+    {
+        int temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
+}
+
+inline int lcm(int a, int b)
+{
+    return a / gcd(a, b) * b;
+}
+
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -76,49 +90,30 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
-    std::string s;
-    std::cin >> s;
+/*
+    1. The AND operator applied to the whole array.
+    2. any subarray cannot have AND result less than the entire array AND.
+*/
 
-    std::string ans;
-    int n = s.size();
-    int L = -1, R = -1;
-    for (int r = 0; r < n; r++)
-    {
-        auto t = s;
-        int i = r;
-        for (int l = r; l >= 0; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-                if (t[n - 1 - (r - l)] == '1')
-                {
-                    i = l;
-                }
-            }
-        }
-        t = s;
-        for (int l = r; l >= i; l--)
-        {
-            if (s[l] == '1')
-            {
-                t[n - 1 - (r - l)] ^= 1;
-            }
-        }
-        if (t > ans)
-        {
-            ans = t;
-            L = i;
-            R = r;
-        }
-    }
-
-    std::cout << 1 << " " << n << " " << L + 1 << " " << R + 1 << "\n";
+void solve(){
+	int n;
+	cin >> n;
+	int arr[n];
+	for(int i = 0; i < n; i++)cin >> arr[i];
+	int cur = arr[0];
+	int part = 1;
+	for(int i = 0; i < n; i++){
+		cur &= arr[i];
+		if(cur == 0){
+			if(i == n-1)break;
+			part++;
+			cur = arr[i + 1];
+		}
+	}
+	if(cur != 0)part--;
+	part = max(part,1);
+	cout << part << '\n';
 }
-
-
 int main()
 {
 
