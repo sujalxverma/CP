@@ -14,9 +14,6 @@ typedef unordered_map<int, int> umap;
 #define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-
-const int MOD = 1e9 + 7;
-
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -30,8 +27,10 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b) {
-    while (b != 0) {
+inline int gcd(int a, int b)
+{
+    while (b != 0)
+    {
         int temp = b;
         b = a % b;
         a = temp;
@@ -39,7 +38,8 @@ inline int gcd(int a, int b) {
     return a;
 }
 
-inline int lcm(int a, int b) {
+inline int lcm(int a, int b)
+{
     return a / gcd(a, b) * b;
 }
 
@@ -58,6 +58,8 @@ inline int lcm(int a, int b) {
             }                                            \
         }                                                \
     } while (0)
+
+const int MOD = 100000;
 
 template <typename T>
 void printVector(const T &val)
@@ -88,9 +90,37 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+ 1. calculate the required score.
+ 2. subtract k from it.
+ 3. if score <= 0 , return 0.
+ 4. if n is odd, then last turen is of Alice and if element - k <= 0, return 0.
+ 5. return score.
+*/
 
-void solve() {
-    
+void solve()
+{
+    ll n, k;
+    cin >> n >> k;
+    vl a(n);
+    rep2(i, 0, n)
+    {
+        cin >> a[i];
+    }
+    sort(a.rbegin(), a.rend());  // sort descending
+ 
+    ll score = 0;
+    rep2(i, 0, n)
+    {
+        if ((i & 1) == 0)
+            score += a[i];  // Alice picks (even indices)
+        else
+            score -= a[i];  // Bob picks (odd indices)
+    }
+ 
+    // Bob adds total k to his picks, reducing the score by k
+    score -= k;
+    cout << max(score,(n&1)*a[n-1] ) << "\n";
 }
 int main()
 {
@@ -106,6 +136,7 @@ int main()
     cin >> t;
     while (t--)
     {
+
         solve();
     }
 }
