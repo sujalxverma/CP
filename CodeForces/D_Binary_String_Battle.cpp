@@ -76,35 +76,46 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    1. the worst situation that can happen to bob is : [ ..0,0,0,1,0,0,0.. ]
+    2. where the ony one remains att either centre of the string.
+    3. eg, if n=6 , then at 3/4 and if n=7, then at 4.
+    4. now in either side of the 1, the number of zero < k, then bob has to select the either side zeros,
+       along with this remaining one, now number of 1 is k, and alice can select these and alice wins.
+    5. But if either side of the 1, the number of zero >= k, then bob can select this part, without selecting the remaining one,
+       and now number of 1 > k, now bob wins, b/c this is optimal for bob extreme case.
+    6. Here i solve the problem by considering the worst case scenario.
+*/
+
+/*
+    Logic:
+    - If total number of 1s is ≤ k, Alice can collect all of them — she wins.
+    - If total length n < 2 * k, Bob can't avoid giving Alice a win — Alice wins.
+    - Otherwise, Bob can play optimally to win.
+*/
+
+
 void solve()
 {
-   int n;
-   cin >> n;
-   vi a(n);
-   rep(i,0,n){
-    cin >> a[i];
-   }
-   vi prefix(n);
-   vi suffix(n);
-   prefix[0] = a[0];
-   suffix[n-1] = a[n-1];
-   // prefix 
-   rep(i,1,n){
-    prefix[i] = min(prefix[i-1],a[i]);
-   }
-   // suffix
-   for(int i = n-2 ; i>=0 ; i--){
-    suffix[i] = max(suffix[i+1],a[i]);
-   }
-   rep(i,0,n){
-    if(a[i] == suffix[i] || a[i] == prefix[i]){
-        cout<<"1";
+    int n;
+    cin >> n;
+    int k;
+    cin >> k;
+    string s;
+    cin >> s;
+    int one = 0;
+    rep(i, 0, n)
+    {
+        if(s[i] == '1') one++;
     }
-    else{
-        cout<<"0";
+    if (one <= k || n < 2 * k)
+    {
+        cout << "Alice" << endl;
     }
-   }
-   line;
+    else
+    {
+        cout << "Bob" << endl;
+    }
 }
 
 int main()

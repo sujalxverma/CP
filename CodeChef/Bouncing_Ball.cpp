@@ -78,35 +78,50 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
-   int n;
-   cin >> n;
-   vi a(n);
-   rep(i,0,n){
-    cin >> a[i];
-   }
-   vi prefix(n);
-   vi suffix(n);
-   prefix[0] = a[0];
-   suffix[n-1] = a[n-1];
-   // prefix 
-   rep(i,1,n){
-    prefix[i] = min(prefix[i-1],a[i]);
-   }
-   // suffix
-   for(int i = n-2 ; i>=0 ; i--){
-    suffix[i] = max(suffix[i+1],a[i]);
-   }
-   rep(i,0,n){
-    if(a[i] == suffix[i] || a[i] == prefix[i]){
-        cout<<"1";
+    int n;
+    cin >> n;
+    ll total = 0;
+    vl a(n);
+    rep(i, 0, n)
+    {
+        cin >> a[i];
     }
-    else{
-        cout<<"0";
-    }
-   }
-   line;
-}
+    // prefix
+    vl prefix(n);
+    prefix[0] = a[0];
 
+    rep(i, 1, n)
+    {
+
+        prefix[i] = a[i] + prefix[i - 1];
+    }
+
+    // suffix
+    vl suffix(n);
+    suffix[n - 1] = a[n - 1];
+
+    for (int i = n - 2; i >= 0; i--)
+    {
+
+        suffix[i] = a[i] + suffix[i + 1];
+    }
+
+    // comparsion
+    rep(i, 0, n )
+    {
+        if (a[i] != 0)
+            continue;
+        if (abs(prefix[i] - suffix[i]) == 1)
+        {
+            total += 1;
+        }
+        else if (abs(prefix[i] - suffix[i]) == 0)
+        {
+            total += 2;
+        }
+    }
+    cout << total << endl;
+}
 int main()
 {
 
@@ -119,8 +134,25 @@ int main()
     cout.tie(nullptr);
     ll t;
     cin >> t;
-    while (t--)
-    {
-        solve();
+    // while (t--)
+    // {
+    //     solve();
+    // }
+    vector<int>a = {1,2,3,4,5,6};
+    int n = a.size();
+    int ans = 0;
+    rep(i,0,n){
+        ans ^= a[i];
     }
+    cout<<ans<<endl;
+     rep(i,0,n){
+       a[i] ^= 9;
+    }
+    ans = 0;
+    rep(i,0,n){
+        ans ^= a[i];
+    }
+    cout<<ans<<endl;
+
+    
 }

@@ -76,37 +76,23 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    1. If the first and last bits of a binary string are the same, then the number of "01" and "10" transitions is equal.
+    2. Changing any bit except the first or last does not affect the equality of "01" and "10" transitions.
+    3. If the first and last bits are different, then only by making them the same can the number of "01" and "10" transitions become equal.
+*/
+
 void solve()
 {
-   int n;
-   cin >> n;
-   vi a(n);
-   rep(i,0,n){
-    cin >> a[i];
-   }
-   vi prefix(n);
-   vi suffix(n);
-   prefix[0] = a[0];
-   suffix[n-1] = a[n-1];
-   // prefix 
-   rep(i,1,n){
-    prefix[i] = min(prefix[i-1],a[i]);
-   }
-   // suffix
-   for(int i = n-2 ; i>=0 ; i--){
-    suffix[i] = max(suffix[i+1],a[i]);
-   }
-   rep(i,0,n){
-    if(a[i] == suffix[i] || a[i] == prefix[i]){
-        cout<<"1";
-    }
-    else{
-        cout<<"0";
-    }
-   }
-   line;
-}
+    string s;
+    cin >> s;
+    int n = s.length();
 
+    if (s[0] == s[n - 1])
+        cout << n - 2 << endl;
+    else
+        cout << 2 << endl;
+}
 int main()
 {
 
