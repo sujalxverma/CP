@@ -1,3 +1,5 @@
+
+
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -76,52 +78,33 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    1. Upto k-1 starting from 1 , print index value,
+    2. then for remaining part, reverse it and print it.
+
+*/
+
 void solve()
 {
-    int n;
-    cin >> n;
-    ll total = 0;
-    vl a(n);
-    rep(i, 0, n)
+    int n, k;
+    cin >> n >> k;
+    vi a(n + 1);
+    rep(i, 1, n + 1)
     {
-        cin >> a[i];
+        a[i] = i;
     }
-    // prefix
-    vl prefix(n);
-    prefix[0] = a[0];
-
-    rep(i, 1, n)
+    rep(i, 1, k)
     {
-
-        prefix[i] = a[i] + prefix[i - 1];
+        cout << i << " ";
     }
-
-    // suffix
-    vl suffix(n);
-    suffix[n - 1] = a[n - 1];
-
-    for (int i = n - 2; i >= 0; i--)
+    reverse(a.begin() + k, a.end());
+    rep(i, k, n + 1)
     {
-
-        suffix[i] = a[i] + suffix[i + 1];
+        cout << a[i] << " ";
     }
-
-    // comparsion
-    rep(i, 0, n )
-    {
-        if (a[i] != 0)
-            continue;
-        if (abs(prefix[i] - suffix[i]) == 1)
-        {
-            total += 1;
-        }
-        else if (abs(prefix[i] - suffix[i]) == 0)
-        {
-            total += 2;
-        }
-    }
-    cout << total << endl;
+    line;
 }
+
 int main()
 {
 
@@ -138,5 +121,4 @@ int main()
     {
         solve();
     }
-    
 }

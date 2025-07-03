@@ -13,7 +13,7 @@ typedef unordered_map<int, int> umap;
 #define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
 #define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << endl
+#define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
 inline bool prime(int num)
@@ -76,52 +76,49 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    1. You can perform any number of such operations.
+*/
 void solve()
 {
-    int n;
-    cin >> n;
-    ll total = 0;
-    vl a(n);
-    rep(i, 0, n)
+    ll n, m;
+    cin >> n >> m;
+    vector<ll> a(n), b(m);
+
+    for (ll i = 0; i < n; i++)
     {
         cin >> a[i];
     }
-    // prefix
-    vl prefix(n);
-    prefix[0] = a[0];
 
-    rep(i, 1, n)
+    ll mul = 0;
+    for (ll i = 0; i < m; i++)
     {
-
-        prefix[i] = a[i] + prefix[i - 1];
+        cin >> b[i];
+        mul |= b[i];
     }
 
-    // suffix
-    vl suffix(n);
-    suffix[n - 1] = a[n - 1];
-
-    for (int i = n - 2; i >= 0; i--)
+    ll ans1 = 0; // Original XOR
+    for (ll i = 0; i < n; i++)
     {
-
-        suffix[i] = a[i] + suffix[i + 1];
+        ans1 ^= a[i];
     }
 
-    // comparsion
-    rep(i, 0, n )
+    ll ans2 = 0; // Modified XOR after applying OR
+    for (ll i = 0; i < n; i++)
     {
-        if (a[i] != 0)
-            continue;
-        if (abs(prefix[i] - suffix[i]) == 1)
-        {
-            total += 1;
-        }
-        else if (abs(prefix[i] - suffix[i]) == 0)
-        {
-            total += 2;
-        }
+        ans2 ^= (a[i] | mul);
     }
-    cout << total << endl;
+
+    if (n % 2 == 0)
+    {
+        cout << ans2 << " " << ans1 << endl;
+    }
+    else
+    {
+        cout << ans1 << " " << ans2 << endl;
+    }
 }
+
 int main()
 {
 
@@ -138,5 +135,4 @@ int main()
     {
         solve();
     }
-    
 }

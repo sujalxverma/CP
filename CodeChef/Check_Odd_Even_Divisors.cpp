@@ -1,3 +1,5 @@
+
+
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -76,51 +78,43 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+vector<ll> factors(ll n)
+{
+    vector<ll> ans;
+    for (ll i = 2; i <= sqrt(n); i++)
+    {
+        if (n % i == 0)
+        {
+            ans.push_back(i);
+            if (i != n / i)
+            { // avoid duplicates
+                ans.push_back(n / i);
+            }
+        }
+    }
+    if (n > 1)
+    {
+        ans.push_back(1);
+        ans.push_back(n);
+    }
+    return ans;
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    ll total = 0;
-    vl a(n);
-    rep(i, 0, n)
-    {
-        cin >> a[i];
+    int a,b;
+    cin >> a>>b;
+    if(a==0){
+        no;
+        return ;
     }
-    // prefix
-    vl prefix(n);
-    prefix[0] = a[0];
-
-    rep(i, 1, n)
-    {
-
-        prefix[i] = a[i] + prefix[i - 1];
+    if(b%a == 0){
+        yes;
+    }
+    else{
+        no;
     }
 
-    // suffix
-    vl suffix(n);
-    suffix[n - 1] = a[n - 1];
-
-    for (int i = n - 2; i >= 0; i--)
-    {
-
-        suffix[i] = a[i] + suffix[i + 1];
-    }
-
-    // comparsion
-    rep(i, 0, n )
-    {
-        if (a[i] != 0)
-            continue;
-        if (abs(prefix[i] - suffix[i]) == 1)
-        {
-            total += 1;
-        }
-        else if (abs(prefix[i] - suffix[i]) == 0)
-        {
-            total += 2;
-        }
-    }
-    cout << total << endl;
 }
 int main()
 {
@@ -138,5 +132,4 @@ int main()
     {
         solve();
     }
-    
 }

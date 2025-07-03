@@ -1,3 +1,5 @@
+
+
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -75,53 +77,74 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
+/*
+    🔍 Problem Insight:
+    -------------------
+    We want to minimize the total score, which is the sum of f(u, v) over all pairs (u, v),
+    where f(u, v) = MEX of the labels on the path from u to v.
+    We can choose the labels as a permutation of [0, N-1] to minimize the score.
+
+    ✅ Observations:
+    ----------------
+    1. A tree with all nodes having degree ≤ 2 (i.e., a path or chain) has exactly one path between any two nodes,
+       and the MEX increases in a predictable way.
+    2. If a node has degree > 2, it means some paths will "merge" at this high-degree node,
+       increasing the chances of small labels appearing more often along paths (thus increasing total MEX contribution).
+
+    ⚙️ Optimization:
+    ----------------
+    - If any node has degree > 2:
+        → That node is used in many paths, and assigning it a small label would reduce MEX in many paths.
+        → But since labels are distinct, this effect causes many paths to get low MEXs.
+        → The best we can do here is: **minimum score = N + 1** (lower bound due to central concentration).
+    
+    - If all nodes have degree ≤ 2 (i.e., it's a path/tree chain):
+        → We can label nodes linearly (0 to N-1), so MEX along any path (subarray of permutation) increases steadily.
+        → This leads to the **minimum possible score = 2 * N - 1** (based on mathematical properties of MEX sums in chains).
+    
+    💡 Implementation Notes:
+    -------------------------
+    - Use 1-based indexing for node input and adjacency list.
+    - For each node, check its degree:
+        → If any node has degree > 2 → Output N + 1.
+    - Otherwise → Output 2 * N - 1.
+
+    🚫 Additional Notes:
+    ---------------------
+    - Since f(u, v) == f(v, u), we don't need to count both (u, v) and (v, u) — just once.
+    - But this optimization is not needed here, since we are returning a constant based on tree shape.
+*/
+
 
 void solve()
 {
     int n;
     cin >> n;
-    ll total = 0;
-    vl a(n);
-    rep(i, 0, n)
-    {
-        cin >> a[i];
+    // 1 bases indexing
+    vector<vector<int>>edges(n+1);
+    if(n==1){
+        cout<<1<<endl;
+        return ;
     }
-    // prefix
-    vl prefix(n);
-    prefix[0] = a[0];
-
-    rep(i, 1, n)
-    {
-
-        prefix[i] = a[i] + prefix[i - 1];
+    rep(i,1,n){
+        int a,b;
+        cin >> a >> b;
+        edges[a].push_back(b);
+        edges[b].push_back(a);
     }
-
-    // suffix
-    vl suffix(n);
-    suffix[n - 1] = a[n - 1];
-
-    for (int i = n - 2; i >= 0; i--)
-    {
-
-        suffix[i] = a[i] + suffix[i + 1];
-    }
-
-    // comparsion
-    rep(i, 0, n )
-    {
-        if (a[i] != 0)
-            continue;
-        if (abs(prefix[i] - suffix[i]) == 1)
-        {
-            total += 1;
+    // if number of edge for a vertex is > 2, then return 2N-1 , else N+1.
+    rep(i,1,n+1){
+        
+        if(edges[i].size() > 2){
+            cout<<n+1<<endl;
+            return ;
         }
-        else if (abs(prefix[i] - suffix[i]) == 0)
-        {
-            total += 2;
-        }
+
     }
-    cout << total << endl;
+    cout<<2*n-1<<endl;
+    
 }
+
 int main()
 {
 
@@ -138,5 +161,4 @@ int main()
     {
         solve();
     }
-    
 }

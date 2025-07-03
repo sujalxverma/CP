@@ -13,7 +13,7 @@ typedef unordered_map<int, int> umap;
 #define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
 #define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << endl
+#define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
 inline bool prime(int num)
@@ -76,52 +76,59 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    1. First store the las day in which the lottery number is present.
+    2. Now if ome day does not have any number that ends on this day, then return -1.
+    3. if there are many numbers on their last day, then choose any one.
+*/
+
 void solve()
 {
-    int n;
-    cin >> n;
-    ll total = 0;
-    vl a(n);
-    rep(i, 0, n)
+   int m;
+    cin >> m;
+    unordered_map<int, int> mp;
+
+    rep(i, 1, m + 1)
     {
-        cin >> a[i];
-    }
-    // prefix
-    vl prefix(n);
-    prefix[0] = a[0];
-
-    rep(i, 1, n)
-    {
-
-        prefix[i] = a[i] + prefix[i - 1];
-    }
-
-    // suffix
-    vl suffix(n);
-    suffix[n - 1] = a[n - 1];
-
-    for (int i = n - 2; i >= 0; i--)
-    {
-
-        suffix[i] = a[i] + suffix[i + 1];
-    }
-
-    // comparsion
-    rep(i, 0, n )
-    {
-        if (a[i] != 0)
-            continue;
-        if (abs(prefix[i] - suffix[i]) == 1)
+        int n;
+        cin >> n;
+        rep(j, 1, n + 1)
         {
-            total += 1;
-        }
-        else if (abs(prefix[i] - suffix[i]) == 0)
-        {
-            total += 2;
+            int k;
+            cin >> k;
+            mp[k] = i; // Store group number
         }
     }
-    cout << total << endl;
+
+    vector<vector<int>> days(m + 1); // groups from 1 to m
+    for (auto it : mp)
+    {
+        days[it.second].push_back(it.first);
+    }
+
+    vector<int> ans;
+    rep(i, 1, m + 1)
+    {
+        if (days[i].empty())
+        {
+            cout << -1 << endl;
+            return;
+        }
+        else
+        {
+            ans.push_back(days[i][0]); // pick one element from the group
+        }
+    }
+
+    for (int x : ans)
+        cout << x << " ";
+    cout << "\n";
+
+
+   
+  
 }
+
 int main()
 {
 
@@ -138,5 +145,4 @@ int main()
     {
         solve();
     }
-    
 }

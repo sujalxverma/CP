@@ -13,7 +13,7 @@ typedef unordered_map<int, int> umap;
 #define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
 #define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << endl
+#define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
 inline bool prime(int num)
@@ -76,52 +76,77 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    1. First, reverse the string to simplify the problem. This way, bringing '0's to the front in the original string
+       becomes equivalent to moving them towards the end after reversing.
+
+    2. Count the number of '0's in the reversed string and store their positions (indices) in an array `index`.
+       This helps us efficiently track where the zeroes are located.
+
+    3. For each k from 1 to the number of zeroes, we want to bring the first k zeroes to the first k positions
+       (i.e., positions 0 to k-1) using the **minimum number of adjacent swaps**.
+
+       The minimum number of adjacent swaps required to move the i-th '0' to position i is:
+           index[i] - i
+
+       So, the total number of swaps to bring the first k zeroes to the front is:
+           sum_{i=0 to k-1} (index[i] - i)
+
+    4. For all values of k > number of zeroes, it is impossible to bring more than that many zeroes to the front,
+       so we print -1 for those cases.
+*/
+
+
+// int swaps(vector<int> &index, int bit, string s)
+// {
+//     int total = 0;
+//     rep(i, 0, bit)
+//     {
+//         int idx = lower_bound(index.begin(),index.end(),i) - index.begin(); // you got index at or above i.
+//         if(idx >= index.size()) break; // means, if idx i got which is not present in index. here, idx is index at which next 0 is present in index.
+//        int actualIdx = index[idx];
+//         swap(s[i], s[actualIdx]);
+//         total += actualIdx - i;
+//     }
+//     return total;
+// }  I thought if using this function , but it did not work well.
+
 void solve()
 {
-    int n;
+    ll n;
     cin >> n;
-    ll total = 0;
-    vl a(n);
-    rep(i, 0, n)
+    string s;
+    cin >> s;
+    reverse(s.begin(), s.end());
+    ll zero = 0;
+    rep2(i, 0, n)
     {
-        cin >> a[i];
-    }
-    // prefix
-    vl prefix(n);
-    prefix[0] = a[0];
-
-    rep(i, 1, n)
-    {
-
-        prefix[i] = a[i] + prefix[i - 1];
+        if (s[i] == '0')
+            zero++; // count zero bits.
     }
 
-    // suffix
-    vl suffix(n);
-    suffix[n - 1] = a[n - 1];
-
-    for (int i = n - 2; i >= 0; i--)
+    vector<ll> index;
+    rep2(i, 0, n)
     {
-
-        suffix[i] = a[i] + suffix[i + 1];
-    }
-
-    // comparsion
-    rep(i, 0, n )
-    {
-        if (a[i] != 0)
-            continue;
-        if (abs(prefix[i] - suffix[i]) == 1)
+        if (s[i] == '0')
         {
-            total += 1;
-        }
-        else if (abs(prefix[i] - suffix[i]) == 0)
-        {
-            total += 2;
+            index.push_back(i); // stores index of 0s.
         }
     }
-    cout << total << endl;
+    ll ans = 0;
+    rep2(i, 0, zero )
+    {
+        // int ans = swaps(index,i,s);
+         ans += (index[i] - i);
+        cout<<ans<<" ";
+    }
+    rep2(i, zero, n)
+    {
+        cout << -1 << " ";
+    }
+    line;
 }
+
 int main()
 {
 
@@ -138,5 +163,4 @@ int main()
     {
         solve();
     }
-    
 }

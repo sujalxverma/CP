@@ -13,7 +13,7 @@ typedef unordered_map<int, int> umap;
 #define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
 #define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << endl
+#define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
 inline bool prime(int num)
@@ -76,52 +76,70 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+const int N = 200'000;
+
+int n, k;
+int a[N+5], h[N+5], pref[N+5], length[N+5];
+ 
+bool get(int dist)
+{
+    bool found = false;
+    for(int i = 0; i < n-dist+1; i++)
+    {
+        if(length[i] < dist){continue;}
+        int sum = pref[i+dist]-pref[i];
+        if(sum <= k)
+        {
+            found = true;
+            break;
+        }
+    }
+    return found;
+}
+ 
 void solve()
 {
-    int n;
-    cin >> n;
-    ll total = 0;
-    vl a(n);
-    rep(i, 0, n)
+    pref[0] = 0;
+    cin >> n >> k;
+    for(int i = 0; i < n; i++)
     {
         cin >> a[i];
+        pref[i+1] = pref[i]+a[i];
     }
-    // prefix
-    vl prefix(n);
-    prefix[0] = a[0];
-
-    rep(i, 1, n)
+    for(int i = 0; i < n; i++)
     {
-
-        prefix[i] = a[i] + prefix[i - 1];
+        cin >> h[i];
     }
-
-    // suffix
-    vl suffix(n);
-    suffix[n - 1] = a[n - 1];
-
-    for (int i = n - 2; i >= 0; i--)
+    length[n-1] = 1;
+    for(int i = n-2; i >= 0; i--)
     {
-
-        suffix[i] = a[i] + suffix[i + 1];
-    }
-
-    // comparsion
-    rep(i, 0, n )
-    {
-        if (a[i] != 0)
-            continue;
-        if (abs(prefix[i] - suffix[i]) == 1)
+        if(h[i]%h[i+1] == 0)
         {
-            total += 1;
+            length[i] = length[i+1]+1;
         }
-        else if (abs(prefix[i] - suffix[i]) == 0)
+        else
         {
-            total += 2;
+            length[i] = 1;
         }
     }
-    cout << total << endl;
+    int l = 1, r = N;
+    while(l <= r)
+    {
+        int mid = (l+r)/2;
+        if(get(mid))
+        {
+            l = mid+1;
+        }
+        else
+        {
+            r = mid-1;
+        }
+    }
+    cout << r << endl;
 }
+ 
+
+
 int main()
 {
 
@@ -138,5 +156,4 @@ int main()
     {
         solve();
     }
-    
 }
