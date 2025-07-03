@@ -76,69 +76,44 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-const int N = 200'000;
-
-int n, k;
-int a[N+5], h[N+5], pref[N+5], length[N+5];
- 
-bool get(int dist)
-{
-    bool found = false;
-    for(int i = 0; i < n-dist+1; i++)
-    {
-        if(length[i] < dist){continue;}
-        int sum = pref[i+dist]-pref[i];
-        if(sum <= k)
-        {
-            found = true;
-            break;
-        }
-    }
-    return found;
-}
- 
+/*
+    also, check solution of editoral.
+*/
 void solve()
 {
-    pref[0] = 0;
-    cin >> n >> k;
-    for(int i = 0; i < n; i++)
-    {
-        cin >> a[i];
-        pref[i+1] = pref[i]+a[i];
-    }
-    for(int i = 0; i < n; i++)
-    {
-        cin >> h[i];
-    }
-    length[n-1] = 1;
-    for(int i = n-2; i >= 0; i--)
-    {
-        if(h[i]%h[i+1] == 0)
-        {
-            length[i] = length[i+1]+1;
-        }
-        else
-        {
-            length[i] = 1;
-        }
-    }
-    int l = 1, r = N;
-    while(l <= r)
-    {
-        int mid = (l+r)/2;
-        if(get(mid))
-        {
-            l = mid+1;
-        }
-        else
-        {
-            r = mid-1;
-        }
-    }
-    cout << r << endl;
-}
- 
+    int n;
+    cin >> n;
+    ll k;
+    cin >> k;
+    vl f(n), h(n);
+    rep(i, 0, n) cin >> f[i];
+    rep(i, 0, n) cin >> h[i];
 
+    ll sum = f[0];
+    int l = 0;
+    int range = (f[0] > k) ? 0 : 1;
+
+    rep(r, 1, n)
+    {
+        if (h[r - 1] % h[r] == 0)
+        {
+            sum += f[r];
+        }
+        else
+        {
+            l = r;
+            sum = f[r];
+        }
+
+        while (sum > k && l <= r)
+        {
+            sum -= f[l];
+            ++l;
+        }
+        range = max(r - l + 1, range);
+    }
+    cout << range << "\n";
+}
 
 int main()
 {

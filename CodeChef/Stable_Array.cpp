@@ -1,3 +1,4 @@
+
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -10,18 +11,12 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
+#define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
+#define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << "\n"
+#define line cout << "/n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define setbits(x) __builtin_popcountll(x)
-#define zerobits(x) __builtin_ctzll(x)
-
-const int MOD = 1e9 + 7;
-const int INF = 1e9;
-const ll LINF = 1e18;
-
-
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -35,19 +30,6 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b) {
-    while (b != 0) {
-        int temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
-}
-
-inline int lcm(int a, int b) {
-    return a / gcd(a, b) * b;
-}
-
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -64,20 +46,7 @@ inline int lcm(int a, int b) {
         }                                                \
     } while (0)
 
-
-inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
-inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
-inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp) {
-    int result = 1;
-    base %= MOD;
-    while (exp > 0) {
-        if (exp % 2 == 1) result = (1LL * result * base) % MOD;
-        base = (1LL * base * base) % MOD;
-        exp /= 2;
-    }
-    return result;
-}
+const int MOD = 100000;
 
 template <typename T>
 void printVector(const T &val)
@@ -108,10 +77,41 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-
-void solve() {
-    
+void solve()
+{
+    int n;
+    cin >> n;
+    vi a(n);
+    rep(i, 0, n)
+    {
+        cin >> a[i];
+    }
+    if (n == 1)
+    {
+        cout << 0 << endl;
+        return;
+    }
+    int maxi = a[n - 1];
+    int index = n - 1;
+    int ans = 0;
+    for (int i = n - 2; i >= 0; i--)
+    {
+        if (a[i] > maxi)
+        {
+            maxi = a[i];
+            index = i;
+        }
+        else if (a[i] < maxi)
+        {
+            ans = max(index - i, ans);
+        }
+        else{
+            index = i;
+        }
+    }
+    cout << ans << endl;
 }
+
 int main()
 {
 
