@@ -11,9 +11,17 @@ typedef unordered_map<int, int> umap;
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << endl
+#define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
+#define setbits(x) __builtin_popcountll(x)
+#define zerobits(x) __builtin_ctzll(x)
+
+const int MOD = 1e9 + 7;
+const int INF = 1e9;
+const ll LINF = 1e18;
+
+
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -27,10 +35,8 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b)
-{
-    while (b != 0)
-    {
+inline int gcd(int a, int b) {
+    while (b != 0) {
         int temp = b;
         b = a % b;
         a = temp;
@@ -38,8 +44,7 @@ inline int gcd(int a, int b)
     return a;
 }
 
-inline int lcm(int a, int b)
-{
+inline int lcm(int a, int b) {
     return a / gcd(a, b) * b;
 }
 
@@ -59,7 +64,20 @@ inline int lcm(int a, int b)
         }                                                \
     } while (0)
 
-const int MOD = 100000;
+
+inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
+inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
+inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
+inline int mod_pow(int base, int exp) {
+    int result = 1;
+    base %= MOD;
+    while (exp > 0) {
+        if (exp % 2 == 1) result = (1LL * result * base) % MOD;
+        base = (1LL * base * base) % MOD;
+        exp /= 2;
+    }
+    return result;
+}
 
 template <typename T>
 void printVector(const T &val)
@@ -90,72 +108,51 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-/*
-Why use the Sliding Window Technique?
-
-- Problem:
-  We are given an array of book reading times and a total amount of free time (k).
-  We need to find the maximum number of consecutive books Valera can read such that
-  the total reading time does not exceed k.
-
-- Naive Approach:
-  Try every possible subarray using nested loops.
-  Time Complexity: O(n^2) — too slow for n up to 1e5.
-
-- Sliding Window Insight:
-  We want the longest subarray (of consecutive books) where the sum of times is <= k.
-  This is a classic use case for the sliding window (or two-pointer) technique:
-    → Expand the window from the right.
-    → Shrink it from the left if the sum exceeds the limit.
-    → Keep track of the maximum window length that satisfies the constraint.
-
-- Efficiency:
-  Each element is added and removed from the window at most once.
-  So the time complexity is O(n), which is optimal and fast enough.
-
-- Summary:
-  Sliding window helps us efficiently maintain a moving range [j, i]
-  that always satisfies the condition (sum ≤ k),
-  and update the maximum number of books that can be read.
-*/
 
 
+vector<vector<pair<int, int>>> build_tree(int n) {
+    // Assuming nodes are 1-based and max node <= n+1 (or you can adjust)
+    int max_node = n + 1;  
+    vector<vector<pair<int,int>>> adj(max_node + 1);
 
-void solve()
-{
-    ll n;
-    cin >> n;
-    ll k;
-    cin >> k;
-    vl a(n);
-    rep2(i, 0, n)
-    {
-        cin >> a[i];
+    for (int i = 0; i < n; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w}); // undirected tree
     }
-
-    // Sliding window
-    ll sum = 0;
-    ll j = 0;
-    ll len = 0;
-
-    rep2(i, 0, n)
-    {
-        sum += a[i];
-
-        // Shrink window if sum exceeds k
-        while (sum > k && j <= i)
-        {
-            sum -= a[j];
-            j++;
-        }
-
-        // Now sum <= k, update max length
-        len = max(len, i - j + 1);
-    }
-
-    cout << len << endl;
+    return adj;
 }
 
+void dfs(vector<vector<pair<int, int>>> &tree,vector<bool>&visited ,int &maxSum ,int localSum,int start){
+    visited[start] = true;
+    for(auto pairs : tree[start]){
+        auto node = pairs.first;
+        auto weight = pairs.second;
+        if(!visited[node]){
+            dfs(tree,visited,maxSum,localSum+weight,node);
+        }
+    }
+    maxSum = max(localSum,maxSum);
+
+}
+
+void solve() {
+    int n;
+    cin >> n;
+    vector<vector<pair<int, int>>> tree = build_tree(n);
+     vector<bool>visited(tree.size(),false);
+    // use dfs to solve, apply dfs frrom jenny (0) upto last leaf node(last friend) b/c at this node the prank is over and calculate
+    // the max path cost.
+
+    int maxSum = 0;
+    int localSum = 0;
+    dfs(tree,visited,maxSum,localSum,0);
+    cout<<maxSum<<endl;
+
+    
+
+}
 int main()
 {
 
@@ -170,7 +167,6 @@ int main()
     // cin >> t;
     // while (t--)
     // {
-
-    solve();
+        solve();
     // }
 }

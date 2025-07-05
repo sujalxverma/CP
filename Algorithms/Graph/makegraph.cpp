@@ -45,3 +45,18 @@ vector<vector<int>> readDirectedGraph(int n) {
 
     return graph;
 }
+
+// create weighted tree.
+vector<vector<pair<int, int>>> build_tree(int n) {
+    // Assuming nodes are 1-based and max node <= n+1 (or you can adjust)
+    int max_node = n + 1;  
+    vector<vector<pair<int,int>>> adj(max_node + 1);
+
+    for (int i = 0; i < n; ++i) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w}); // undirected tree
+    }
+    return adj;
+}
