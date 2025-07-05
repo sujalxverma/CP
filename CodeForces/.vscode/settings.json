@@ -2,7 +2,8 @@
     "files.associations": {
       "string": "cpp",
       "vector": "cpp",
-      "unordered_map": "cpp"
+      "unordered_map": "cpp",
+      "iostream": "cpp"
     },
      "editor.tokenColorCustomizations": {
   "textMateRules": [
