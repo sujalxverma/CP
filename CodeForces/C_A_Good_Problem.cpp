@@ -111,74 +111,77 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-
 /*
- * Explanation of minimum reachable distance (d_min):
+ * Approach Explanation:
+ * ---------------------
+ * Goal: Construct an array of size `n` with values in the range [l, r]
+ *       and return the value at index `k` (0-based), following certain constraints.
  *
- * Given a sequence of steps with fixed lengths a[i], you want to determine
- * the minimum possible net displacement from the starting point after
- * taking all steps in any directions.
+ * Step-by-step logic:
  *
- * Intuition:
- * Each step is a vector of length a[i] with a freely chosen direction.
- * The final position is the vector sum of all these steps.
+ * 1. If `n == 2`:
+ *    - It's impossible to build the required structure with only 2 elements,
+ *      so output `-1`.
  *
- * Definitions:
- *   L = max(a[i])           // length of the largest step
- *   S = sum of all a[i]     // total length of all steps
+ * 2. If `n` is odd:
+ *    - Directly return `l` as a simple base case or special case for odd sizes.
  *
- * The minimum net distance d_min after all moves satisfies:
+ * 3. If `n` is even:
+ *    - Compute the next power of 2 greater than `l`:
+ *         next2power = 1 << (floor(log2(l)) + 1)
+ *      This ensures that we get a value with one more bit set than `l`.
  *
- *   d_min = max(0, 2 * L - S)
+ *    - If this next2power exceeds `r`, it means we can't use it,
+ *      so output `-1` as it falls outside the allowed range.
  *
- * Why?
- * - If the largest step L is less than or equal to the sum of the others (S - L),
- *   the vectors can be arranged to form a closed polygon, so minimum distance is 0.
- * - If L is greater, the largest step cannot be fully canceled by others,
- *   so minimum distance is the leftover: L - (S - L) = 2L - S.
+ *    - Otherwise:
+ *        - If `k <= n - 2`: output `l`
+ *          → Most of the array (first n-2 elements) is filled with `l`
+ *        - Else: output `next2power`
+ *          → The last two elements are set to this larger power-of-2 value
+ *            to ensure higher bit-length or other constraints.
  *
- * This formula is a direct consequence of the triangle inequality in vector addition.
- * It helps check if a target point is reachable given the steps.
+ * Notes:
+ * - This kind of logic might be used in bitmask/bitwise structure problems
+ *   or those involving minimum excluded values, constraints on distinctness, etc.
+ * - The structure ensures that most values are constant (`l`) and
+ *   only the tail of the array is "special" using a higher power-of-two.
  */
-
-ll euclideanDistance(double x1, double y1, double x2, double y2)
-{
-    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-}
 
 void solve()
 {
-    ll n;
-    ;
-    cin >> n;
-    ll px, py, qx, qy;
-    cin >> px >> py >> qx >> qy;
-    vl a(n);
-    ll maxi = 0;
-    rep(i, 0, n)
+    ll n, l, r, k;
+    cin >> n >> l >> r >> k;
+    if (n == 2)
     {
-        cin >> a[i];
-        maxi = max(a[i], maxi);
-    }
-    ll sum = 0;
-    rep(i, 0, n)
-    {
-        sum += a[i];
-    }
-
-    ll d = (px - qx) * (px - qx) + (py - qy) * (py - qy);
-    if ((d) > sum * sum)
-    {
-        no;
+        cout << -1 << endl;
         return;
     }
-    ll mini = max(0ll, 2 * maxi - sum);
-    if (d < mini * mini)  // it means i can never reach point (qx,qy).
+    if ((n & 1) == 1)
     {
-        no;
+        cout << l << endl;
         return;
     }
-    yes;
+    else
+    {
+        ll next2power = 1LL << ((ll)floor(log2(l)) + 1);
+        if (next2power > r)
+        {
+            cout << -1 << endl;
+            return;
+        }
+        else
+        {
+            if (k <= n - 2)
+            {
+                cout << l << endl;
+            }
+            else
+            {
+                cout << next2power << endl;
+            }
+        }
+    }
 }
 int main()
 {

@@ -113,73 +113,96 @@ void printVector(const vector<T> &v)
 //                                          Here you go
 
 /*
- * Explanation of minimum reachable distance (d_min):
+ * Approach and Strategy:
+ * ----------------------
+ * The problem requires counting the total number of pairs of elements in an array
+ * that have the same bit-length representation.
  *
- * Given a sequence of steps with fixed lengths a[i], you want to determine
- * the minimum possible net displacement from the starting point after
- * taking all steps in any directions.
+ * Steps:
+ * 1. Read the input array of integers.
+ * 2. For each element, compute its bit-length:
+ *      bit_length = floor(log2(value)) + 1
+ *    This gives the number of bits required to represent the number.
  *
- * Intuition:
- * Each step is a vector of length a[i] with a freely chosen direction.
- * The final position is the vector sum of all these steps.
+ * 3. Store all bit-lengths in a separate array and sort it.
+ *    Sorting groups equal bit-length elements together.
  *
- * Definitions:
- *   L = max(a[i])           // length of the largest step
- *   S = sum of all a[i]     // total length of all steps
+ * 4. Traverse the sorted array to identify consecutive groups of equal bit-lengths.
+ *    For each group:
+ *      - Calculate the number of pairs that can be formed using nC2 formula:
+ *          number_of_pairs = nC2(group_size) = group_size * (group_size - 1) / 2
+ *      - Accumulate this count to the total result.
  *
- * The minimum net distance d_min after all moves satisfies:
+ * 5. Output the total count of pairs having equal bit-lengths.
  *
- *   d_min = max(0, 2 * L - S)
+ * Important notes:
+ * - Initialize the group count to 1 at the start since the first element always forms
+ *   a group of at least size 1.
+ * - When moving to a new group, add the pairs from the previous group using nC2.
+ * - For groups of size 1, nC2 returns 0 as no pairs can be formed.
  *
- * Why?
- * - If the largest step L is less than or equal to the sum of the others (S - L),
- *   the vectors can be arranged to form a closed polygon, so minimum distance is 0.
- * - If L is greater, the largest step cannot be fully canceled by others,
- *   so minimum distance is the leftover: L - (S - L) = 2L - S.
- *
- * This formula is a direct consequence of the triangle inequality in vector addition.
- * It helps check if a target point is reachable given the steps.
+ * This approach efficiently groups elements by their bit-length and counts pairs
+ * without extra space or complex data structures, using sorting and a simple traversal.
  */
 
-ll euclideanDistance(double x1, double y1, double x2, double y2)
+/*
+ * Why we approach the problem this way:
+ * ------------------------------------
+ * 1. The condition (a[i] & a[j]) >= (a[i] ^ a[j]) compares bitwise AND and XOR of two numbers.
+ *    Understanding this relationship helps reduce the problem from brute force checks to
+ *    something more manageable.
+ *
+ * 2. Bitwise AND tends to be smaller or equal to both numbers, while XOR highlights differing bits.
+ *    The inequality suggests pairs with many common bits and fewer differing bits are favorable.
+ *
+ * 3. By analyzing this condition, we can exploit bit-level patterns or mathematical properties,
+ *    potentially grouping numbers or using sorting to optimize pair counting.
+ *
+ * 4. Doing a direct brute force O(n^2) check may be too slow for large inputs, so recognizing
+ *    properties of AND and XOR guides efficient solutions.
+ *
+ * In summary, the approach is designed to leverage bitwise properties to simplify counting pairs
+ * that satisfy the given condition without expensive computations.
+ */
+long long nC2(long long n)
 {
-    return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
+    if (n < 2)
+        return 0;
+    return (n * (n - 1)) / 2;
 }
 
 void solve()
 {
     ll n;
-    ;
     cin >> n;
-    ll px, py, qx, qy;
-    cin >> px >> py >> qx >> qy;
     vl a(n);
-    ll maxi = 0;
-    rep(i, 0, n)
+    rep2(i, 0, n)
     {
-        cin >> a[i];
-        maxi = max(a[i], maxi);
+        ll k;
+        cin >> k;
+        a[i] = floor(log2(k)) + 1;
     }
-    ll sum = 0;
-    rep(i, 0, n)
-    {
-        sum += a[i];
-    }
+    sort(a.begin(), a.end());
 
-    ll d = (px - qx) * (px - qx) + (py - qy) * (py - qy);
-    if ((d) > sum * sum)
+    ll total = 0;
+    ll count = 1; // Start with 1 for the first element
+
+    rep2(i, 1, n)
     {
-        no;
-        return;
+        if (a[i] == a[i - 1])
+        {
+            count++;
+        }
+        else
+        {
+            total += nC2(count);
+            count = 1; // Reset count for new group
+        }
     }
-    ll mini = max(0ll, 2 * maxi - sum);
-    if (d < mini * mini)  // it means i can never reach point (qx,qy).
-    {
-        no;
-        return;
-    }
-    yes;
+    total += nC2(count); // Add for the last group
+    cout << total << endl;
 }
+
 int main()
 {
 
