@@ -1,7 +1,8 @@
 {\rtf1\ansi\ansicpg1252\cocoartf2822
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;}
-{\colortbl;\red255\green255\blue255;}
-{\*\expandedcolortbl;;}
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fswiss\fcharset0 Helvetica-Bold;\f2\froman\fcharset0 Times-Roman;
+\f3\froman\fcharset0 Times-Bold;\f4\fmodern\fcharset0 Courier-Bold;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
 \paperw11900\paperh16840\margl1440\margr1440\vieww18700\viewh8540\viewkind0
 \pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
@@ -22,12 +23,19 @@ chinese remainder theorem.\
 7. Bitwise AND is a monotonic decreasing operation: In fact, the AND of any subarray can never be less than the AND of the full array if total_and is defined as the AND of the entire array.
 \f1\b \
 \
-\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
 
-\f0\b0 \cf0 8. Dmin = max(0 , 2*maxi - sum) , sum = sum of all elements including maxi.\
+\f0\b0 8. Dmin = max(0 , 2*maxi - sum) , sum = sum of all elements including maxi.\
 \
 9, if two numbers A and B, having same number of bits, and the last MSB is 1, then if we AND of A & B, then the MSB remains 1, but if we do XOR of A^B, then MSB is reset to 0.\
 \
+10. Subsequence can be found using take and not take the current element.\
+\
+11. 
+\f2 \outl0\strokewidth0 \strokec2 It returns the 
+\f3\b greatest power of two less than or equal to 
+\f4 x
+\f2\b0 . : __bit_floor(x)
+\f0 \outl0\strokewidth0 \
 \
 
 \f1\b \

@@ -10,20 +10,13 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
+#define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
+#define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << "\n"
+#define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x)          __builtin_ctzll(x)
-#define setbits(x)           __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x)         __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x)       __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x)      __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x)            __builtin_parity(x)        // 1 if odd number of set bits, else 0
-
-const int MOD = 1e9 + 7;
-const int INF = 1e9;
-const ll LINF = 1e18;
+const int MOD = 1e7 + 7;
 
 inline bool prime(int num)
 {
@@ -38,22 +31,6 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b)
-{
-    while (b != 0)
-    {
-        int temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
-}
-
-inline int lcm(int a, int b)
-{
-    return a / gcd(a, b) * b;
-}
-
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -69,23 +46,6 @@ inline int lcm(int a, int b)
             }                                            \
         }                                                \
     } while (0)
-
-inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
-inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
-inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp)
-{
-    int result = 1;
-    base %= MOD;
-    while (exp > 0)
-    {
-        if (exp % 2 == 1)
-            result = (1LL * result * base) % MOD;
-        base = (1LL * base * base) % MOD;
-        exp /= 2;
-    }
-    return result;
-}
 
 template <typename T>
 void printVector(const T &val)
@@ -116,8 +76,38 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    1. I dont't know, i just guessed.
+    2. if already palindrome then return 1.
+    3. if not, we can make it's length 0 in 2 steps.
+
+*/
+
+/*
+
+    1. If the entire string is a palindrome, you can delete it in one operation.
+    2. If it is not a palindrome, you can always delete the whole string in two steps:
+    3. First, remove all 'a's (which is a palindrome like "aaa"). Then, remove all 'b's (again a palindrome like "bbb").
+
+*/
+
 void solve()
 {
+    string s;
+    cin >> s;
+    int i = 0;
+    int j = s.length() - 1;
+    while (i <= j)
+    {
+        if (s[i] != s[j])
+        {
+            cout << 2 << endl;
+            return;
+        }
+        i++;
+        j--;
+    }
+    cout << 1 << endl;
 }
 int main()
 {
