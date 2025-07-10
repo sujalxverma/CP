@@ -10,6 +10,8 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
+#define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
+#define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
 #define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
@@ -27,19 +29,6 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b) {
-    while (b != 0) {
-        int temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
-}
-
-inline int lcm(int a, int b) {
-    return a / gcd(a, b) * b;
-}
-
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -84,30 +73,31 @@ void printVector(const vector<T> &v)
 #define debug(x)
 #endif
 
-//------------------------------------------------------------------------------------------------------------//
-//                                          Here you go
+//------------------------------------------------------------------------------------------
+//                  Here you go
 
-void recursion(ll n, ll &sum) {
-
-    for(ll i = 1 ; i <= 6 ; i++) {
-        if(n - i == 0) {
-            sum++;
-        }
-        else if(n - i > 0) {
-            recursion(n - i, sum);
-        }
-        else{
-            return ;
-        }
-    }
-}
-
-void solve() {
-    ll n;
+void solve()
+{
+    int n;
     cin >> n;
-    ll sum = 0;
-    recursion(n, sum);
-    cout << sum << endl;
+    vi a(n+1);
+    vi b(n+1);
+    vi c(n+1);
+    rep(i, 1, n+1) cin >> a[i];
+    rep(i, 1, n+1) cin >> b[i];
+    rep(i, 1, n+1) cin >> c[i];
+
+   vi mp(n+1,0);
+    rep(i, 1, n+1)
+    {
+        mp[b[c[i]]]+=1;
+    }
+    ll count = 0;
+    rep(i, 1, n+1)
+    {
+        count += mp[a[i]];
+    }
+    cout << count << endl;
 }
 int main()
 {
@@ -123,6 +113,6 @@ int main()
     // cin >> t;
     // while (t--)
     // {
-        solve();
+    solve();
     // }
 }

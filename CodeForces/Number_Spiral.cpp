@@ -77,18 +77,38 @@ void printVector(const vector<T> &v)
 //                                          Here you go
 
 void solve()
-{
-    int n;
-    cin >> n;
-    vi a(n+1);
-    rep(i,1,n+1) a[i] = i;
-    int sum = 0;
-    for(int i = 1 ; i<= n ; i++){
-        sum += abs(a[i] - (n-i));
+{ // y->row , x->col
+    ll y,x;
+    cin >> y >> x;
+    if (y > x)
+    {
+        ll area = (y - 1) * (y - 1);
+        if (!even(y))
+        {
+            area += x;
+        }
+        else
+        {
+            area += (2 * y) - x;
+        }
+        cout << area << endl;
+        return;
     }
-    cout<<1 + (sum/2)<<endl;
+    else
+    {
+        ll area = (x - 1) * (x - 1);
+        if (even(x))
+        {
+            area += y;
+        }
+        else
+        {
+            area += 2 * x - y;
+        }
+        cout << area << endl;
+        return;
+    }
 }
-
 int main()
 {
 

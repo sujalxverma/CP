@@ -78,17 +78,43 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
-    int n;
+    ll n;
     cin >> n;
-    vi a(n+1);
-    rep(i,1,n+1) a[i] = i;
-    int sum = 0;
-    for(int i = 1 ; i<= n ; i++){
-        sum += abs(a[i] - (n-i));
+    ll sum = (n*(n+1))/2;
+    if(even(sum)){
+      set<ll>s1;
+      set<ll>s2;
+      ll target = sum/2;
+      for(int i = n ; i >= 1 ; i--){
+        if(target - i >= 0){
+            s1.insert(i);
+            target -= i;
+        }
+        else{
+            s2.insert(i);
+        }
+      }
+      yes;
+      cout<<s1.size()<<"\n";
+      for(auto x : s1){
+        cout<<x<<" ";
+      }
+      line;
+      cout<<s2.size()<<"\n";
+       for(auto x : s2){
+        cout<<x<<" ";
+      }
+      line;
+      
+    }   
+    else{
+        // cout<<sum<<endl;
+        no;
+        return ;
     }
-    cout<<1 + (sum/2)<<endl;
-}
 
+
+}
 int main()
 {
 
@@ -99,10 +125,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
         solve();
-    }
+    // }
 }

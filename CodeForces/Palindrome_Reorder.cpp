@@ -78,15 +78,37 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n+1);
-    rep(i,1,n+1) a[i] = i;
-    int sum = 0;
-    for(int i = 1 ; i<= n ; i++){
-        sum += abs(a[i] - (n-i));
+    string s;
+    cin >> s;
+    int n = s.length();
+    map<char,int>mp;
+    for(auto x : s){
+        mp[x]++;
     }
-    cout<<1 + (sum/2)<<endl;
+    int count = 0;
+    for(auto it : mp){
+        if((it.second & 1 ) == 1){
+            count++;
+        }
+    }
+    if(count > 1){
+        cout<<"NO SOLUTION"<<"\n";
+        return ;
+    }
+    string ch = "";
+    string a = "";;
+    string b = "";
+    for(auto it : mp){
+        if(!even(it.second)){
+            ch = it.first;
+        }
+        a += string((it.second/2),it.first);
+        b += string((it.second/2),it.first);
+    }
+    reverse(b.begin(),b.end());
+    cout<<a+ch+b<<"\n";
+
+
 }
 
 int main()
@@ -99,10 +121,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
+    solve();
+    // }
 }

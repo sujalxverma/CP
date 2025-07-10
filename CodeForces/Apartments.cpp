@@ -75,18 +75,33 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
+void solve(){
+    ll n, m, k;
+    cin >> n >> m >> k;
+    vl a(n), b(m);
+    
+    for(ll i = 0; i < n; ++i) cin >> a[i]; // applicants
+    for(ll i = 0; i < m; ++i) cin >> b[i]; // apartments
 
-void solve()
-{
-    int n;
-    cin >> n;
-    vi a(n+1);
-    rep(i,1,n+1) a[i] = i;
-    int sum = 0;
-    for(int i = 1 ; i<= n ; i++){
-        sum += abs(a[i] - (n-i));
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end());
+
+    ll i = 0, j = 0, count = 0;
+
+    while(i < n && j < m) {
+        if(abs(a[i] - b[j]) <= k) {
+            count++;
+            i++;
+            j++;
+        } else if(b[j] < a[i] - k) {
+            j++;
+        } else {
+            i++;
+        }
     }
-    cout<<1 + (sum/2)<<endl;
+
+    cout << count << endl;
+   
 }
 
 int main()
@@ -99,10 +114,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
+    solve();
+    // }
 }

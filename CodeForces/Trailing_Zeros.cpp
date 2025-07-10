@@ -76,17 +76,16 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
-    int n;
+void solve(){
+    ll n;
     cin >> n;
-    vi a(n+1);
-    rep(i,1,n+1) a[i] = i;
-    int sum = 0;
-    for(int i = 1 ; i<= n ; i++){
-        sum += abs(a[i] - (n-i));
+    ll sum = 0;
+    ll i = 5;
+    while(n >= i){
+        sum += n/i;
+        i = i*5;
     }
-    cout<<1 + (sum/2)<<endl;
+    cout<<sum <<endl;
 }
 
 int main()
@@ -99,10 +98,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
         solve();
-    }
+    // }
 }

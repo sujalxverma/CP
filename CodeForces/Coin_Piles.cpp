@@ -78,15 +78,18 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n+1);
-    rep(i,1,n+1) a[i] = i;
-    int sum = 0;
-    for(int i = 1 ; i<= n ; i++){
-        sum += abs(a[i] - (n-i));
+    ll a, b;
+    cin >> a >> b;
+    ll maxi = max(a, b);
+    ll mini = min(a, b);
+
+    if((a+b)%3 == 0 && (  2*mini  >= maxi )){
+        yes;
+        return ;
     }
-    cout<<1 + (sum/2)<<endl;
+  
+    no;
+   
 }
 
 int main()
@@ -103,6 +106,6 @@ int main()
     cin >> t;
     while (t--)
     {
-        solve();
+    solve();
     }
 }

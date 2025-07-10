@@ -13,7 +13,7 @@ typedef unordered_map<int, int> umap;
 #define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
 #define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << "\n"
+#define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
 inline bool prime(int num)
@@ -73,22 +73,59 @@ void printVector(const vector<T> &v)
 #define debug(x)
 #endif
 
-//------------------------------------------------------------------------------------------------------------//
-//                                          Here you go
+//------------------------------------------------------------------------------------------
+//                  Here you go
+
+vector<pair<int,int>> directions = {
+    {-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+
+void dfs(vector<vector<char>> &room, vector<vector<char>> &visited, pair<int, int> node)
+{
+    int r = node.first;
+    int c = node.second;
+    visited[r][c] = 1;
+
+    for(auto dir : directions){
+        int row = dir.first + r;
+        int col = dir.second + c;
+        if(col >= 0 && col < room[0].size() && row >= 0 && row < room.size() ){
+             if (visited[row][col] == -1 && room[row][col] == '.')
+            {
+               
+                dfs(room, visited, {row, col});
+            }
+        }
+    }
+}
 
 void solve()
 {
-    int n;
-    cin >> n;
-    vi a(n+1);
-    rep(i,1,n+1) a[i] = i;
-    int sum = 0;
-    for(int i = 1 ; i<= n ; i++){
-        sum += abs(a[i] - (n-i));
-    }
-    cout<<1 + (sum/2)<<endl;
-}
+    int n, m;
+    cin >> n >> m;
 
+    vector<vector<char>> room(n, vector<char>(m));
+    vector<vector<char>> visited(n, vector<char>(m, -1));
+    rep(i, 0, n)
+    {
+        rep(j, 0, m)
+        {
+            cin >> room[i][j];
+        }
+    }
+    int count = 0;
+    rep(i, 0, n)
+    {
+        rep(j, 0, m)
+        {
+            if (visited[i][j] == -1 && room[i][j] == '.')
+            {
+                count++;
+                dfs(room, visited, {i, j});
+            }
+        }
+    }
+    cout << count << endl;
+}
 int main()
 {
 
@@ -99,10 +136,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
+    solve();
+    // }
 }

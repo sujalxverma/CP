@@ -13,7 +13,7 @@ typedef unordered_map<int, int> umap;
 #define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
 #define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << "\n"
+#define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
 inline bool prime(int num)
@@ -75,18 +75,45 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
+/*
+    1. We only care for the last digit.
+    2. so we create map to store frequency of last digits.
+    3. then for frq <= 3 we store it in vector, if freq > 3 still we store 3 times.
+    4. then we use 3 nested loops to solve the problem. the complexity of loop is : O(1) b/c size is very small, max upto 1000.
+*/
+void solve() {
 
-void solve()
-{
     int n;
     cin >> n;
-    vi a(n+1);
-    rep(i,1,n+1) a[i] = i;
-    int sum = 0;
-    for(int i = 1 ; i<= n ; i++){
-        sum += abs(a[i] - (n-i));
+    vi a(n);
+    map<int,int> mp;
+
+    rep(i, 0, n) {
+        cin >> a[i];
+        mp[a[i] % 10]++;
     }
-    cout<<1 + (sum/2)<<endl;
+
+    vi b;
+    for (auto it : mp) {
+        int times = min(it.second, 3);
+        for (int i = 0; i < times; ++i) {
+            b.push_back(it.first);
+        }
+    }
+
+    // Check all combinations of 3 digits
+    int sz = b.size();
+    for (int i = 0; i < sz; ++i) {
+        for (int j = i + 1; j < sz; ++j) {
+            for (int k = j + 1; k < sz; ++k) {
+                if ((b[i] + b[j] + b[k]) % 10 == 3) {
+                    yes;
+                    return;
+                }
+            }
+        }
+    }
+    no;
 }
 
 int main()
