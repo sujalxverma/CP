@@ -287,3 +287,30 @@ void primeFactors(ll n, vector<ll> &factors) {
     factor(divisor, factors);
     factor(n / divisor, factors);
 }
+
+
+// as i iterates over the array, it calculates the MEX of that segment.
+ unordered_map<int, int> freq;
+    int current_mex = 0;
+
+    for (int i = 1; i <= n; ++i) {
+        freq[a[i - 1]]++;
+
+        // Update current_mex
+        while (freq.count(current_mex)) {
+            current_mex++;
+        }
+
+        cout << "MEX of a[1.." << i << "] is: " << current_mex << '\n';
+    }
+/*
+ * The while loop starts from the current MEX guess (current_mex). If you replace while with if, it will give wrong answer.
+ * While the number current_mex is present in the frequency map
+ * (meaning we've seen it in the prefix),
+ * it increases current_mex by 1, moving on to check the next integer.
+ */
+
+
+
+
+

@@ -116,10 +116,54 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    Strategy to Maximize Product by Minimizing the Difference:
 
-void solve()
-{
+    1. Traverse from left to right (most significant digit first).
+
+    2. Find the first position 'i' where digits differ:
+        - At this position, assign the larger digit to the larger number.
+        - This defines which number is larger (say, x > y).
+
+    3. From position j = i + 1 to the end:
+        - If x[j] > y[j] (i.e., larger number has a larger digit),
+          swap x[j] and y[j] to help balance the values.
+        - This reduces the difference between x and y, which increases their product.
+
+    4. The sum of x and y remains unchanged, so minimizing their absolute difference
+       leads to a higher product, according to the identity:
+           Product = (S/2 - a)(S/2 + a) = (S^2 / 4) - a^2
+       where 'a' is half of the absolute difference, and S = x + y.
+       Thus, the smaller 'a' is, the larger the product.
+
+    Final Goal:
+        Reduce the difference between x and y after fixing the first mismatch.
+*/
+
+
+void solve() {
+    string x, y;
+    cin >> x >> y;
+
+    int n = x.size();
+
+    for (int i = 0; i < n; ++i) {
+        if (x[i] == y[i]) continue;
+
+        // Ensure x[i] is the larger digit
+        if (x[i] < y[i]) swap(x[i], y[i]);
+
+        // After this point, x is larger than y
+        // So assign rest to minimize difference: x[j] <= y[j]
+        for (int j = i + 1; j < n; ++j) {
+            if (x[j] > y[j]) swap(x[j], y[j]);
+        }
+        break; // Only one such position to modify
+    }
+
+    cout << x << '\n' << y << '\n';
 }
+
 int main()
 {
 

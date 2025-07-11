@@ -116,9 +116,52 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+Let's consider a good pair.
+
+Since (ai + aj) mod x = 0,
+it follows that (ai mod x + aj mod x) mod x = 0,
+which implies that ai mod x + aj mod x is either x or 0.
+Therefore, for some j, this holds true if:
+    ai mod x = (x − aj mod x) mod x
+
+Since (ai − aj) mod y = 0, it follows that ai mod y − aj mod y = 0, which implies that: ai mod y = aj mod y
+
+Thus, for some fixed aj, all ai will fit the following criteria:
+    - i < j
+    - ai mod x = (x − aj mod x) mod x
+    - ai mod y = aj mod y
+
+We will iterate through j from left to right and maintain the count of elements with specific pairs ⟨ai mod x, ai mod y⟩ using a map on the prefix.
+*/
 
 void solve()
 {
+
+    ll n,x,y;
+    cin>>n >> x >> y;
+    vl a(n);
+    rep2(i,0,n) cin >> a[i];
+    ll ans = 0;
+    map<pair<ll,ll>,ll>mp;
+    for(ll i= 0 ; i < n ; i++){
+        
+        ll xx = a[i]%x;
+        ll yy = a[i]%y;
+
+        ll neededXX = (x - xx)%x;
+        pair<ll,ll>p = {neededXX , yy};
+        if(mp.count(p)){
+            ans += mp[p];
+        }
+        mp[{xx,yy}]++;
+
+    }
+    cout<<ans<<endl;
+
+   
+
+
 }
 int main()
 {

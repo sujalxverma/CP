@@ -38,11 +38,11 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b)
+inline ll gcd(ll a, ll b)
 {
     while (b != 0)
     {
-        int temp = b;
+        ll temp = b;
         b = a % b;
         a = temp;
     }
@@ -116,9 +116,33 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-
 void solve()
 {
+    int n;
+    cin >> n;
+    vl a(n);
+    rep(i, 0, n) cin >> a[i];
+    sorting(a);
+    ll mini = a[0];
+    vl b;
+    for(int i = 1 ;i<n ; i++){
+        if(a[i] % mini == 0){
+            b.push_back(a[i]);
+        }
+    }
+    if (b.empty()) {
+    no;
+    return;
+}
+    ll g = b[0];
+    rep(i,1,b.size()){
+        g = gcd(g,b[i]);
+    }
+    if(g == mini){
+        yes;
+    }else{
+        no;
+    }
 }
 int main()
 {

@@ -116,9 +116,53 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-
 void solve()
 {
+    int n;
+    cin >> n;
+    vi a(n);
+    rep(i, 0, n) cin >> a[i];
+    unordered_set<int> s(a.begin(), a.end());
+    int globalMEX = 0;
+    while (s.count(globalMEX))
+        globalMEX++;
+    int segments = 0;
+    int current_mex = 0;
+    unordered_map<int, int> freq;
+    pair<int, int> p;
+    for (int i = 0; i < n; ++i)
+    {
+        freq[a[i]]++;
+
+        // Update MEX as you go
+        if (freq.count(current_mex))
+        {
+            current_mex++;
+        }
+
+        if (current_mex == globalMEX)
+        {
+            if (segments == 0)
+            {
+                p = {0, i};
+            }
+
+            segments++;
+            current_mex = 0;
+            freq.clear(); // ✅ Important
+        }
+    }
+    if (segments >= 2)
+    {
+        cout << 2 << endl;
+        cout << p.first + 1 << " " << p.second + 1 << endl;
+        cout << p.second + 2 << " " << n << endl;
+        return;
+    }
+    else
+    {
+        cout << -1 << endl;
+    }
 }
 int main()
 {
