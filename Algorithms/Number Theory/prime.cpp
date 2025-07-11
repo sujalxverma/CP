@@ -213,3 +213,77 @@ unsigned long long bit_ceil(unsigned long long x)
     x |= x >> 32;
     return x + 1;
 }
+
+
+// Fast multiplication mod m (avoid overflow)
+ll mulmod(ll a, ll b, ll mod) {
+    ll res = 0;
+    a %= mod;
+    while (b) {
+        if (b & 1) {
+            res = (res + a) % mod;
+        }
+        a = (a + a) % mod;
+        b >>= 1;
+    }
+    return res;
+}
+
+// Miller-Rabin primality test (deterministic for 64-bit)
+bool miller_rabin(ll n) {
+    if (n < 2) return false;
+    ll r = 0;
+    ll d = n - 1;
+    while ((d & 1) == 0) {
+        d >>= 1;
+        r++;
+    }
+    // Test bases for 64-bit integers (deterministic set)
+    vector<ll> testBases = {2,3,5,7,11,13,17,19,23};
+    for (ll a : testBases) {
+        if (a >= n) break;
+        ll x = modpow(a, d, n);
+        if (x == 1 || x == n-1) continue;
+        bool composite = true;
+        for (ll i = 0; i < r-1; i++) {
+            x = mulmod(x, x, n);
+            if (x == n-1) {
+                composite = false;
+                break;
+            }
+        }
+        if (composite) return false;
+    }
+    return true;
+}
+
+// Find a non-trivial factor of n quickly.
+ll pollard_rho(ll n) {
+    if (n % 2 == 0) return 2;
+    ll x = rand() % (n-2) + 2;
+    ll y = x;
+    ll c = rand() % (n-1) + 1;
+    ll d = 1;
+    while (d == 1) {
+        x = (mulmod(x, x, n) + c) % n;
+        y = (mulmod(y, y, n) + c) % n;
+        y = (mulmod(y, y, n) + c) % n;
+        d = __gcd(abs(x - y), n);
+        if (d == n) return pollard_rho(n);
+    }
+    return d;
+}
+
+// Recursively factorize n into prime factors and store them in factors.
+
+
+void primeFactors(ll n, vector<ll> &factors) {
+    if (n == 1) return;
+    if (miller_rabin(n)) {
+        factors.push_back(n);
+        return;
+    }
+    ll divisor = pollard_rho(n);
+    factor(divisor, factors);
+    factor(n / divisor, factors);
+}
