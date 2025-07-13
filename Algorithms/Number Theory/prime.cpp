@@ -311,6 +311,19 @@ void primeFactors(ll n, vector<ll> &factors) {
  */
 
 
+// Binary Exponention
+ll expo(ll a, ll b)
+{
+    ll ans = 1;
+    while(b){
+        if(b&1){
+            ans = a*ans;
+        }
+        a = a*a;
+        b = b>>1;
+    }
+    return ans;
+}
 
 
 
