@@ -1,4 +1,3 @@
-// VERMA
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -15,12 +14,12 @@ typedef unordered_map<int, int> umap;
 #define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x)          __builtin_ctzll(x)
-#define setbits(x)           __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x)         __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x)       __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x)      __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x)            __builtin_parity(x)        // 1 if odd number of set bits, else 0
+#define zerobits(x) __builtin_ctzll(x)
+#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
+#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
+#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
+#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
+#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
 
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
@@ -117,9 +116,26 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
+void solve(){
+    ll n;
+    cin >> n;
+    if( n == 1){
+        cout<<1<<" "<<1<<"\n";
+        return ;
+    }
+    ll index = floor(sqrt(n));
+    ll ans = 0;
+    for(ll i = index ; i >= 1 ; i--){
+        if(n%i == 0){
+            if(lcm(n/i,i) == n){
+                cout<<i<<" "<<n/i<<"\n";
+                return ;
+            }
+        }
+    } 
+  
 }
+
 int main()
 {
 
@@ -131,7 +147,7 @@ int main()
     cin.tie(nullptr);
     cout.tie(nullptr);
     ll t;
-    cin >> t;
+    t = 1;
     while (t--)
     {
         solve();

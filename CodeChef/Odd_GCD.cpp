@@ -1,4 +1,3 @@
-// VERMA
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -15,12 +14,12 @@ typedef unordered_map<int, int> umap;
 #define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x)          __builtin_ctzll(x)
-#define setbits(x)           __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x)         __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x)       __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x)      __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x)            __builtin_parity(x)        // 1 if odd number of set bits, else 0
+#define zerobits(x) __builtin_ctzll(x)
+#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
+#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
+#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
+#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
+#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
 
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
@@ -119,6 +118,39 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
+    int n;
+    cin >> n;
+//   cout<<n<<endl;
+    vl a(n);
+    rep(i, 0, n) cin >> a[i];
+    sorting(a);
+    bool f = false;
+    rep(i, 0, n)
+    {
+        if (a[i] & 1)
+        {
+            f = true;
+        }
+    }
+
+    if (f)
+    {
+        cout << 0 << "\n";
+        return;
+    }
+
+    int count = INT_MAX;
+    // brute force will work.
+    rep(i,0,n){
+        ll num = a[i];
+        int c = 0;
+        while((num&1) != 1){
+            c ++;
+            num = num/2;
+        }
+        count = min(c,count);
+    }
+    cout<<count<<"\n";
 }
 int main()
 {

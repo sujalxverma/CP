@@ -1,4 +1,4 @@
-// VERMA
+
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -15,12 +15,12 @@ typedef unordered_map<int, int> umap;
 #define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x)          __builtin_ctzll(x)
-#define setbits(x)           __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x)         __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x)       __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x)      __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x)            __builtin_parity(x)        // 1 if odd number of set bits, else 0
+#define zerobits(x) __builtin_ctzll(x)
+#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
+#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
+#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
+#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
+#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
 
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
@@ -116,9 +116,46 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-
+ll factors(ll n)
+{
+    vector<ll> ans;
+    for (ll i = 2; i <= sqrt(n); i++)
+    {
+        if (n % i == 0)
+        {
+            ans.push_back(i);
+            if (i != n / i)
+            { // avoid duplicates
+                ans.push_back(n / i);
+            }
+        }
+    }
+    if (n > 1)
+    {
+        ans.push_back(1);
+        ans.push_back(n);
+    }
+    return ans.size();
+}
 void solve()
 {
+    int n;
+    cin >> n;
+    vl a(n);
+    rep(i, 0, n) cin >> a[i];
+    sorting(a);
+    ll g = a[0];
+
+    rep(i, 1, n)
+    {
+        g = gcd(g, a[i]);
+    }
+    if (g == 1)
+    {
+        cout << 1 << "\n";
+        return;
+    }
+    cout << factors(g) << "\n";
 }
 int main()
 {
@@ -130,10 +167,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
+    solve();
+    // }
 }

@@ -1,4 +1,3 @@
-// VERMA
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -15,12 +14,12 @@ typedef unordered_map<int, int> umap;
 #define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x)          __builtin_ctzll(x)
-#define setbits(x)           __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x)         __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x)       __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x)      __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x)            __builtin_parity(x)        // 1 if odd number of set bits, else 0
+#define zerobits(x) __builtin_ctzll(x)
+#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
+#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
+#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
+#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
+#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
 
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
@@ -117,8 +116,26 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
+
+void solve() {
+    // a{i,j} = i * (j + r)
+    int n, m;
+    cin >> n >> m;
+
+    if (n == 1 && m == 1) {
+        cout << 0 << endl;
+        return;
+    }
+
+    vector<vector<int>> a(n + 1, vector<int>(m + 1));
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= m; j++) {
+           if(m>n)cout<<i*(j+n)<<" ";
+			else cout<<(i+m)*j<<" ";
+        }
+        cout << "\n";
+    }
 }
 int main()
 {
@@ -130,8 +147,8 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
+    ll t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();

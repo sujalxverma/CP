@@ -117,7 +117,6 @@ void printVector(const vector<T> &v)
 //                                          Here you go
 
 void solve(){
-    
 }
 int main()
 {

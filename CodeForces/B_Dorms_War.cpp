@@ -1,4 +1,3 @@
-// VERMA
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -15,12 +14,12 @@ typedef unordered_map<int, int> umap;
 #define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x)          __builtin_ctzll(x)
-#define setbits(x)           __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x)         __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x)       __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x)      __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x)            __builtin_parity(x)        // 1 if odd number of set bits, else 0
+#define zerobits(x) __builtin_ctzll(x)
+#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
+#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
+#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
+#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
+#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
 
 const int MOD = 1e9 + 7;
 const int INF = 1e9;
@@ -119,6 +118,58 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    int k;
+    cin >> k;
+    set<char> myset;
+    rep(i, 0, k)
+    {
+        char a;
+        cin >> a;
+        myset.insert(a);
+    }
+    for (int i = 0; i < n; i++)
+    {
+        if (myset.count(s[i]))
+        {
+            s[i] = '1';
+        }
+        else
+        {
+            s[i] = '0';
+        }
+    }
+    int count = 0;
+    int ans = 0;
+    bool flag = false;
+    rep(i, 0, n)
+    {
+        if (s[i] == '0')
+        {
+            count++;
+        }
+        else
+        {
+            if (flag == false)
+            {
+                flag = true;
+                ans = max(count, ans);
+                if (flag)
+                {
+                    count = 1;
+                }
+            }
+            else
+            {
+                ans = max(count, ans);
+                count = 1;
+            }
+        }
+    }
+    cout << ans << "\n";
 }
 int main()
 {
