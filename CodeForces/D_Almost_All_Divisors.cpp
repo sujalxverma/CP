@@ -115,10 +115,55 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-
-void solve(){
-    
+vector<ll> factors(ll n)
+{
+    vector<ll> ans;
+    for (ll i = 2; i * i <= n; ++i)
+    {
+        if (n % i == 0)
+        {
+            ans.push_back(i);
+            if (i != n / i)
+                ans.push_back(n / i);
+        }
+    }
+    return ans;
 }
+void solve()
+{
+    ll n;
+    cin >> n;
+
+    vl a(n);
+    rep2(i, 0, n) cin >> a[i];
+
+    sorting(a);
+
+   
+
+    ll candidate = a[0] * a[n - 1];
+
+    vl f = factors(candidate);
+    sorting(f);
+
+    if (f.size() != a.size())
+    {
+        cout << -1 << "\n";
+        return;
+    }
+
+    rep(i, 0, n)
+    {
+        if (f[i] != a[i])
+        {
+            cout << -1 << "\n";
+            return;
+        }
+    }
+
+    cout << candidate << "\n";
+}
+
 int main()
 {
 

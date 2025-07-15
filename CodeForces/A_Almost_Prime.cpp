@@ -115,8 +115,35 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
+set<int> factors(int n)
+{
+    set<int> f;
+    for (int x = 2; x * x <= n; x++)
+    {
+        while (n % x == 0)
+        {
+            f.insert(x);
+            n /= x;
+        }
+    }
+    if (n > 1)
+        f.insert(n);
+    return f;
+}
 
 void solve(){
+    int n;
+    cin >> n;
+    int count = 0;
+    rep(i,1,n+1){
+        set<int> f = factors(i);
+        if(f.size() == 2){
+            count++;
+            
+            
+        }
+    }
+    cout<<count<<"\n";
     
 }
 int main()
@@ -129,10 +156,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
         solve();
-    }
+    // }
 }

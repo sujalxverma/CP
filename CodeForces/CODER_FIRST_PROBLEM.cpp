@@ -116,8 +116,42 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
-    
+
+void solve()
+{
+    int n;
+    cin >> n;
+
+   
+    if((prime(n))){
+        cout<<0<<"\n";
+        return ;
+    }
+    if(n == 0){
+         cout<<0<<"\n";
+         return ;
+    }
+    if(n==1){
+         cout<<1<<"\n";
+          return ;
+    }
+    if(n==2){
+         cout<<2<<"\n";
+            return ;
+    }
+    int two = 0;
+    while(n>0){
+        if(n%2 == 0){
+            two ++;
+            n = n/2;
+        }
+        else{
+            break;
+        }
+        
+    }
+    cout<<2*two<<"\n";
+
 }
 int main()
 {
@@ -129,10 +163,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
         solve();
-    }
+    // }
 }

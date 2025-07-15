@@ -116,9 +116,20 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
+void solve() {
+    ll n;
+    cin >> n;
     
+    ll root = sqrtl(n); // Use sqrtl for large n
+    ll first = (n % 2 == 0) ? 2 : 1; // Start with same parity
+    if (root < first) {
+        cout << 0 << "\n";
+        return;
+    }
+    ll count = ((root - first) / 2) + 1;
+    cout << count << "\n";
 }
+
 int main()
 {
 

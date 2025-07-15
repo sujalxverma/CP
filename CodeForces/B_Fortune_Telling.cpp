@@ -116,8 +116,31 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
-    
+
+void solve()
+{
+    ll n;
+    cin >> n;
+    vl a(n);
+    rep2(i,0,n) cin >> a[i];
+    ll s = 0;
+    sorting(a);
+    rep2(i,0,n){
+        s += a[i];
+    }
+    if(!even(s)){
+        cout<<s<<"\n";
+        return ;
+    }
+    rep(i,0,n)
+    {
+        if(!even(s-a[i])){
+            cout<<s-a[i]<<"\n";
+            return ;
+        }
+    }
+    cout<<0<<"\n";
+
 }
 int main()
 {
@@ -129,10 +152,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
         solve();
-    }
+    // }
 }

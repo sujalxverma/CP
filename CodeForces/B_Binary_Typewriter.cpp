@@ -115,10 +115,40 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
+/*
+        assuming s[0] = 0;
+    1. swaps >= 3 ,count - 2.
+    2. swaps == 2 , count - 1.
+    3. swaps <= 1 , count - 0.
+*/
 
-void solve(){
-    
+void solve()
+{
+    int n;
+    cin >> n;
+    string s;
+    cin >> s;
+    s = '0'+s;
+    int changes = 0;
+
+    // Count transitions: s[i] != s[i - 1]
+    for (int i = 1; i < n+1; ++i)
+    {
+        if (s[i] != s[i - 1])
+            changes++;
+    }
+
+    int min_changes;
+    if (changes >= 3)
+        min_changes = changes - 2;
+    else if (changes == 2)
+        min_changes = changes - 1;
+    else
+        min_changes = changes;
+
+    cout << min_changes + n<< endl;
 }
+
 int main()
 {
 

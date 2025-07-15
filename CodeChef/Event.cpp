@@ -116,9 +116,51 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
-    
+int f(string s) {
+    if (s == "sunday") return 0;
+    if (s == "monday") return 1;
+    if (s == "tuesday") return 2;
+    if (s == "wednesday") return 3;
+    if (s == "thursday") return 4;
+    if (s == "friday") return 5;
+    if (s == "saturday") return 6;
+    return -1; // Invalid input
 }
+
+void solve(){
+    string s,e;
+    cin >> s >> e;
+    int l,r;
+    cin >> l >> r;
+    int st = f(s);
+    int en = f(e);
+
+    int count = 0;
+    int diff = (en - st + 8)%7;
+
+    for(int i = l ; i<=r ; i++){
+        if(diff == (i%7)) count++;
+    }
+    if(count == 0){
+        cout<<"impossible";
+        line;
+        return;
+    }
+    if(count > 1){
+        cout<<"many";
+        line;
+        return;
+    }
+ for(int i = l ; i<=r ; i++){
+    if(i%7 == diff){
+        cout<<i;
+        line;
+    }
+ }
+
+
+}
+
 int main()
 {
 
