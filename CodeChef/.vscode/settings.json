@@ -26,7 +26,7 @@
         "punctuation.definition.comment"
       ],
       "settings": {
-        "foreground": "#FF0000"  // bright red
+        "foreground": "#ff0000"  // bright red
       }
     }
   ]

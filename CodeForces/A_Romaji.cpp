@@ -11,9 +11,20 @@ typedef unordered_map<int, int> umap;
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << endl
+#define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
+#define zerobits(x) __builtin_ctzll(x)
+#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
+#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
+#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
+#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
+#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
+
+const int MOD = 1e9 + 7;
+const int INF = 1e9;
+const ll LINF = 1e18;
+
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -59,7 +70,22 @@ inline int lcm(int a, int b)
         }                                                \
     } while (0)
 
-const int MOD = 100000;
+inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
+inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
+inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
+inline int mod_pow(int base, int exp)
+{
+    int result = 1;
+    base %= MOD;
+    while (exp > 0)
+    {
+        if (exp % 2 == 1)
+            result = (1LL * result * base) % MOD;
+        base = (1LL * base * base) % MOD;
+        exp /= 2;
+    }
+    return result;
+}
 
 template <typename T>
 void printVector(const T &val)
@@ -90,23 +116,64 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-
-
-void solve(){
-    int n;
-    cin >> n;
+void solve()
+{
     string s;
     cin >> s;
-    int count =0;
-    set<char>st;
-    for(int i = 0 ;  i < n ;i++){
-        st.insert(s[i]);
-        count += st.size();
-        // s = s.substr(i+1,s.length());
-    }
-    cout<<count<<"\n";
-}
+    int n = s.length();
 
+    set<char> vowels = {'a', 'e', 'i', 'o', 'u'};
+    if(n==1 && s[0] == 'n'){
+        yes;
+        return ;
+    }
+    if (n == 1 && !vowels.count(s[0]))
+    {
+        no;
+        return;
+    }
+    if ((n == 1 && vowels.count(s[0])))
+    {
+        yes;
+        return;
+    }
+    for (int i = 0; i < n - 1; i++)
+    {
+        if (vowels.count(s[i]))
+        {
+        }
+        else if (!vowels.count(s[i]))
+        {
+            if (vowels.count(s[i + 1]))
+            {
+            }
+            else
+            {
+                if (s[i] == 'n')
+                {
+                }
+                else
+                {
+                    no;
+                    return;
+                }
+            }
+        }
+    }
+    if(s[n-1] == 'n'){
+        yes;
+        return ;
+    }
+    if(vowels.count(s[n-1])){
+        yes;
+        return ;
+    }else{
+        no;
+        return ;
+    }
+
+    yes;
+}
 int main()
 {
 
@@ -117,8 +184,8 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
+    ll t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();

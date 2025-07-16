@@ -11,9 +11,20 @@ typedef unordered_map<int, int> umap;
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << endl
+#define line cout << "\n"
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
+#define zerobits(x) __builtin_ctzll(x)
+#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
+#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
+#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
+#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
+#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
+
+const int MOD = 1e9 + 7;
+
+const ll LINF = 1e18;
+
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -59,7 +70,22 @@ inline int lcm(int a, int b)
         }                                                \
     } while (0)
 
-const int MOD = 100000;
+inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
+inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
+inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
+inline int mod_pow(int base, int exp)
+{
+    int result = 1;
+    base %= MOD;
+    while (exp > 0)
+    {
+        if (exp % 2 == 1)
+            result = (1LL * result * base) % MOD;
+        base = (1LL * base * base) % MOD;
+        exp /= 2;
+    }
+    return result;
+}
 
 template <typename T>
 void printVector(const T &val)
@@ -87,40 +113,77 @@ void printVector(const vector<T> &v)
 #define debug(x)
 #endif
 
-//------------------------------------------------------------------------------------------------------------//
-//                                          Here you go
+const int INF = -1e9;
 
-
-
-void solve(){
+void solve()
+{
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-    int count =0;
-    set<char>st;
-    for(int i = 0 ;  i < n ;i++){
-        st.insert(s[i]);
-        count += st.size();
-        // s = s.substr(i+1,s.length());
+    vi a(n);
+    rep(i, 0, n) cin >> a[i];
+
+    int maxCoins = 2 * n;
+
+    vector<vector<vector<int>>> dp(n + 1, vector<vector<int>>(maxCoins + 1, vector<int>(n + 1, INF)));
+
+    dp[0][0][0] = 0;
+
+    rep(i, 1, n + 1)
+    {
+        rep(k, 0, maxCoins + 1)
+        {
+            rep(x, 0, i + 1)
+            {
+                // do nothing
+                if (dp[i - 1][k][x] != INF)
+                {
+                    dp[i][k][x] = max(dp[i][k][x], dp[i - 1][k][x]);
+                }
+
+                if (x > 0)
+                {
+                    // take with 1 coin
+                    if (k >= 1 && dp[i - 1][k - 1][x - 1] != INF)
+                    {
+                        dp[i][k][x] = max(dp[i][k][x], dp[i - 1][k - 1][x - 1] + a[i - 1]);
+                    }
+
+                    // take with 2 coins (sum + a[i-1] + x-1)
+                    if (k >= 2 && dp[i - 1][k - 2][x - 1] != INF)
+                    {
+                        dp[i][k][x] = max(dp[i][k][x], dp[i - 1][k - 2][x - 1] + a[i - 1] + (x - 1));
+                    }
+                }
+            }
+        }
     }
-    cout<<count<<"\n";
+
+    rep(k, 1, maxCoins + 1)
+    {
+        int ans = 0;
+        rep(x, 0, n + 1)
+        {
+            ans = max(ans, dp[n][k][x]);
+        }
+        cout << ans << " ";
+    }
+    cout << "\n";
 }
 
 int main()
 {
-
 #ifndef ONLINE_JUDGE
     freopen("Error.txt", "w", stderr);
 #endif
-
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
+
+    int t;
     cin >> t;
     while (t--)
     {
         solve();
     }
+    return 0;
 }
