@@ -116,32 +116,57 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+
+
 void solve()
 {
     int n;
     cin >> n;
-    vl a(n);
-    rep(i, 0, n)
+    vl a(n + 1);
+    rep(i, 1, n + 1) cin >> a[i];
+
+    vl b = a; // Copy for original order
+
+    vl p(n + 1);
+    sort(a.begin() + 1, a.end());
+    p[1] = a[1];
+    rep(i, 2, n + 1)
     {
-        cin >> a[i];
+        p[i] = p[i - 1] + a[i];
     }
-    vl b = a;
-    sort(a.begin(), a.end());
-    unordered_map<ll, ll> mp;
-    int sum = 0;
-    int count = 1;
-    sum = a[0];
-    rep(i, 1, n)
+
+    unordered_map<ll, ll> c;
+    int count = 0;
+    ll sum = 0;
+    for (int i = 1; i < n + 1; i++)
     {
-        if (sum >= a[i])
+        sum = p[i];
+
+        if (i > 1)
         {
+            if (c[a[i - 1]] + 1 >= i)
+            {
+                c[a[i]] = c[a[i - 1]];
+                continue;
+            }
+        }
+
+        int j = i + 1;
+        count = i - 1;
+        while (j <= n && sum >= a[j])
+        {
+            sum += a[j];
             count++;
-            sum += a[i];
+            j++;
         }
-        else
-        {
-        }
+        c[a[i]] = count;
     }
+
+    for (int i = 1; i <= n; i++)
+    {
+        cout << c[b[i]] << " ";
+    }
+    line;
 }
 int main()
 {

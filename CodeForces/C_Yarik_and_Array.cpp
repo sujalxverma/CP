@@ -116,164 +116,38 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
+void solve(){
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-
-    // 4 cases
-    // 1
-    if (s[0] == '0' && s[n - 1] == '0')
-    {
-        // find first and last occurence of 1.
-        int i = 0;
-        while (i < n - 1)
-        {
-
-            if (s[i] == '0')
-            {
-                i++;
-            }
-            else
-            {
-                break;
-            }
+    vl a(n);
+    rep(i,0,n) cin >> a[i];
+    ll sum = 0;
+    ll maxSum = 0;
+    int j = 0;
+    for(int i = 0 ; i < n ; i++){
+        if(i == j){
+            sum = a[i];
+            continue;
         }
-
-        int j = n - 2;
-        while (j >= i)
-        {
-            if (s[j] == '0')
-            {
-                j--;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        ll count = 0;
-        for (int k = 0; k < i; k++)
-        {
-            count++;
-        }
-        for (int k = j + 1; k < n; k++)
-        {
-            count++;
-        }
-        cout << count << "\n";
-        return;
-    }
-    // 2
-    if (s[0] == '0' && s[n - 1] == '1')
-    {
-        int i  = 0; 
-        while(i < n-1) { // first occurence of 1.
-            if(s[i] == '1'){
-                break;
+        if(even(abs(a[i])) != even(abs(a[i-1]))){
+            if(sum + a[i] > sum){
+                  sum += a[i];
             }
             else{
-                i++;
+                j = i;
+                maxSum = max(sum,maxSum);
+                sum = a[i];
             }
-        }
-
-        int j = n-2;
-        while( j > 0){
-            if(s[j] == '0'){
-                break;
-            }
-            else{
-                j--;
-            }
-        }
-
-        if(i < j){
-            cout << i + (n-j)<<"\n";
-            return ;
-        }
-        else{
-            cout<<(n-i) + j + 1<<"\n";
-        }
-
-    }
-    // 3
-    if (s[0] == '1' && s[n - 1] == '1')
-    {
-        // find first and last occurence of 1.
-        int i = 0;
-        while (i < n - 1)
-        {
-
-            if (s[i] == '1')
-            {
-                i++;
-            }
-            else
-            {
-                break;
-            }
-        }
-
-        int j = n - 2;
-        while (j >= i)
-        {
-            if (s[j] == '1')
-            {
-                j--;
-            }
-            else
-            {
-                break;
-            }
-        }
-        ll count = 0;
-        for (int k = 0; k < i; k++)
-        {
-            count++;
-        }
-        for (int k = j + 1; k < n; k++)
-        {
-            count++;
-        }
-        cout << count << "\n";
-        return;
-    }
-    // 4
-    if (s[0] == '1' && s[n - 1] == '0')
-    {
-          int i  = 0; 
-        while(i < n-1) { // first occurence of 1.
-            if(s[i] == '0'){
-                break;
-            }
-            else{
-                i++;
-            }
-        }
-
-        int j = n-2;
-        while( j > 0){
-            if(s[j] == '1'){
-                break;
-            }
-            else{
-                j--;
-            }
-        }
-
-        if(i < j){
-            cout << i + (n-j)<<"\n";
-            return ;
-        }
-        else{
-            cout<<(n-i) + j + 1<<"\n";
+          
+        }else{
+            j = i;
+            maxSum = max(maxSum,sum);
+            sum = a[i];
         }
     }
+    maxSum = max(maxSum,sum);
+    cout<<maxSum<<"\n";
 }
-
 int main()
 {
 
