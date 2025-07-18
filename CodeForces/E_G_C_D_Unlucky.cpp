@@ -116,9 +116,71 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
-    
+bool is_valid_array_possible(const vector<ll> &prefix_gcd, const vector<ll>& suffix_gcd) {
+    int n = prefix_gcd.size();
+
+    for (int i = 0; i < n; ++i) {
+        int a_possible_from_prefix;
+        if (i == 0) {
+            a_possible_from_prefix = prefix_gcd[0];
+        } else {
+            // prefix_gcd[i] = gcd(prefix_gcd[i-1], A[i])
+            // Check if prefix_gcd[i] divides prefix_gcd[i-1]
+            if (prefix_gcd[i - 1] % prefix_gcd[i] != 0) {
+                return false;
+            }
+            a_possible_from_prefix = prefix_gcd[i];
+        }
+
+        int a_possible_from_suffix;
+        if (i == n - 1) {
+            a_possible_from_suffix = suffix_gcd[n - 1];
+        } else {
+            // Check if suffix_gcd[i+1] divides suffix_gcd[i]
+            if (suffix_gcd[i + 1] % suffix_gcd[i] != 0) {
+                return false;
+            }
+            a_possible_from_suffix = suffix_gcd[i];
+        }
+
+        // Both prefix and suffix impose constraints on A[i]
+        // So check if gcd(a_possible_from_prefix, a_possible_from_suffix) == max(prefix_gcd[i], suffix_gcd[i])
+        if (gcd(a_possible_from_prefix, a_possible_from_suffix) != max(prefix_gcd[i], suffix_gcd[i])) {
+            return false;
+        }
+    }
+
+    return true;
 }
+void solve()
+{
+    int n;
+    cin >> n;
+    vl p(n), s(n);
+    rep(i, 0, n) cin >> p[i];
+    rep(i, 0, n) cin >> s[i];
+
+    rep(i,0,n-1){
+        if(p[i] < p[i+1]){
+            no;
+            return ;
+        }
+    }
+    rep(i,0,n-1){
+        if(s[i] > s[i+1]){
+            no;
+            return ;
+        }
+    }
+    bool f = is_valid_array_possible(p,s);
+
+    if(f){
+        yes;
+    }else{
+        no;
+    }
+}
+
 int main()
 {
 

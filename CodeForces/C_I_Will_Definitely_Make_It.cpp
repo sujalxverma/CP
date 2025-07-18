@@ -115,13 +115,65 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    --k; // 0-based
 
-void solve(){
-    
+    vi h(n);
+    rep(i, 0, n) cin >> h[i];
+
+    int maxH = *max_element(h.begin(), h.end());
+
+    if (h[k] == maxH) {
+        yes;
+        return;
+    }
+
+    vector<bool> vis(n, false);
+    multimap<int, int> mp; // height → index
+    rep(i, 0, n) {
+        if (i != k) mp.insert({h[i], i});
+    }
+
+    queue<pair<int, int>> q;
+    q.push({k, 0});
+    vis[k] = true;
+
+    while (!q.empty()) {
+        auto [i, t] = q.front(); q.pop();
+
+        if (t > h[i]) continue;
+        if (h[i] == maxH) {
+            yes;
+            return;
+        }
+
+        int lo = h[i] - (h[i] - t); // = t
+        int hi = h[i] + (h[i] - t); // = 2h[i] - t
+
+        auto it1 = mp.lower_bound(lo);
+        auto it2 = mp.upper_bound(hi);
+
+        vector<decltype(it1)> to_erase;
+
+        for (auto it = it1; it != it2; ++it) {
+            int j = it->second;
+            if (vis[j]) continue;
+            int cost = abs(h[i] - h[j]);
+            if (t + cost <= h[i]) {
+                vis[j] = true;
+                q.push({j, t + cost});
+                to_erase.push_back(it); // delay erase to avoid iterator invalidation
+            }
+        }
+
+        for (auto it : to_erase) mp.erase(it); // safe erasing
+    }
+
+    no;
 }
-int main()
-{
-
+int main() {
 #ifndef ONLINE_JUDGE
     freopen("Error.txt", "w", stderr);
 #endif
@@ -129,10 +181,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
+
+    int t;
     cin >> t;
-    while (t--)
-    {
+    while (t--) {
         solve();
     }
 }

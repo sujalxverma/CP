@@ -116,9 +116,47 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
-    
+void solve() {
+    int n;
+    cin >> n;
+    vl a(n + 1);
+    rep(i, 1, n + 1) cin >> a[i];
+
+    if (n == 1) {
+        cout << 0 << '\n';
+        return;
+    }
+
+    // Prefix sum
+    vl p(n + 1, 0);
+    rep(i, 1, n + 1) {
+        p[i] = p[i - 1] + a[i];
+    }
+
+    // Collect divisors
+    vl divisors;
+    for (int i = 1; i * i <= n; ++i) {
+        if (n % i == 0) {
+            divisors.push_back(i);
+            if (i != n / i) divisors.push_back(n / i);
+        }
+    }
+
+    ll ans = 0;
+
+    for (int k : divisors) {
+        vl b;
+        for (int i = k; i <= n; i += k) {
+            b.push_back(p[i] - p[i - k]);
+        }
+        ll maxi = *max_element(b.begin(), b.end());
+        ll mini = *min_element(b.begin(), b.end());
+        ans = max(ans, maxi - mini);
+    }
+
+    cout << ans << "\n";
 }
+
 int main()
 {
 

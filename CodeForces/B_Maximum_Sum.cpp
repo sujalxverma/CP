@@ -116,9 +116,31 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
-    
+void solve() {
+    int n, k;
+    cin >> n >> k;
+    vl a(n);
+    rep(i, 0, n) cin >> a[i];
+
+    sort(a.begin(), a.end());  // First sort!
+
+    // Compute prefix sum on sorted array
+    vl prefix(n + 1, 0);
+    rep(i, 0, n) prefix[i + 1] = prefix[i] + a[i];
+
+    ll maxSum = 0;
+    for (int x = 0; x <= k; ++x) {
+        int left = 2 * x;
+        int right = n - (k - x);
+
+        if (left > right) continue; // Invalid case
+        ll currSum = prefix[right] - prefix[left];
+        maxSum = max(maxSum, currSum);
+    }
+
+    cout << maxSum << "\n";
 }
+
 int main()
 {
 

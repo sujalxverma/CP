@@ -115,10 +115,67 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
+vector<vector<pair<int, int>>> build_tree(int n) {
+    int max_node = n + 1;
+    vector<vector<pair<int, int>>> adj(max_node + 1);
 
-void solve(){
-    
+    rep(i, 0, n - 1) {
+        int u, v, w;
+        cin >> u >> v >> w;
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w});
+    }
+    return adj;
 }
+
+void solve() {
+    int n, q;
+    cin >> n >> q;
+
+    vi color(n + 1);
+    rep(i,1,n+1) cin >> color[i];
+
+    vector<vi> adj(n + 1);
+    vector<vi> cost(n + 1); // parallel cost lists
+
+    vi U(n-1), V(n-1), W(n-1);
+    rep(i,0,n-1) {
+        cin >> U[i] >> V[i] >> W[i];
+        adj[U[i]].push_back(V[i]);
+        cost[U[i]].push_back(W[i]);
+        adj[V[i]].push_back(U[i]);
+        cost[V[i]].push_back(W[i]);
+    }
+
+    ll totalCost = 0;
+    rep(i,0,n-1) {
+        if (color[U[i]] != color[V[i]])
+            totalCost += W[i];
+    }
+
+    while (q--) {
+        int node, newColor;
+        cin >> node >> newColor;
+        int oldColor = color[node];
+        if (oldColor == newColor) {
+            cout << totalCost << '\n';
+            continue;
+        }
+        auto &nbrs = adj[node];
+        auto &wts = cost[node];
+        int deg = nbrs.size();
+        rep(i,0,deg) {
+            int nb = nbrs[i], w = wts[i];
+            bool wasDiff = (color[nb] != oldColor);
+            bool nowDiff = (color[nb] != newColor);
+            if (wasDiff && !nowDiff) totalCost -= w;
+            else if (!wasDiff && nowDiff) totalCost += w;
+        }
+        color[node] = newColor;
+        cout << totalCost << '\n';
+    }
+}
+
 int main()
 {
 

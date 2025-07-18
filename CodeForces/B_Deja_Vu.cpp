@@ -116,8 +116,41 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
+
+/*
+    1. we start with prev = 31, b/c x[i] can go upto 30.
+    2. let's say the first element of x is 5, means we want to check divisibility by (1<<x[i]).
+    3. now we will loop throught 1 to n , and update all values of a.
+    4. now prev = 5, now all x[i] >= prev , cannot update the a.
     
+*/
+
+void solve()
+{
+    int n,q;
+    cin >> n >> q;
+    vl a(n);
+    vl x(q);
+    rep(i,0,n) cin >> a[i];
+    rep(i,0,q) cin >> x[i];
+    ll prev = 31;
+    for(int i = 0 ; i < q ; i++){
+  
+        if(x[i] >= prev) continue;
+        ll val = (1LL<<x[i]);
+        for(int j = 0 ; j < n ; j ++){
+            if(a[j] % val == 0){
+                a[j] += (val/2);
+            }
+        }
+
+
+        prev = x[i];
+    }
+    for(int i = 0 ; i < n ; i ++){
+        cout<<a[i]<<" ";
+    }
+    line;
 }
 int main()
 {

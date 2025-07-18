@@ -117,7 +117,19 @@ void printVector(const vector<T> &v)
 //                                          Here you go
 
 void solve(){
-    
+    int n;
+    cin >> n;
+    set<int>s;
+    while(n > 0){
+        s.insert(n%10);
+        n = n / 10;
+    }
+    rep(i,0,1000){
+        if(s.count(i)){
+            cout<<i<<"\n";
+            return ;
+        }
+    }
 }
 int main()
 {

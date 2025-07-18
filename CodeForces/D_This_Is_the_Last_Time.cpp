@@ -117,7 +117,25 @@ void printVector(const vector<T> &v)
 //                                          Here you go
 
 void solve(){
-    
+    int n,k;
+    cin >> n>>k;
+    vector<tuple<int,int,int>>v;
+    rep(i,0,n){
+        int a,b,c;
+        cin >> a >>b >>c;;
+        v.push_back({a,b,c});
+    }
+    sort(v.begin(),v.end());
+    int x = k;
+    for(int i = 0 ; i < n ; i++){
+        auto [initial , last , real] = v[i];
+        if(x>=initial && x<=last){
+            if(x < real){
+                x = real;
+            }
+        }
+    }
+    cout<<x<<"\n";
 }
 int main()
 {

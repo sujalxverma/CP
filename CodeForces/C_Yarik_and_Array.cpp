@@ -116,37 +116,49 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
+void solve()
+{
     int n;
     cin >> n;
     vl a(n);
-    rep(i,0,n) cin >> a[i];
+    rep(i, 0, n) cin >> a[i];
     ll sum = 0;
-    ll maxSum = 0;
+    ll maxSum = INT_MIN;
     int j = 0;
-    for(int i = 0 ; i < n ; i++){
-        if(i == j){
-            sum = a[i];
-            continue;
+    for (int i = 0; i < n; i++)
+    {
+        if(sum < 0 ){
+            sum = 0;
+            j = i;
         }
-        if(even(abs(a[i])) != even(abs(a[i-1]))){
-            if(sum + a[i] > sum){
-                  sum += a[i];
+        // if (i == j)
+        // {
+        //     sum = a[i];
+        //     continue;
+        // }
+        if ( j<i  && even(abs(a[i])) != even(abs(a[i - 1])))
+        {
+            if (sum + a[i] >= 0)
+            {
+                sum += a[i];
             }
-            else{
+            else
+            {
                 j = i;
-                maxSum = max(sum,maxSum);
+                maxSum = max(sum, maxSum);
                 sum = a[i];
             }
-          
-        }else{
+        }
+        else
+        {
             j = i;
-            maxSum = max(maxSum,sum);
+           
             sum = a[i];
         }
+         maxSum = max(maxSum, sum);
     }
-    maxSum = max(maxSum,sum);
-    cout<<maxSum<<"\n";
+    maxSum = max(maxSum, sum);
+    cout << maxSum << "\n";
 }
 int main()
 {

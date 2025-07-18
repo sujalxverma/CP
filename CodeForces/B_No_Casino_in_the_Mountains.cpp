@@ -117,7 +117,32 @@ void printVector(const vector<T> &v)
 //                                          Here you go
 
 void solve(){
-    
+    int n,k;
+    cin >> n >> k;
+    int count = 0;
+
+    vi a(n+1); // 1 based indexing;
+    rep(i,1,n+1) cin >> a[i];
+    bool f = false;
+    int ans = 0;
+    for(int i = 1 ; i <= n ; i++){
+        if(f == true){
+            f = false;
+            continue;
+        }
+        if(a[i] == 0){
+            count ++ ;
+            if(count == k){
+                ans ++;
+                f = true;
+                count = 0;
+               
+            }
+        }else{
+            count = 0;
+        }
+    }
+    cout<<ans<<"\n";
 }
 int main()
 {
