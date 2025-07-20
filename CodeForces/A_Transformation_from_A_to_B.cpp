@@ -1,4 +1,3 @@
-
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -117,42 +116,55 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+bool dfs(ll a, ll b, vector<ll> &ans)
+{
+
+    // multiply the current number by 2 (that is, replace the number x by 2·x);
+    // append the digit 1 to the right of current number (that is, replace the number x by 10·x + 1).
+
+    if (a == b)
+    {
+        ans.push_back(a);
+        return true;
+    }
+    if(a>b){
+        return false;
+    }
+
+    if (dfs((2 * a), b, ans))
+    {
+        ans.push_back(a);
+        return true;
+    }
+    if (dfs((10 * a + 1), b, ans))
+    {
+        ans.push_back(a );
+        return true;
+    }
+
+    return false;
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<ll> a(n);
-    for (auto &x : a)
-        cin >> x;
-    vector<ll> b(n);
-    for (auto &x : b)
-        cin >> x;
-    bool ans = true;
-    vector<ll> c(n);
-    for (int i = 0; i < n; i++)
+    ll a, b;
+    cin >> a >> b;
+    vector<ll> ans;
+    if (dfs(a, b, ans))
     {
-        c[i] = lcm(a[i], b[i]);
+        // ans.push_back(a);
+        yes;
+        cout << ans.size() << "\n";
+        sorting(ans);
+        for (auto x : ans)
+        {
+            cout << x << " ";
+        }
+        line;
+        return;
     }
-    int g = c[0];
-    for (int i = 0; i < n; i++)
-    {
-        g = gcd(g, c[i]);
-        if (g != a[i])
-            ans = false;
-    }
-    g = c[n - 1];
-    for (int i = n - 1; i >= 0; i--)
-    {
-        g = gcd(g, c[i]);
-        if (g != b[i])
-            ans = false;
-    }
-    if (ans)
-        cout << "YES\n";
-    else
-        cout << "NO\n";
+    no;
 }
-
 int main()
 {
 
@@ -163,27 +175,8 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
-}
-
-
-int main()
-{
-
-#ifndef ONLINE_JUDGE
-    freopen("Error.txt", "w", stderr);
-#endif
-
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-    ll t;
-    cin >> t;
+    ll t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();

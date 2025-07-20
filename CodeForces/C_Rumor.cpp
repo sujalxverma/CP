@@ -1,4 +1,3 @@
-
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -117,42 +116,51 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+void dfs(vector<vector<ll>> &g, vector<int> &visited, vector<ll> &a, int start, ll &miniCost)
+{
+    visited[start] = 1;
+    miniCost = min(miniCost, a[start]);
+
+    for (auto v : g[start])
+    {
+        if (visited[v] == -1)
+        {
+            dfs(g, visited, a,v, miniCost);
+        }
+    }
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    vector<ll> a(n);
-    for (auto &x : a)
-        cin >> x;
-    vector<ll> b(n);
-    for (auto &x : b)
-        cin >> x;
-    bool ans = true;
-    vector<ll> c(n);
-    for (int i = 0; i < n; i++)
+    int n, m;
+    cin >> n >> m;
+    vl a(n+1);
+    rep(i, 1, n+1) cin >> a[i];
+    vector<vector<ll>> g(n+1);
+    ll total = 0;
+    rep(i, 0, m)
     {
-        c[i] = lcm(a[i], b[i]);
+       int u, v;
+        cin >> u >> v;
+        g[u].push_back(v);
+        g[v].push_back(u); 
+       
     }
-    int g = c[0];
-    for (int i = 0; i < n; i++)
-    {
-        g = gcd(g, c[i]);
-        if (g != a[i])
-            ans = false;
-    }
-    g = c[n - 1];
-    for (int i = n - 1; i >= 0; i--)
-    {
-        g = gcd(g, c[i]);
-        if (g != b[i])
-            ans = false;
-    }
-    if (ans)
-        cout << "YES\n";
-    else
-        cout << "NO\n";
+     vector<int> visited(n + 1, -1);
+     for(int i = 1 ; i <= n  ; i++){
+        ll miniCost = LLONG_MAX;
+        if(visited[i] == -1){
+            dfs(g,visited,a,i,miniCost);
+            total += miniCost;
+        }
+     }
+    //  for(int i = 1 ; i <= n ; i++){
+    //     if(visited[i] == -1){
+    //         total += a[i];
+    //     }
+    //  }
+     cout<<total<<"\n";
 }
-
 int main()
 {
 
@@ -163,27 +171,8 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
-}
-
-
-int main()
-{
-
-#ifndef ONLINE_JUDGE
-    freopen("Error.txt", "w", stderr);
-#endif
-
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-    ll t;
-    cin >> t;
+    ll t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();
