@@ -75,3 +75,36 @@ vector<vector<int>> allPermutations(vector<int> nums) {
 
     return result;
 }
+
+
+// if there any subset exist whose sum is target.
+int subsetSum(int index ,int target){
+
+    if(index < 0 ){
+        return false;
+    }
+    if(index == 0){
+        return (target == a[0] ? true : false);
+    }
+    bool nottake = subsetSum(index-1,target);
+    bool take = (target - a[index] >= 0) ? subsetSum(index-1,target-a[index]) : false;
+    return  take || nottake;
+}
+
+// Using Dynamic Programming | if there any subset exist whose sum is target.
+vector<vector<int>>dp(n , vector<int>(target+1,-1));
+int subsetSum(int index ,int target){
+    if(index < 0 ){
+        return false;
+    }
+
+    if(index == 0){
+        return dp[index][target]= (target == a[0] ? true : false);
+    }
+    if(dp[index][target] != -1){
+        return dp[index][target];
+    }
+    bool nottake = subsetSum(index-1,target);
+    bool take = (target - a[index] >= 0) ? subsetSum(index-1,target-a[index]) : false;
+    return dp[index][target] =  take|| nottake;
+}
