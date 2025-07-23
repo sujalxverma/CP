@@ -116,44 +116,46 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+void solve()
+{
+    int n;
+    cin >> n;
+    int k ;
+    cin >> k;
+    int a,b;
+    cin >> a >> b;
+    
+    vector<pair<int, int>> v;
+    rep(i, 0, n)
+    {
+        int u, g;
+        cin >> u >> g;
+        v.push_back({u, g});
+    }
 
-void solve(){
-    ll l, r;
-    cin >> l >> r;
-    ll range = r - l + 1;
-    vl n = {2, 3, 5, 7};
+    if(a<=k && b<=k){
+        cout<<0<<"\n";
+        return; 
+    }
+    
 
-    // Helper lambda for counting multiples in [l, r]
-    auto count_multiples = [&](ll x) -> ll {
-        return (r / x) - ((l - 1) / x);
-    };
 
-    ll singleMultiple = count_multiples(2) + count_multiples(3) + count_multiples(5) + count_multiples(7);
 
-    ll twoMultiple = count_multiples(2 * 3) + count_multiples(3 * 5) + count_multiples(7 * 5) +
-                     count_multiples(7 * 2) + count_multiples(7 * 3) + count_multiples(2 * 5);
-
-    ll threeMultiple = count_multiples(2 * 3 * 5) + count_multiples(3 * 5 * 7) +
-                       count_multiples(5 * 7 * 2) + count_multiples(7 * 2 * 3);
-
-    ll fourMultiple = count_multiples(2 * 3 * 5 * 7);
-
-    ll ans = singleMultiple - twoMultiple + threeMultiple - fourMultiple;
-
-    // print count of numbers NOT divisible by 2,3,5,7 in [l,r]
-    cout << range - ans << "\n";
 }
+int main()
+{
 
+#ifndef ONLINE_JUDGE
+    freopen("Error.txt", "w", stderr);
+#endif
 
-
-int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
+    cout.tie(nullptr);
     ll t;
     cin >> t;
-    while (t--) {
+    while (t--)
+    {
         solve();
     }
-    return 0;
 }

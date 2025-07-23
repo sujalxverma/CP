@@ -116,44 +116,68 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-
 void solve(){
-    ll l, r;
-    cin >> l >> r;
-    ll range = r - l + 1;
-    vl n = {2, 3, 5, 7};
+    int n;
+    cin >> n; 
+    vi a(n);
+    rep(i,0,n) cin >>a[i];
+    if(n == 2){
+        yes;
+        return ;
+    }
+    unordered_map<int,int>mp;
+    rep(i,0,n){
+        mp[a[i]]++;
+    }
+    bool f = false;
+    for(auto it : mp){
+        if(it.second == 2){
+            f = true;
+        }
+        else if(it.second == n){
+            yes;
+            return ;
+        }
+    }
+    if(!f) {
+        no;
+        return ;
+    }
+    f = false;
+    int i = 0; int j = n-1;
+    while( i <= j){
+        if(a[i] != a[j]){
+            i++;
+            j--;
+        }
+        else{
+            f = true;
+            i++;
+            j--;
+        }
+    }
+    if(!f){
+        yes;
+        return ;
+    }
 
-    // Helper lambda for counting multiples in [l, r]
-    auto count_multiples = [&](ll x) -> ll {
-        return (r / x) - ((l - 1) / x);
-    };
+    yes;
 
-    ll singleMultiple = count_multiples(2) + count_multiples(3) + count_multiples(5) + count_multiples(7);
-
-    ll twoMultiple = count_multiples(2 * 3) + count_multiples(3 * 5) + count_multiples(7 * 5) +
-                     count_multiples(7 * 2) + count_multiples(7 * 3) + count_multiples(2 * 5);
-
-    ll threeMultiple = count_multiples(2 * 3 * 5) + count_multiples(3 * 5 * 7) +
-                       count_multiples(5 * 7 * 2) + count_multiples(7 * 2 * 3);
-
-    ll fourMultiple = count_multiples(2 * 3 * 5 * 7);
-
-    ll ans = singleMultiple - twoMultiple + threeMultiple - fourMultiple;
-
-    // print count of numbers NOT divisible by 2,3,5,7 in [l,r]
-    cout << range - ans << "\n";
 }
+int main()
+{
 
+#ifndef ONLINE_JUDGE
+    freopen("Error.txt", "w", stderr);
+#endif
 
-
-int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
+    cout.tie(nullptr);
     ll t;
     cin >> t;
-    while (t--) {
+    while (t--)
+    {
         solve();
     }
-    return 0;
 }
