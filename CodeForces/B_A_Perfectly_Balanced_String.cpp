@@ -118,27 +118,48 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
-   ll n,k ,s, d;
-   cin >> n >> k >> s >> d;
-   vl x(n+1);
-   vl y(n+1);
-   for(int i = 1 ; i <= n ; i++){
-    cin >> x[i];
-    cin >> y[i];
-   }
+    string s;
+    cin >> s;
+    int n = s.length();
+    string unique = "";
+    unique += s[0];
+    set<char> st;
+    for (int i = 1; i < n; i++)
+    {
+        if (s[i] != unique[0])
+        {
 
-   ll distance = abs(x[s] - x[d]) + abs(y[s] - y[d]);
-
-   ll min1 = LLONG_MAX/2;
-   ll min2 = LLONG_MAX /2;
-   for(int i = 1 ; i <= k ; i++){
-    min1 = min(min1 , abs(x[s]- x[i]) + abs(y[s] - y[i]));
-     min2 = min(min2 , abs(x[d]- x[i]) + abs(y[d] - y[i]));
-   }
-   cout<<min(distance , min1+min2)<<"\n";
-   
+            if (!st.count(s[i]))
+            {
+                unique += s[i];
+                st.insert(s[i]);
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    // cout<<unique<<endl;
+    int i = 0;
+    int j = 0;
+    int m = unique.size();
+    while (i < n && j < m)
+    {
+        if (s[i] != unique[j])
+        {
+            no;
+            return;
+        }
+        i++;
+        j++;
+        if (j == m)
+        {
+            j = 0;
+        }
+    }
+    yes;
 }
-
 int main()
 {
 

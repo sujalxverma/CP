@@ -115,18 +115,19 @@ void printVector(const vector<T> &v)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-
-void solve(){
-    int n;
+void solve()
+{
+   int n;
     cin >> n;
-     vl a(n);
-     rep(i,0,n){
-        cin >> a[i];
-     }
-     ll maxi = *max_element(a.begin(),a.end());
-     ll mini = *min_element(a.begin(),a.end());
-     
-
+    vector<int> a(n);
+    for (auto &i : a) cin >> i;//n
+    int ans = 0;
+    for (int i = 0; i < n; ++i) {//nlog(maxai)
+        ans = gcd(ans, abs(a[i] - a[n - i - 1]));
+    }
+    cout << ans << endl;
+    // T.C :- O(n*log(1e9))
+    // S,C :- O(n)
 }
 int main()
 {

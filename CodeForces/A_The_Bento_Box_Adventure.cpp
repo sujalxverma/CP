@@ -116,29 +116,20 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
-   ll n,k ,s, d;
-   cin >> n >> k >> s >> d;
-   vl x(n+1);
-   vl y(n+1);
-   for(int i = 1 ; i <= n ; i++){
-    cin >> x[i];
-    cin >> y[i];
-   }
-
-   ll distance = abs(x[s] - x[d]) + abs(y[s] - y[d]);
-
-   ll min1 = LLONG_MAX/2;
-   ll min2 = LLONG_MAX /2;
-   for(int i = 1 ; i <= k ; i++){
-    min1 = min(min1 , abs(x[s]- x[i]) + abs(y[s] - y[i]));
-     min2 = min(min2 , abs(x[d]- x[i]) + abs(y[d] - y[i]));
-   }
-   cout<<min(distance , min1+min2)<<"\n";
-   
+void solve(){
+    vi a(4);
+    rep(i,0,4){
+        cin >> a[i];
+    }
+    sort(a.begin(),a.end());
+    rep(i,0,4){
+        if(i+1 != a[i]){
+            cout<<i+1<<"\n";
+            return ;
+        }
+    }
+    cout<<5<<"\n";
 }
-
 int main()
 {
 
@@ -149,8 +140,8 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
+    ll t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();

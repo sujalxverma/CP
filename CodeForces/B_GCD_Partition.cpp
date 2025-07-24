@@ -116,27 +116,28 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
-   ll n,k ,s, d;
-   cin >> n >> k >> s >> d;
-   vl x(n+1);
-   vl y(n+1);
-   for(int i = 1 ; i <= n ; i++){
-    cin >> x[i];
-    cin >> y[i];
-   }
+void solve(){
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    for(ll i = 0 ; i < n ; i++){
+        cin >> a[i];
+    }
+    vector<ll> p(n);
+    p[0] = a[0];
+    for(ll i = 1; i < n; i++){
+        p[i] = p[i-1] + a[i];
+    }
 
-   ll distance = abs(x[s] - x[d]) + abs(y[s] - y[d]);
+    ll total = p[n-1];
+    ll ans = 0;
 
-   ll min1 = LLONG_MAX/2;
-   ll min2 = LLONG_MAX /2;
-   for(int i = 1 ; i <= k ; i++){
-    min1 = min(min1 , abs(x[s]- x[i]) + abs(y[s] - y[i]));
-     min2 = min(min2 , abs(x[d]- x[i]) + abs(y[d] - y[i]));
-   }
-   cout<<min(distance , min1+min2)<<"\n";
-   
+    // We try splitting at i: prefix = p[i], suffix = total - p[i]
+    for(ll i = 0 ; i < n - 1; i++){
+        ll curr_gcd = gcd(p[i], total - p[i]);
+        ans = max(ans, curr_gcd);
+    }
+    cout << ans << "\n";
 }
 
 int main()
