@@ -121,69 +121,28 @@ void solve()
     int n;
     cin >> n;
     vi a(n);
-    rep(i, 0, n) cin >> a[i];
-
-    int i = 0;
-    int j = n - 1;
-
-    while (i < j && a[i] == a[j])
+    set<int> s;
+    rep(i, 0, n)
     {
-        i++;
-        j--;
+        cin >> a[i];
+        s.insert(a[i]);
     }
-
-    if (i >= j)
-    {
-        yes;
-        return;
-    }
-
-    // Check if by removing a[i] palindrome can be formed
-    auto is_palindrome = [](const vi &v) {
-        int left = 0, right = (int)v.size() - 1;
-        while (left < right)
-        {
-            if (v[left] != v[right])
-                return false;
-            left++;
-            right--;
+    int count = 1;
+    int ans = 0;
+    int i = n-2;
+    while( i >= 0){
+        if(a[i] == a[n-1]){
+            count ++ ;
+            i--;
         }
-        return true;
-    };
-
-    // Try removing all occurrences of a[i]
-    vi b;
-    rep(k, 0, n)
-    {
-        if (a[k] != a[i])
-        {
-            b.push_back(a[k]);
+        else{
+            count *= 2;
+            i = n-1 - count;
+            ans ++;
         }
     }
-    if (is_palindrome(b))
-    {
-        yes;
-        return;
-    }
-
-    // Try removing all occurrences of a[j]
-    vi c;
-    rep(k, 0, n)
-    {
-        if (a[k] != a[j])
-        {
-            c.push_back(a[k]);
-        }
-    }
-    if (is_palindrome(c))
-    {
-        yes;
-        return;
-    }
-
-    no;
+    cout<<ans<<endl;
 }
-
 int main()
 {
 
