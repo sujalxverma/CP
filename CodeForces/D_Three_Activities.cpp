@@ -93,6 +93,17 @@ void printVector(const T &val)
     cerr << val;
 }
 
+template <typename T>
+void printVector(const vector<T> &v)
+{
+    cerr << "[ ";
+    for (const auto &elem : v)
+    {
+        printVector(elem);
+        cerr << " ";
+    }
+    cerr << "]";
+}
 #ifndef ONLINE_JUDGE
 #define debug(x)       \
     cerr << #x << " "; \
@@ -104,21 +115,49 @@ void printVector(const T &val)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
+
 void solve()
 {
-
-   int n;
+    int n;
     cin >> n;
-    vector<int> a(n);
-    for (auto &i : a) cin >> i;//n
-    int ans = 0;
-    for (int i = 0; i < n; ++i) {//nlog(maxai)
-        ans = gcd(ans, abs(a[i] - a[n - i - 1]));
+    vector<pair<ll, ll>> a(n);
+    vector<pair<ll, ll>> b(n);
+    vector<pair<ll, ll>> c(n);
+
+    for(int i = 0 ; i < n ; i++){
+        cin >> a[i].first;
+        a[i].second = i;
     }
-    cout << ans << endl;
-    // T.C :- O(n*log(1e9))
-    // S,C :- O(n)
+     for(int i = 0 ; i < n ; i++){
+        cin >> b[i].first;
+        b[i].second = i;
+    }
+     for(int i = 0 ; i < n ; i++){
+        cin >> c[i].first;
+        c[i].second = i;
+    }
+    sorting(a);sorting(b),sorting(c);
+    reverse(a.begin(),a.end());reverse(b.begin(),b.end());reverse(c.begin(),c.end());
+    ll ans = 0;
+    for(int i = 0; i< 3;i++){
+        ll num1 = a[i].first;
+        ll idx1 = a[i].second;
+        for(int j = 0 ; j < 3; j++){
+            ll num2 = b[j].first;
+            ll idx2 = b[j].second;
+            if(idx1 == idx2) continue;
+
+            for(int k = 0 ; k < 3 ; k++){
+                ll num3 = c[k].first;
+                ll idx3 = c[k].second;
+                if(idx1 == idx3 || idx2 == idx3) continue;
+                ans = max(ans , num1 + num2 + num3);
+            }
+        }
+    }
+    cout<<ans<<"\n";
 }
+
 int main()
 {
 

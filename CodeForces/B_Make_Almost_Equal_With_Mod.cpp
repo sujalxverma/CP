@@ -93,6 +93,17 @@ void printVector(const T &val)
     cerr << val;
 }
 
+template <typename T>
+void printVector(const vector<T> &v)
+{
+    cerr << "[ ";
+    for (const auto &elem : v)
+    {
+        printVector(elem);
+        cerr << " ";
+    }
+    cerr << "]";
+}
 #ifndef ONLINE_JUDGE
 #define debug(x)       \
     cerr << #x << " "; \
@@ -104,21 +115,27 @@ void printVector(const T &val)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-void solve()
-{
 
-   int n;
+void solve() {
+    ll n;
     cin >> n;
-    vector<int> a(n);
-    for (auto &i : a) cin >> i;//n
-    int ans = 0;
-    for (int i = 0; i < n; ++i) {//nlog(maxai)
-        ans = gcd(ans, abs(a[i] - a[n - i - 1]));
+    vl a(n);
+    rep2(i,0,n) cin >> a[i];
+
+    for(ll i = 1; i <= 60; ++i) { // Since max 10^17 < 2^60
+        set<ll> s;
+        ll k = 1LL << i;     // Use 1LL to ensure 64-bit shift
+        for(auto x : a) {
+            s.insert(x % k);
+        }
+        if(s.size() == 2) {
+            cout << k << "\n";
+            return;
+        }
     }
-    cout << ans << endl;
-    // T.C :- O(n*log(1e9))
-    // S,C :- O(n)
+    // As per the problem, it guarantees a solution. No need for failsafe.
 }
+
 int main()
 {
 

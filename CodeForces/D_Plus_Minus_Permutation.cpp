@@ -93,6 +93,17 @@ void printVector(const T &val)
     cerr << val;
 }
 
+template <typename T>
+void printVector(const vector<T> &v)
+{
+    cerr << "[ ";
+    for (const auto &elem : v)
+    {
+        printVector(elem);
+        cerr << " ";
+    }
+    cerr << "]";
+}
 #ifndef ONLINE_JUDGE
 #define debug(x)       \
     cerr << #x << " "; \
@@ -104,20 +115,30 @@ void printVector(const T &val)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-void solve()
-{
 
-   int n;
+void solve(){
+    ll n;
     cin >> n;
-    vector<int> a(n);
-    for (auto &i : a) cin >> i;//n
-    int ans = 0;
-    for (int i = 0; i < n; ++i) {//nlog(maxai)
-        ans = gcd(ans, abs(a[i] - a[n - i - 1]));
-    }
-    cout << ans << endl;
-    // T.C :- O(n*log(1e9))
-    // S,C :- O(n)
+    ll x,y;
+    cin >> x >> y;
+    ll X = n/x;
+    ll Y = n/y;
+    ll Z = n/lcm(x,y);
+    
+    // if(X - Z <= Y - Z){
+    //     ll count = 0;
+    //     for(ll i = 1 ; i<= Y-Z ;i++){
+    //         count += i;
+    //     }
+    //     cout<<-1*count<<"\n";
+    //     return ;
+    // }
+
+    ll count = 0;
+    count = (((X-Z)) * (2*n - (X-Z) + 1)) / 2;
+    count = count - ((Y-Z) * ((Y-Z+1)))/2;
+    cout<<count<<"\n";
+    return ;
 }
 int main()
 {

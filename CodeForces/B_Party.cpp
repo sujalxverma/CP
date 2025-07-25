@@ -93,6 +93,17 @@ void printVector(const T &val)
     cerr << val;
 }
 
+template <typename T>
+void printVector(const vector<T> &v)
+{
+    cerr << "[ ";
+    for (const auto &elem : v)
+    {
+        printVector(elem);
+        cerr << " ";
+    }
+    cerr << "]";
+}
 #ifndef ONLINE_JUDGE
 #define debug(x)       \
     cerr << #x << " "; \
@@ -104,20 +115,45 @@ void printVector(const T &val)
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-void solve()
-{
 
-   int n;
-    cin >> n;
-    vector<int> a(n);
-    for (auto &i : a) cin >> i;//n
-    int ans = 0;
-    for (int i = 0; i < n; ++i) {//nlog(maxai)
-        ans = gcd(ans, abs(a[i] - a[n - i - 1]));
+void solve(){
+    int n,m;
+    cin >> n >> m;
+    vector<ll>cost(n+1) , freq(n+1);
+    vector<pair<ll,ll>>g ;
+    for(int i = 1 ; i<= n ; i++){
+        cin >> cost[i];
     }
-    cout << ans << endl;
-    // T.C :- O(n*log(1e9))
-    // S,C :- O(n)
+
+    for(int i = 1 ;  i<= m ; i++){
+        ll u , v ;
+        cin >> u >> v;
+        g.push_back({u,v});
+        freq[u]++;
+        freq[v]++;
+    }
+
+    if((m&1 )== 0)
+    {
+        cout<<0<<"\n";
+        return ;
+    }
+    ll ans = INT_MAX;
+
+    for(int i = 1 ; i <= n ; i++){
+        if(!even(freq[i])){
+            ans = min(ans , cost[i]);
+        }
+    }
+    for(auto x : g)
+    {
+        if( even(freq[x.first]) && even(freq[x.second]) ){
+            ans = min(ans,cost[x.first] + cost[x.second]);
+        }
+    }
+
+    cout<<ans<<"\n";
+
 }
 int main()
 {
