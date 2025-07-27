@@ -433,3 +433,38 @@ void segmented_sieve(int n)
 
   
 }
+
+
+// nCr
+vector<ll> fact(MAXN + 1), invfact(MAXN + 1);
+
+// Fast modular exponentiation
+ll mod_pow(ll base, ll exp) {
+    ll result = 1;
+    base %= MOD;
+    while (exp > 0) {
+        if (exp & 1)
+            result = (result * base) % MOD;
+        base = (base * base) % MOD;
+        exp >>= 1;
+    }
+    return result;
+}
+
+// Precompute factorials and inverse factorials
+void precompute() {
+    fact[0] = 1;
+    for (int i = 1; i <= MAXN; ++i)
+        fact[i] = (fact[i - 1] * i) % MOD;
+    invfact[MAXN] = mod_pow(fact[MAXN], MOD - 2);
+    for (int i = MAXN - 1; i >= 0; --i)
+        invfact[i] = (invfact[i + 1] * (i + 1)) % MOD;
+}
+
+// nCr modulo MOD
+ll nCr(int n, int r) {
+    if (r < 0 || r > n) return 0;
+    return (((fact[n] * invfact[r]) % MOD) * invfact[n - r]) % MOD;
+}
+
+//
