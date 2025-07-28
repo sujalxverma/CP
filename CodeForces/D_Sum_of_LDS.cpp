@@ -107,28 +107,32 @@ void printVector(const vector<T> &v) {
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+void solutionN2(vector<int> &a,int &total){
+    int n = a.size();
+    for(int i = 0 ; i < n ; i++){
+        int x = a[n-1];
+        int lds = 1;
+        for(int j = n-2 ; j >= 0 ; j--){
+            if(a[j] > x){
+                lds ++ ;
+                x = a[j];
+            }
+             total += lds;
+        }
+       
+    }
+}
 
-/*
-    
-*/
 void solve(){
     int n;
     cin >> n;
-    vector<int>a(n);
-    for(int i = 0 ; i < n ; i++) cin >> a[i];
-
-    vector<int>prefixSmall(n);
-    prefixSmall[0] = a[0];
-    for(int i = 1 ; i < n ; i++){
-        prefixSmall[i] = min(prefixSmall[i-1] , a[i] );
+    vector<int>a(n); // permuatation
+    for(int i = 0 ; i < n ; i++){
+        cin >> a[i];
     }
-    for(int i = 1 ; i< n ; i++){
-        if(a[i] >= 2*(prefixSmall[i])){
-            no;
-            return ;
-        }
-    }
-    yes;
+    int total = 0;
+    solutionN2(a, total);
+    cout<<total<<"\n";
 }
 
 int main()
