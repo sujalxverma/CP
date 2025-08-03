@@ -1,4 +1,4 @@
-// VERMA
+// VERMA 
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -26,8 +26,7 @@ const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LINF = 1e18;
 
-inline bool prime(int num)
-{
+inline bool prime(int num) {
     if (num <= 1)
         return false;
     if (num == 2)
@@ -39,10 +38,8 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b)
-{
-    while (b != 0)
-    {
+inline int gcd(int a, int b) {
+    while (b != 0) {
         int temp = b;
         b = a % b;
         a = temp;
@@ -50,8 +47,7 @@ inline int gcd(int a, int b)
     return a;
 }
 
-inline int lcm(int a, int b)
-{
+inline int lcm(int a, int b) {
     return a / gcd(a, b) * b;
 }
 
@@ -74,12 +70,10 @@ inline int lcm(int a, int b)
 inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
 inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
 inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp)
-{
+inline int mod_pow(int base, int exp) {
     int result = 1;
     base %= MOD;
-    while (exp > 0)
-    {
+    while (exp > 0) {
         if (exp % 2 == 1)
             result = (1LL * result * base) % MOD;
         base = (1LL * base * base) % MOD;
@@ -89,17 +83,14 @@ inline int mod_pow(int base, int exp)
 }
 
 template <typename T>
-void printVector(const T &val)
-{
+void printVector(const T &val) {
     cerr << val;
 }
 
 template <typename T>
-void printVector(const vector<T> &v)
-{
+void printVector(const vector<T> &v) {
     cerr << "[ ";
-    for (const auto &elem : v)
-    {
+    for (const auto &elem : v) {
         printVector(elem);
         cerr << " ";
     }
@@ -117,40 +108,29 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
-    int n;
-    cin >> n;
-    int q;
-    cin >> q;
-    vector<ll> a(n);
-    vector<ll> b(q);
-    rep(i, 0, n) cin >> a[i];
-    rep(i, 0, q) cin >> b[i];
-
-    vector<ll> prefix(n);
-    prefix[0] = a[0];
-    rep(i, 1, n)
-    {
-        prefix[i] = prefix[i - 1] + a[i];
+void solve(){
+    ll n,k;
+    cin >> n >> k;
+    string s;
+    cin >> s;
+    ll z = 0;
+    ll o = 0;
+    rep(i,0,n){
+        if(s[i] == '0') o++;
+        else z++;
     }
+    // neutralize .
+    ll mini = min(o,z);
+    ll maxi = max(o,z);
 
-    vector<ll> maxCount(n);
-    maxCount[0] = a[0];
-    rep(i, 1, n)
-    {
-        maxCount[i] = max(maxCount[i - 1], a[i]);
+    if( ((maxi - mini) / k )*k == (maxi-mini) ){
+        cout<<(maxi - mini) / k <<" \n";
+        return ;
     }
-
-    for (int i = 0; i < q; i++)
-    {
-        auto idx = upper_bound(maxCount.begin(), maxCount.end(), b[i]) - maxCount.begin() - 1;
-        if (idx < 0)
-            cout << 0 << " ";
-        else
-            cout << prefix[idx] << " ";
+    else{
+         cout<<1 + (maxi - mini) / k <<" \n";
+        return ;
     }
-    line;
 }
 
 int main()

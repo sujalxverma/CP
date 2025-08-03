@@ -117,41 +117,30 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
-    int n;
+const ll R = 998244353;
+
+void solve() {
+    ll n;
     cin >> n;
-    int q;
-    cin >> q;
-    vector<ll> a(n);
-    vector<ll> b(q);
-    rep(i, 0, n) cin >> a[i];
-    rep(i, 0, q) cin >> b[i];
+    vector<ll> p(n), q(n);
+    for (ll i = 0; i < n; i++) cin >> p[i];
+    for (ll i = 0; i < n; i++) cin >> q[i];
 
-    vector<ll> prefix(n);
-    prefix[0] = a[0];
-    rep(i, 1, n)
-    {
-        prefix[i] = prefix[i - 1] + a[i];
-    }
+    vector<ll> pow2(n + 1);
+    pow2[0] = 1;
+    for (ll i = 1; i <= n; i++) pow2[i] = (pow2[i - 1] * 2) % R;
 
-    vector<ll> maxCount(n);
-    maxCount[0] = a[0];
-    rep(i, 1, n)
-    {
-        maxCount[i] = max(maxCount[i - 1], a[i]);
+    for (ll i = 0; i < n; i++) {
+        ll ans = 0;
+        for (ll j = 0; j <= i; j++) {
+            ll val = (pow2[p[j]] + pow2[q[i - j]]) % R;
+            ans = max(ans, val);
+        }
+        cout << ans << " ";
     }
-
-    for (int i = 0; i < q; i++)
-    {
-        auto idx = upper_bound(maxCount.begin(), maxCount.end(), b[i]) - maxCount.begin() - 1;
-        if (idx < 0)
-            cout << 0 << " ";
-        else
-            cout << prefix[idx] << " ";
-    }
-    line;
+    cout << "\n";
 }
+
 
 int main()
 {

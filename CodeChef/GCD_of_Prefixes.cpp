@@ -117,40 +117,36 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+/*
+    1. if prefix i > i-1 then not posiible return -1.
+    2. gcd decrease from 1 to n.
+    3. can use lcm technique.
+*/
+
 void solve()
 {
-    int n;
+    ll n;
     cin >> n;
-    int q;
-    cin >> q;
-    vector<ll> a(n);
-    vector<ll> b(q);
-    rep(i, 0, n) cin >> a[i];
-    rep(i, 0, q) cin >> b[i];
-
-    vector<ll> prefix(n);
-    prefix[0] = a[0];
-    rep(i, 1, n)
+    vector<ll> gcdPrefix(n);
+    for (ll i = 0; i < n; i++)
+        cin >> gcdPrefix[i];
+    for (ll i = 1; i < n; i++)
     {
-        prefix[i] = prefix[i - 1] + a[i];
+        if (gcdPrefix[i] > gcdPrefix[i - 1])
+        {
+            cout << -1 << "\n";
+            return;
+        }
+        else if( gcdPrefix[i-1] % gcdPrefix[i] != 0){
+            cout<<-1<<"\n";
+            return ;
+        }
     }
-
-    vector<ll> maxCount(n);
-    maxCount[0] = a[0];
-    rep(i, 1, n)
-    {
-        maxCount[i] = max(maxCount[i - 1], a[i]);
-    }
-
-    for (int i = 0; i < q; i++)
-    {
-        auto idx = upper_bound(maxCount.begin(), maxCount.end(), b[i]) - maxCount.begin() - 1;
-        if (idx < 0)
-            cout << 0 << " ";
-        else
-            cout << prefix[idx] << " ";
-    }
+    
+    for (ll i = 0; i < n; i++)
+        cout << gcdPrefix[i]<<" ";
     line;
+   
 }
 
 int main()

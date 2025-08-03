@@ -119,38 +119,39 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
-    int n;
-    cin >> n;
-    int q;
-    cin >> q;
-    vector<ll> a(n);
-    vector<ll> b(q);
-    rep(i, 0, n) cin >> a[i];
-    rep(i, 0, q) cin >> b[i];
+    ll r, g, b, m;
+    cin >> r >> g >> b >> m;
+    ll maxRed = 0;
+    ll maxGreen = 0;
+    ll maxBlue = 0;
 
-    vector<ll> prefix(n);
-    prefix[0] = a[0];
-    rep(i, 1, n)
+    for (ll i = 0; i < r; i++)
     {
-        prefix[i] = prefix[i - 1] + a[i];
+        ll k;
+        cin >> k;
+        maxRed = max(maxRed, k);
+    }
+    for (ll i = 0; i < g; i++)
+    {
+        ll k;
+        cin >> k;
+        maxGreen = max(maxGreen, k);
+    }
+    for (ll i = 0; i < b; i++)
+    {
+        ll k;
+        cin >> k;
+        maxBlue = max(maxBlue, k);
     }
 
-    vector<ll> maxCount(n);
-    maxCount[0] = a[0];
-    rep(i, 1, n)
+    while (m > 0)
     {
-        maxCount[i] = max(maxCount[i - 1], a[i]);
+        ll &maxRef = (maxRed >= maxBlue && maxRed >= maxGreen) ? maxRed : (maxBlue >= maxRed && maxBlue >= maxGreen) ? maxBlue
+                                                                                                                     : maxGreen;
+        maxRef /= 2;
+        m--;
     }
-
-    for (int i = 0; i < q; i++)
-    {
-        auto idx = upper_bound(maxCount.begin(), maxCount.end(), b[i]) - maxCount.begin() - 1;
-        if (idx < 0)
-            cout << 0 << " ";
-        else
-            cout << prefix[idx] << " ";
-    }
-    line;
+    cout << max({maxRed, maxBlue, maxGreen}) << "\n";
 }
 
 int main()

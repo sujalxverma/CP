@@ -119,38 +119,28 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
-    int n;
-    cin >> n;
-    int q;
-    cin >> q;
-    vector<ll> a(n);
-    vector<ll> b(q);
-    rep(i, 0, n) cin >> a[i];
-    rep(i, 0, q) cin >> b[i];
-
-    vector<ll> prefix(n);
-    prefix[0] = a[0];
-    rep(i, 1, n)
-    {
-        prefix[i] = prefix[i - 1] + a[i];
+    string s;
+    cin >> s;
+    int open = 0;
+    int n = s.length();
+    int ans = 0;
+    for(int i = 0 ; i < n ; i++){
+        if(s[i] == '>'){
+            open--;
+            if(open < 0 ){
+                cout<<ans<<"\n";
+                return ;
+            }
+            else if(open == 0){
+                ans = i+1;
+                
+            }
+        }
+        else{
+            open++;
+        }
     }
-
-    vector<ll> maxCount(n);
-    maxCount[0] = a[0];
-    rep(i, 1, n)
-    {
-        maxCount[i] = max(maxCount[i - 1], a[i]);
-    }
-
-    for (int i = 0; i < q; i++)
-    {
-        auto idx = upper_bound(maxCount.begin(), maxCount.end(), b[i]) - maxCount.begin() - 1;
-        if (idx < 0)
-            cout << 0 << " ";
-        else
-            cout << prefix[idx] << " ";
-    }
-    line;
+    cout<<ans<<"\n";
 }
 
 int main()
