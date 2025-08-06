@@ -109,20 +109,3 @@ int subsetSum(int index ,int target){
     return dp[index][target] =  take|| nottake;
 }
 
-
-// Calculate MEX for a range in a vector.
-int calculateMex(const std::vector<int>& vec, int start, int end) {
-    std::unordered_set<int> seen;
-    // Insert elements from the subrange into the set
-    for (int i = start; i <= end && i < (int)vec.size(); ++i) {
-        if (vec[i] >= 0) {
-            seen.insert(vec[i]);
-        }
-    }
-    // Find the smallest non-negative integer not in the set
-    int mex = 0;
-    while (seen.count(mex)) {
-        ++mex;
-    }
-    return mex;
-}
