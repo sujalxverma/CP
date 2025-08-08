@@ -109,3 +109,57 @@ int subsetSum(int index ,int target){
     return dp[index][target] =  take|| nottake;
 }
 
+// Knuth-Morris-Pratt 
+// KMP : String matching 
+// O(n+m)
+// Builds the LPS array for the pattern
+void computeLPSArray(const string &pattern, vector<int> &lps) {
+    int length = 0;
+    int m = pattern.length();
+    lps[0] = 0; // First value always 0
+    int i = 1;
+    while (i < m) {
+        if (pattern[i] == pattern[length]) {
+            length++;
+            lps[i] = length;
+            i++;
+        } else {
+            if (length != 0) {
+                length = lps[length - 1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+}
+
+// Returns starting indexes of all occurrences of pattern in text
+vector<int> KMPSearch(const string &text, const string &pattern) {
+    int n = text.size();
+    int m = pattern.size();
+    vector<int> lps(m);
+    vector<int> result;
+    computeLPSArray(pattern, lps);
+
+    int i = 0; // index for text
+    int j = 0; // index for pattern
+    while (i < n) {
+        if (pattern[j] == text[i]) {
+            j++;
+            i++;
+        }
+        if (j == m) {
+            result.push_back(i - j); // Match found
+            j = lps[j - 1];
+        } else if (i < n && pattern[j] != text[i]) {
+            if (j != 0) {
+                j = lps[j - 1];
+            } else {
+                i++;
+            }
+        }
+    }
+    return result;
+}
+

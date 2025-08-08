@@ -117,40 +117,26 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve()
-{
+void solve() {
     int n;
     cin >> n;
-    vi a(n);
-    vi b(n);
-    int z = 0;
-    rep(i, 0, n) { cin >> a[i]; }
-    rep(i, 0, n) { cin >> b[i]; }
-    set<int>both;
-    set<int>ones;
-    bool first = true;
-    rep(i,0,n){
-        if(a[i] == b[i]){
-            both.insert(a[i]);
-        }
-        else{
-            ones.insert(a[i]);
-            ones.insert(b[i]);
-        }
-    }
-    int mex = 0;
-    while(true){
-        if(both.count(mex)){
-            mex++;
-        }
-        else if(ones.count(mex) && first == true){
-            mex++;
-            first = false;
-        }else{
-            cout<<mex<<"\n";
-            return ;
+    string s;
+    cin >> s;
+    vector<bool> visited(n + 1, false); // visited[i] means number i is removed
+
+    long long sum = 0;
+    for (int i = 1; i <= n; ++i) {
+        if (s[i - 1] == '1') continue; // This value is kept in T
+
+        for (int j = i; j <= n; j += i) {
+            if (s[j - 1] == '1') break; // Stop when hitting a kept value
+            if (!visited[j]) {
+                sum += i;
+                visited[j] = true;
+            }
         }
     }
+    cout << sum << '\n';
 }
 
 int main()
