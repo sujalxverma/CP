@@ -1,4 +1,4 @@
-// VERMA 
+// VERMA
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -26,7 +26,8 @@ const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LINF = 1e18;
 
-inline bool prime(int num) {
+inline bool prime(int num)
+{
     if (num <= 1)
         return false;
     if (num == 2)
@@ -38,8 +39,10 @@ inline bool prime(int num) {
             return false;
     return true;
 }
-inline int gcd(int a, int b) {
-    while (b != 0) {
+inline int gcd(int a, int b)
+{
+    while (b != 0)
+    {
         int temp = b;
         b = a % b;
         a = temp;
@@ -47,7 +50,8 @@ inline int gcd(int a, int b) {
     return a;
 }
 
-inline int lcm(int a, int b) {
+inline int lcm(int a, int b)
+{
     return a / gcd(a, b) * b;
 }
 
@@ -70,10 +74,12 @@ inline int lcm(int a, int b) {
 inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
 inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
 inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp) {
+inline int mod_pow(int base, int exp)
+{
     int result = 1;
     base %= MOD;
-    while (exp > 0) {
+    while (exp > 0)
+    {
         if (exp % 2 == 1)
             result = (1LL * result * base) % MOD;
         base = (1LL * base * base) % MOD;
@@ -83,14 +89,17 @@ inline int mod_pow(int base, int exp) {
 }
 
 template <typename T>
-void printVector(const T &val) {
+void printVector(const T &val)
+{
     cerr << val;
 }
 
 template <typename T>
-void printVector(const vector<T> &v) {
+void printVector(const vector<T> &v)
+{
     cerr << "[ ";
-    for (const auto &elem : v) {
+    for (const auto &elem : v)
+    {
         printVector(elem);
         cerr << " ";
     }
@@ -106,33 +115,66 @@ void printVector(const vector<T> &v) {
 #endif
 
 //------------------------------------------------------------------------------------------------------------//
-//                                          Here you goa
+//                                          Here you go
 
-void solve(){
-    ll n;
+void solve()
+{
+    int n;
     cin >> n;
-    vector<ll>a(n);
-    for(ll i = 0 ; i < n ; i ++){
-        cin >> a[i];
-    }
-   vector<ll>p(n);
-   p[0] = a[0];
-   for(ll i = 1; i < n ; i++){
-    p[i] = max(p[i-1], a[i]);
-   }
-    vector<ll>s(n);
-    s[n-1] = a[n-1];
-    for(ll i = n-2; i >= 0 ; i--){
-        s[i] = max(s[i+1], a[i]);
-    }
-    ll ans = a[0] + a[n-1];
-    for(ll i = 1; i < n-1; i++){
-        ans += min(p[i], s[i]);
-    }
-    cout<<ans<<"\n";
+    string s;
+    cin >> s;
+    // for upto x = 3 , all substrings of s will exceed the condition.
+    // condition : (26^i) > n(n-1)(n-2)....   i -> iterations
+    string mex = "";
+    for (char ch = 'a'; ch <= 'z'; ch++)
+    {
+        string temp = "";
+        temp.push_back(ch);
+        if (s.find(temp) == string ::npos)
+        {
+            mex = temp;
+            break;
+        }
+    } // O(26 * n)
+
+    for (char ch1 = 'a'; ch1 <= 'z'; ch1++)
+    {
+        for (char ch2 = 'a'; ch2 <= 'z'; ch2++)
+        {
+            string temp = "";
+           temp.push_back(ch1);
+            temp.push_back(ch2);
+            if ( mex == "" && s.find(temp) == string ::npos)
+            {
+                mex = temp;
+                break;
+            }
+
+        } } // O(26 *26* n)
+        for (char ch1 = 'a'; ch1 <= 'z'; ch1++)
+        {
+            for (char ch2 = 'a'; ch2 <= 'z'; ch2++)
+            {
+                for (char ch3 = 'a'; ch3 <= 'z'; ch3++)
+                {
+                    string temp = "";
+                   temp.push_back(ch1);
+                    temp.push_back(ch2);
+                    temp.push_back(ch3);    
+                    if (mex == "" && s.find(temp) == string ::npos)
+                    {
+                        mex = temp;
+                        break;
+                    }
+                }
+
+            } // O(26 *26 * 26* n)
+        }
+
+       
+    
+     cout << mex << "\n";
 }
-
-
 int main()
 {
 #ifndef ONLINE_JUDGE

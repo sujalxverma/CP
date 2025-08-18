@@ -106,32 +106,39 @@ void printVector(const vector<T> &v) {
 #endif
 
 //------------------------------------------------------------------------------------------------------------//
-//                                          Here you goa
+//                                          Here you go
 
 void solve(){
-    ll n;
+    int n;
     cin >> n;
-    vector<ll>a(n);
-    for(ll i = 0 ; i < n ; i ++){
-        cin >> a[i];
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];        
+        if(i%2 != 0){
+            a[i] = -a[i];
+        }
     }
-   vector<ll>p(n);
-   p[0] = a[0];
-   for(ll i = 1; i < n ; i++){
-    p[i] = max(p[i-1], a[i]);
-   }
-    vector<ll>s(n);
-    s[n-1] = a[n-1];
-    for(ll i = n-2; i >= 0 ; i--){
-        s[i] = max(s[i+1], a[i]);
-    }
-    ll ans = a[0] + a[n-1];
-    for(ll i = 1; i < n-1; i++){
-        ans += min(p[i], s[i]);
-    }
-    cout<<ans<<"\n";
-}
 
+    vector<int>p(n);
+    p[0] = a[0];
+    for(int i=1  ; i < n ; i++){
+        p[i] = p[i-1] + a[i];
+    }
+
+    map<int,int>mp;
+    for(int i=0 ; i < n ; i++){
+        mp[p[i]]++;
+    }
+    for(auto x : mp){
+        if(x.second > 1){
+            cout << "YES" << endl;
+            return;
+        }
+    }
+    cout<<"NO"<<"\n";
+    return;
+
+}
 
 int main()
 {
