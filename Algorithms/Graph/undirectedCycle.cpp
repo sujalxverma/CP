@@ -57,3 +57,46 @@ void undirectedCyclic(const vector<vector<int>> &graph)
         cout << "There is no cycle" << endl;
     }
 }
+
+
+
+// converting binary tree to undirected graph
+void convertToGraph(TreeNode *root, int k)
+{
+    if (!root) return;
+
+    unordered_map<int, vector<int>> g;
+    queue<pair<TreeNode *, int>> q;
+    q.push({root, -1});
+    // Build the undirected graph
+    while (!q.empty())
+    {
+        auto val = q.front();
+        q.pop();
+        auto node = val.first;
+        auto parent = val.second;
+
+        if (parent != -1)
+            g[node->data].push_back(parent);
+        if (node->left)
+        {
+            g[node->data].push_back(node->left->data);
+            q.push({node->left, node->data});
+        }
+        if (node->right)
+        {
+            g[node->data].push_back(node->right->data);
+            q.push({node->right, node->data});
+        }
+    }
+    // Print the graph
+    for (auto &kv : g)
+    {
+        cout << kv.first << " : ";
+        for (int neighbor : kv.second)
+        {
+            cout << neighbor << " ";
+        }
+        cout << "\n";
+    }
+}

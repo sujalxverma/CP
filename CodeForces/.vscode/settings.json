@@ -1,23 +1,23 @@
 {
-    "files.associations": {
-      "string": "cpp",
-      "vector": "cpp",
-      "unordered_map": "cpp",
-      "iostream": "cpp"
-    },
-     "editor.tokenColorCustomizations": {
-  "textMateRules": [
-    {
-      "scope": [
-        "comment",
-        "comment.line",
-        "comment.line.double-slash",
-        "punctuation.definition.comment"
-      ],
-      "settings": {
-        "foreground": "#FF0000"  // bright red
+  "files.associations": {
+    "string": "cpp",
+    "vector": "cpp",
+    "unordered_map": "cpp",
+    "iostream": "cpp"
+  },
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          "comment",
+          "comment.line",
+          "comment.line.double-slash",
+          "punctuation.definition.comment"
+        ],
+        "settings": {
+          "foreground": "#FF0000" // bright red
+        }
       }
-    }
-  ]
-}
+    ]
+  }
 }
