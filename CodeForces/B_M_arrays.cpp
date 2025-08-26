@@ -119,75 +119,29 @@ void printVector(const vector<T> &v)
 
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
+    int n, m;
+    cin >> n >> m;
 
-    set<char> st;
+    vector<int> a(n);
+    unordered_map<int, int> mp;
     for (int i = 0; i < n; i++)
-        st.insert(s[i]);
-
-    int ans = 1e8;
-
-    // Check if already palindrome
-    int i = 0, j = n - 1;
-    bool check = true;
-    while (i < j)
     {
-        if (s[i] != s[j])
-        {
-            check = false;
-            break;
-        }
-        i++;
-        j--;
-    }
-    if (check)
-    {
-        cout << 0 << "\n";
-        return;
+        cin >> a[i];
+        mp[a[i]]++;
     }
 
-    for (auto ch : st)
-    {
-        int count = 0;
-        int i = 0;
-        int j = n - 1;
-        bool f = true;
-        while (i < j)
-        {
-            if (s[i] == s[j])
-            {
-                i++;
-                j--;
-            }
-            else if (s[i] == ch)
-            {
-                i++;
-                count++;
-            }
-            else if (s[j] == ch)
-            {
-                j--;
-                count++;
-            }
-            else
-            {
-                f = false;
-                break;
+    int ans = 0;
+    sort(a.begin() , a.end());
+    int maxElement = *max_element(a.begin() ,a.end());
+    int checkTo = maxElement/m;
+    for(int i = 0 ; i < n  ; i++){
+        if(mp[a[i]]!=0 ){
+            for(int i = 1 ; i < checkTo ; i ++){
+                if()
             }
         }
-        if (f)
-            ans = min(ans, count);
     }
-    // Corrected output logic
-    if (ans == 1e8)
-        cout << -1 << "\n";
-    else
-        cout << ans << "\n";
 }
-
 
 int main()
 {

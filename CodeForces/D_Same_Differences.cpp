@@ -74,19 +74,19 @@ inline int lcm(int a, int b)
 inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
 inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
 inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp)
-{
-    int result = 1;
-    base %= MOD;
-    while (exp > 0)
-    {
-        if (exp % 2 == 1)
-            result = (1LL * result * base) % MOD;
-        base = (1LL * base * base) % MOD;
-        exp /= 2;
-    }
-    return result;
-}
+// inline int mod_pow(int base, int exp)
+// {
+//     int result = 1;
+//     base %= MOD;
+//     while (exp > 0)
+//     {
+//         if (exp % 2 == 1)
+//             result = (1LL * result * base) % MOD;
+//         base = (1LL * base * base) % MOD;
+//         exp /= 2;
+//     }
+//     return result;
+// }
 
 template <typename T>
 void printVector(const T &val)
@@ -117,77 +117,27 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
+
 void solve()
 {
-    int n;
+    ll n;
     cin >> n;
-    string s;
-    cin >> s;
-
-    set<char> st;
-    for (int i = 0; i < n; i++)
-        st.insert(s[i]);
-
-    int ans = 1e8;
-
-    // Check if already palindrome
-    int i = 0, j = n - 1;
-    bool check = true;
-    while (i < j)
+    vector<ll> a(n);
+    unordered_map<ll, ll> mp;
+    for (ll i = 0; i < n; i++)
     {
-        if (s[i] != s[j])
-        {
-            check = false;
-            break;
-        }
-        i++;
-        j--;
+        cin >> a[i];
+        ll val = a[i] - i;
+        mp[val]++;
     }
-    if (check)
+    ll ans = 0;
+    for (auto x : mp)
     {
-        cout << 0 << "\n";
-        return;
+        if (x.second > 1)
+            ans += x.second * (x.second - 1) / 2; // or use nCr(x.second, 2)
     }
-
-    for (auto ch : st)
-    {
-        int count = 0;
-        int i = 0;
-        int j = n - 1;
-        bool f = true;
-        while (i < j)
-        {
-            if (s[i] == s[j])
-            {
-                i++;
-                j--;
-            }
-            else if (s[i] == ch)
-            {
-                i++;
-                count++;
-            }
-            else if (s[j] == ch)
-            {
-                j--;
-                count++;
-            }
-            else
-            {
-                f = false;
-                break;
-            }
-        }
-        if (f)
-            ans = min(ans, count);
-    }
-    // Corrected output logic
-    if (ans == 1e8)
-        cout << -1 << "\n";
-    else
-        cout << ans << "\n";
+    cout << ans << "\n";
 }
-
 
 int main()
 {
@@ -200,6 +150,7 @@ int main()
     cout.tie(nullptr);
     ll t;
     cin >> t;
+  
     while (t--)
     {
         solve();
