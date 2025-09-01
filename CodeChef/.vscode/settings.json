@@ -1,35 +1,36 @@
 {
-    "files.associations": {
-      "string": "cpp",
-      "vector": "cpp",
-      "__bit_reference": "cpp",
-      "__hash_table": "cpp",
-      "__split_buffer": "cpp",
-      "__tree": "cpp",
-      "array": "cpp",
-      "deque": "cpp",
-      "initializer_list": "cpp",
-      "list": "cpp",
-      "map": "cpp",
-      "set": "cpp",
-      "string_view": "cpp",
-      "unordered_map": "cpp",
-      "unordered_set": "cpp",
-      "queue": "cpp"
-    },
-     "editor.tokenColorCustomizations": {
-  "textMateRules": [
-    {
-      "scope": [
-        "comment",
-        "comment.line",
-        "comment.line.double-slash",
-        "punctuation.definition.comment"
-      ],
-      "settings": {
-        "foreground": "#ff0000"  // bright red
+  "files.associations": {
+    "string": "cpp",
+    "vector": "cpp",
+    "__bit_reference": "cpp",
+    "__hash_table": "cpp",
+    "__split_buffer": "cpp",
+    "__tree": "cpp",
+    "array": "cpp",
+    "deque": "cpp",
+    "initializer_list": "cpp",
+    "list": "cpp",
+    "map": "cpp",
+    "set": "cpp",
+    "string_view": "cpp",
+    "unordered_map": "cpp",
+    "unordered_set": "cpp",
+    "queue": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "enabled",
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          "comment",
+          "comment.line",
+          "comment.line.double-slash",
+          "punctuation.definition.comment"
+        ],
+        "settings": {
+          "foreground": "#ff0000" // bright red
+        }
       }
-    }
-  ]
-}
+    ]
+  }
 }

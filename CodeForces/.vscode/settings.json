@@ -5,6 +5,7 @@
     "unordered_map": "cpp",
     "iostream": "cpp"
   },
+  "C_Cpp.errorSquiggles": "enabled",
   "editor.tokenColorCustomizations": {
     "textMateRules": [
       {
