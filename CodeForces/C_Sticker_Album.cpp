@@ -1,167 +1,70 @@
-// VERMA
 #include "bits/stdc++.h"
 using namespace std;
+
+#define int ll
+#define endl '\n'
+#define fast_io ios::sync_with_stdio(0); cin.tie(0); cout.tie(0)
+#define pb push_back
+#define re resize
+#define ff first
+#define ss second
+#define all(x) (x).begin(), (x).end()
+#define all1(x) (x).begin()+1, (x).end()
+#define loop(i, n) for(int i = 0; i < n; ++i)
+#define loop1(i, n) for(int i = 1; i <= n; ++i)
+#define print(x) cout << #x << ": " << x << endl << flush
 typedef long long ll;
 typedef vector<int> vi;
-typedef vector<long long> vl;
-#define rep(i, a, b) for (int i = a; i < b; i++)
-#define rep2(i, a, b) for (long long i = a; i < b; i++)
-typedef unordered_map<int, int> umap;
-#define yes cout << "YES" << endl
-#define no cout << "NO" << endl
-#define even(a) (((a) % 2) == 0 ? 1 : 0)
-#define rev(v) reverse(v.begin(), v.end())
-#define sorting(v) sort(v.begin(), v.end())
-#define line cout << "\n"
-#define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
-#define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x) __builtin_ctzll(x)
-#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
+typedef array<int, 2> ii;
+typedef array<int, 3> ti;
+typedef vector<ii> vii;
+typedef vector<ti> vti;
+typedef vector<vi> vvi;
+typedef vector<double> vd;
+typedef priority_queue<int> pq;
 
-const int MOD = 1e9 + 7;
-const int INF = 1e9;
-const ll LINF = 1e18;
+template<class T>
+bool ckmin(T &a, T b) { bool B = a > b; a = min(a, b); return B; }
 
-inline bool prime(int num)
-{
-    if (num <= 1)
-        return false;
-    if (num == 2)
-        return true;
-    if (num % 2 == 0)
-        return false;
-    for (int i = 3; i * i <= num; i += 2)
-        if (num % i == 0)
-            return false;
-    return true;
-}
-inline int gcd(int a, int b)
-{
-    while (b != 0)
-    {
-        int temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
-}
+template<class T>
+bool ckmax(T &a, T b) { bool B = a < b; a = max(a, b); return B; }
 
-inline int lcm(int a, int b)
-{
-    return a / gcd(a, b) * b;
-}
+const int inf = 1e17;
 
-#define ROTATE_VEC(v, k)                                 \
-    do                                                   \
-    {                                                    \
-        int __n = (int)(v).size();                       \
-        if (__n > 0)                                     \
-        {                                                \
-            int __k = (k) % __n;                         \
-            if (__k != 0)                                \
-            {                                            \
-                reverse((v).begin(), (v).end());         \
-                reverse((v).begin(), (v).begin() + __k); \
-                reverse((v).begin() + __k, (v).end());   \
-            }                                            \
-        }                                                \
-    } while (0)
-
-inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
-inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
-inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp)
-{
-    int result = 1;
-    base %= MOD;
-    while (exp > 0)
-    {
-        if (exp % 2 == 1)
-            result = (1LL * result * base) % MOD;
-        base = (1LL * base * base) % MOD;
-        exp /= 2;
-    }
-    return result;
-}
-
-template <typename T>
-void printVector(const T &val)
-{
-    cerr << val;
-}
-
-template <typename T>
-void printVector(const vector<T> &v)
-{
-    cerr << "[ ";
-    for (const auto &elem : v)
-    {
-        printVector(elem);
-        cerr << " ";
-    }
-    cerr << "]";
-}
-#ifndef ONLINE_JUDGE
-#define debug(x)       \
-    cerr << #x << " "; \
-    printVector(x);    \
-    cerr << endl;
-#else
-#define debug(x)
-#endif
-
-//------------------------------------------------------------------------------------------------------------//
-//                                          Here you go
-
-int f(int n,vector<int>v,vector<int>&ans,int index)
-{
-    if(n == 0){
-        return 1;
-    }
-
-    int nottake = f(n , v , ans , index);
-    int take = 0;
-    if(v[index] <= n){
-        take = 1 + f(n-v[index] , v ,ans , index);
-    }
-
-    return take + nottake ;
-}
-
-void solve()
-{
+void solve() {
     int n, a, b;
     cin >> n >> a >> b;
 
-    vector<int> v(b - a + 1);
-    for (int i = 0; i < b - a + 1; i++)
-    {
-        v[i] = i + a;
+    vd dp(n+1), p(n+1);
+
+    if(a) {
+        for(int i = 1; i <= min(a, n); i++) {
+            dp[i] = 1;
+            p[i] = p[i-1] + dp[i];
+        }
+        for(int i = min(a, n) + 1; i <= n; i++) {
+            int l = i - a;
+            int r = max(i - b, 1ll);
+            dp[i] = 1 + (p[l] - p[r-1]) / (b - a + 1);
+            p[i] = dp[i] + p[i-1];
+        }
+    } else {
+        for(int i = 1; i <= n; i++) {
+            int l = i - 1;
+            int r = max(i - b, 1ll);
+            dp[i] = ((b + 1) + (p[l] - p[r-1])) / b;
+            p[i] = dp[i] + p[i-1];
+        }
     }
 
-    vector<int> ans;
-    
-
+    cout << dp[n] << endl;
 }
 
-int main()
-{
-#ifndef ONLINE_JUDGE
-    freopen("Error.txt", "w", stderr);
-#endif
-
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-    cout.tie(nullptr);
-    ll t = 1;
-    ;
-    // cin >> t;
-    while (t--)
-    {
+signed main() {
+    fast_io;
+    cout << setprecision(10);
+    int t = 1;
+    while(t--)
         solve();
-    }
+    return 0;
 }
