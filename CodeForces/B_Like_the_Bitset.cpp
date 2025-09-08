@@ -1,4 +1,4 @@
-// VERMA 
+// VERMA
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -26,7 +26,8 @@ const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LINF = 1e18;
 
-inline bool prime(int num) {
+inline bool prime(int num)
+{
     if (num <= 1)
         return false;
     if (num == 2)
@@ -38,8 +39,10 @@ inline bool prime(int num) {
             return false;
     return true;
 }
-inline int gcd(int a, int b) {
-    while (b != 0) {
+inline int gcd(int a, int b)
+{
+    while (b != 0)
+    {
         int temp = b;
         b = a % b;
         a = temp;
@@ -47,7 +50,8 @@ inline int gcd(int a, int b) {
     return a;
 }
 
-inline int lcm(int a, int b) {
+inline int lcm(int a, int b)
+{
     return a / gcd(a, b) * b;
 }
 
@@ -70,10 +74,12 @@ inline int lcm(int a, int b) {
 inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
 inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
 inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp) {
+inline int mod_pow(int base, int exp)
+{
     int result = 1;
     base %= MOD;
-    while (exp > 0) {
+    while (exp > 0)
+    {
         if (exp % 2 == 1)
             result = (1LL * result * base) % MOD;
         base = (1LL * base * base) % MOD;
@@ -83,14 +89,17 @@ inline int mod_pow(int base, int exp) {
 }
 
 template <typename T>
-void printVector(const T &val) {
+void printVector(const T &val)
+{
     cerr << val;
 }
 
 template <typename T>
-void printVector(const vector<T> &v) {
+void printVector(const vector<T> &v)
+{
     cerr << "[ ";
-    for (const auto &elem : v) {
+    for (const auto &elem : v)
+    {
         printVector(elem);
         cerr << " ";
     }
@@ -107,47 +116,69 @@ void printVector(const vector<T> &v) {
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-/*
-    1. First we created a vector 'p', which will store the last distinct element, w.r.t current element.
-    2. eg : [1,1,1,2,2,3,4] -> [-1,-1,-1,3,3,5,6]  :  1-based indexing.
-    3. Then we will check that for (l,r).
-    4. we will select a[r] as the second element, and find a[i].
-    5. for a[r], we will check if p[r], lies b/w  [l,r).
-    6. If not then (-1,-1), else (p[i] , r);
-*/
-void solve(){
+
+void solve()
+{
     int n;
     cin >> n;
-    vector<int>a(n);
-    for(int i = 0; i < n ; i++){
-        cin >> a[i];
+    int k;
+    cin >> k;
+    string s;
+    cin >> s;
+    int one = 0;
+    int totalone = 0;
+    int maxOne = 0;
+    for (int i = 0; i < n; i++)
+    {
+        if (s[i] == '1')
+        {
+            one++;
+            totalone++;
+            if (one >= k)
+            {
+                no;
+                return;
+            }
+        }
+        else
+        {
+            maxOne = max(one, maxOne);
+            one = 0;
+            if (maxOne >= k)
+            {
+                no;
+                return;
+            }
+        }
     }
-    vector<int>p(n);
-    p[0] = -1;
-    for(int i = 1 ; i < n ; i++){
-        if(a[i] == a[i-1]){
-            p[i] = p[i-1];
+    maxOne = max(one, maxOne);
+    one = 0;
+    if (maxOne >= k)
+    {
+        no;
+        return;
+    }
+    int count = 1;
+    vector<int>a(n);
+    for(int i = 0 ; i < n ; i++){
+        if(s[i] == '1'){
+            a[i] = count;
+            count++;
         }
-        else{
-            p[i] = i-1;
+    }
+    for(int i = 0 ;i < n ; i++){
+        if(s[i] == '0'){
+            a[i] = count;
+            count++;
         }
-    }    
-    int q;
-    cin >> q;
-    while(q--){
-        int a,b;
-        cin >> a >> b;
-        a--;
-        b--;
-        if(p[b] >= a){
-            cout<<p[b]+1<<" "<<b+1<<"\n";
-        }else{
-            cout<<-1<<" "<<-1<<"\n";
-        }
-
+    }
+    yes;
+    for(auto x : a){
+        cout<<x<<" ";
     }
     line;
-    return ;
+    
+
 }
 
 int main()

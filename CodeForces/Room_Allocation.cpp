@@ -107,44 +107,37 @@ void printVector(const vector<T> &v) {
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-/*
-    1. First we created a vector 'p', which will store the last distinct element, w.r.t current element.
-    2. eg : [1,1,1,2,2,3,4] -> [-1,-1,-1,3,3,5,6]  :  1-based indexing.
-    3. Then we will check that for (l,r).
-    4. we will select a[r] as the second element, and find a[i].
-    5. for a[r], we will check if p[r], lies b/w  [l,r).
-    6. If not then (-1,-1), else (p[i] , r);
-*/
+
 void solve(){
     int n;
     cin >> n;
-    vector<int>a(n);
-    for(int i = 0; i < n ; i++){
-        cin >> a[i];
+    vector<pair<int,int>>p(n);
+    vector<int>ans;
+    int rooms = 1;
+    map<int,int>mp;
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+    for(int i = 0 ; i < n ; i++){
+        cin >> p[i].first;
+        cin >> p[i].second;
+        pq.push({p[i].second , p[i].first}) ; // {end,arrival}
     }
-    vector<int>p(n);
-    p[0] = -1;
-    for(int i = 1 ; i < n ; i++){
-        if(a[i] == a[i-1]){
-            p[i] = p[i-1];
-        }
-        else{
-            p[i] = i-1;
-        }
-    }    
-    int q;
-    cin >> q;
-    while(q--){
-        int a,b;
-        cin >> a >> b;
-        a--;
-        b--;
-        if(p[b] >= a){
-            cout<<p[b]+1<<" "<<b+1<<"\n";
-        }else{
-            cout<<-1<<" "<<-1<<"\n";
-        }
+    sort(p.begin(),p.end());
+    for(int i = 0; i < n ; i++){
+        auto val = pq.top();
+        if(val.first < p[i].first){ // end < arrival
+            mp[p[i].first] = mp[val.second];
+            ans.push_back(mp[p[i].first]);
+            pq.pop();
+        }else{ // arrival > end
+            mp[p[i].first] = rooms ; // p[i].first resits in this room.
+            ans.push_back(rooms);
+            rooms++;
 
+        }
+    }
+    cout<<rooms-1<<"\n";
+    for(auto x : ans){
+        cout<<x<<" ";
     }
     line;
     return ;
@@ -159,8 +152,8 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
+    ll t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();

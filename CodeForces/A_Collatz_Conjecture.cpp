@@ -107,46 +107,15 @@ void printVector(const vector<T> &v) {
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-/*
-    1. First we created a vector 'p', which will store the last distinct element, w.r.t current element.
-    2. eg : [1,1,1,2,2,3,4] -> [-1,-1,-1,3,3,5,6]  :  1-based indexing.
-    3. Then we will check that for (l,r).
-    4. we will select a[r] as the second element, and find a[i].
-    5. for a[r], we will check if p[r], lies b/w  [l,r).
-    6. If not then (-1,-1), else (p[i] , r);
-*/
-void solve(){
-    int n;
-    cin >> n;
-    vector<int>a(n);
-    for(int i = 0; i < n ; i++){
-        cin >> a[i];
-    }
-    vector<int>p(n);
-    p[0] = -1;
-    for(int i = 1 ; i < n ; i++){
-        if(a[i] == a[i-1]){
-            p[i] = p[i-1];
-        }
-        else{
-            p[i] = i-1;
-        }
-    }    
-    int q;
-    cin >> q;
-    while(q--){
-        int a,b;
-        cin >> a >> b;
-        a--;
-        b--;
-        if(p[b] >= a){
-            cout<<p[b]+1<<" "<<b+1<<"\n";
-        }else{
-            cout<<-1<<" "<<-1<<"\n";
-        }
 
+void solve(){
+    ll k,x;
+    cin >> k >> x;
+    ll ans = x;
+    for(ll i = 0 ; i < k ; i++){
+        ans *= 2;
     }
-    line;
+    cout<<ans<<"\n";
     return ;
 }
 

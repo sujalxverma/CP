@@ -1,12 +1,15 @@
 // VERMA 
 #include "bits/stdc++.h"
 using namespace std;
+
 typedef long long ll;
 typedef vector<int> vi;
 typedef vector<long long> vl;
+
 #define rep(i, a, b) for (int i = a; i < b; i++)
 #define rep2(i, a, b) for (long long i = a; i < b; i++)
 typedef unordered_map<int, int> umap;
+
 #define yes cout << "YES" << endl
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
@@ -27,39 +30,25 @@ const int INF = 1e9;
 const ll LINF = 1e18;
 
 inline bool prime(int num) {
-    if (num <= 1)
-        return false;
-    if (num == 2)
-        return true;
-    if (num % 2 == 0)
-        return false;
+    if (num <= 1) return false;
+    if (num == 2) return true;
+    if (num % 2 == 0) return false;
     for (int i = 3; i * i <= num; i += 2)
-        if (num % i == 0)
-            return false;
+        if (num % i == 0) return false;
     return true;
 }
 inline int gcd(int a, int b) {
-    while (b != 0) {
-        int temp = b;
-        b = a % b;
-        a = temp;
-    }
+    while (b != 0) { int temp = b; b = a % b; a = temp; }
     return a;
 }
-
-inline int lcm(int a, int b) {
-    return a / gcd(a, b) * b;
-}
+inline int lcm(int a, int b) { return a / gcd(a, b) * b; }
 
 #define ROTATE_VEC(v, k)                                 \
-    do                                                   \
-    {                                                    \
+    do {                                                 \
         int __n = (int)(v).size();                       \
-        if (__n > 0)                                     \
-        {                                                \
+        if (__n > 0) {                                   \
             int __k = (k) % __n;                         \
-            if (__k != 0)                                \
-            {                                            \
+            if (__k != 0) {                              \
                 reverse((v).begin(), (v).end());         \
                 reverse((v).begin(), (v).begin() + __k); \
                 reverse((v).begin() + __k, (v).end());   \
@@ -71,31 +60,25 @@ inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
 inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
 inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
 inline int mod_pow(int base, int exp) {
-    int result = 1;
-    base %= MOD;
+    int result = 1; base %= MOD;
     while (exp > 0) {
-        if (exp % 2 == 1)
-            result = (1LL * result * base) % MOD;
+        if (exp & 1) result = (1LL * result * base) % MOD;
         base = (1LL * base * base) % MOD;
-        exp /= 2;
+        exp >>= 1;
     }
     return result;
 }
 
 template <typename T>
-void printVector(const T &val) {
-    cerr << val;
-}
+void printVector(const T &val) { cerr << val; }
 
 template <typename T>
 void printVector(const vector<T> &v) {
     cerr << "[ ";
-    for (const auto &elem : v) {
-        printVector(elem);
-        cerr << " ";
-    }
+    for (const auto &elem : v) { printVector(elem); cerr << " "; }
     cerr << "]";
 }
+
 #ifndef ONLINE_JUDGE
 #define debug(x)       \
     cerr << #x << " "; \
@@ -107,62 +90,29 @@ void printVector(const vector<T> &v) {
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-/*
-    1. First we created a vector 'p', which will store the last distinct element, w.r.t current element.
-    2. eg : [1,1,1,2,2,3,4] -> [-1,-1,-1,3,3,5,6]  :  1-based indexing.
-    3. Then we will check that for (l,r).
-    4. we will select a[r] as the second element, and find a[i].
-    5. for a[r], we will check if p[r], lies b/w  [l,r).
-    6. If not then (-1,-1), else (p[i] , r);
-*/
-void solve(){
-    int n;
-    cin >> n;
-    vector<int>a(n);
-    for(int i = 0; i < n ; i++){
-        cin >> a[i];
-    }
-    vector<int>p(n);
-    p[0] = -1;
-    for(int i = 1 ; i < n ; i++){
-        if(a[i] == a[i-1]){
-            p[i] = p[i-1];
-        }
-        else{
-            p[i] = i-1;
-        }
-    }    
-    int q;
-    cin >> q;
-    while(q--){
-        int a,b;
-        cin >> a >> b;
-        a--;
-        b--;
-        if(p[b] >= a){
-            cout<<p[b]+1<<" "<<b+1<<"\n";
-        }else{
-            cout<<-1<<" "<<-1<<"\n";
-        }
 
+void solve() {
+    int n; 
+    if (!(cin >> n)) return;
+    vi p(n), q(n);
+    rep(i, 0, n) cin >> p[i];
+    // B-solution: complementary permutation q[i] = (n + 1) - p[i]
+    rep(i, 0, n) q[i] = (n + 1) - p[i];
+    rep(i, 0, n) {
+        cout << q[i] << (i + 1 == n ? '\n' : ' ');
     }
-    line;
-    return ;
 }
 
-int main()
-{
+int main() {
 #ifndef ONLINE_JUDGE
     freopen("Error.txt", "w", stderr);
 #endif
-
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
+
+    ll t; 
     cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+    while (t--) solve();
+    return 0;
 }

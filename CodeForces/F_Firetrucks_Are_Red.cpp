@@ -107,47 +107,59 @@ void printVector(const vector<T> &v) {
 
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
-/*
-    1. First we created a vector 'p', which will store the last distinct element, w.r.t current element.
-    2. eg : [1,1,1,2,2,3,4] -> [-1,-1,-1,3,3,5,6]  :  1-based indexing.
-    3. Then we will check that for (l,r).
-    4. we will select a[r] as the second element, and find a[i].
-    5. for a[r], we will check if p[r], lies b/w  [l,r).
-    6. If not then (-1,-1), else (p[i] , r);
-*/
-void solve(){
-    int n;
+void solve() {
+    ll n;
     cin >> n;
-    vector<int>a(n);
-    for(int i = 0; i < n ; i++){
-        cin >> a[i];
+    vector<vl> g(n);                         // numbers for each person
+    map<ll, vector<ll>> owner;               // number -> list of people with it
+    rep(i, 0, n) {
+        ll m;
+        cin >> m;
+        rep(j, 0, m) {
+            ll d;
+            cin >> d;
+            g[i].push_back(d);
+            owner[d].push_back(i);
+        }
     }
-    vector<int>p(n);
-    p[0] = -1;
-    for(int i = 1 ; i < n ; i++){
-        if(a[i] == a[i-1]){
-            p[i] = p[i-1];
-        }
-        else{
-            p[i] = i-1;
-        }
-    }    
-    int q;
-    cin >> q;
-    while(q--){
-        int a,b;
-        cin >> a >> b;
-        a--;
-        b--;
-        if(p[b] >= a){
-            cout<<p[b]+1<<" "<<b+1<<"\n";
-        }else{
-            cout<<-1<<" "<<-1<<"\n";
-        }
 
+    // DSU for people
+    vi par(n);
+    rep(i, 0, n) par[i] = i;
+    function<int(int)> find = [&](int x) {
+        return par[x] == x ? x : par[x] = find(par[x]);
+    };
+    auto unite = [&](int x, int y) {
+        x = find(x); y = find(y);
+        if (x != y) par[x] = y;
+    };
+
+    vector<tuple<int,int,ll>> edges; // (p, q, r)
+
+    for (auto &kv : owner) {
+        const auto &people = kv.second;
+        if (people.size() < 2) continue;
+        int root = people[0];
+        rep(j, 1, people.size()) {
+            int a = find(root), b = find(people[j]);
+            if (a != b) {
+                unite(a, b);
+                edges.push_back({root + 1, people[j] + 1, kv.first});
+            }
+        }
     }
-    line;
-    return ;
+    // After all unions, check if there’s one component and n-1 edges.
+    set<int> comps;
+    rep(i, 0, n) comps.insert(find(i));
+    if (comps.size() > 1 || edges.size() != n - 1) {
+        cout << "impossible\n";
+        return;
+    }
+    for (auto &it : edges) {
+        int p, q; ll r;
+        tie(p, q, r) = it;
+        cout << p << " " << q << " " << r << "\n";
+    }
 }
 
 int main()
@@ -159,8 +171,8 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
+    ll t = 1;
+    // cin >> t;
     while (t--)
     {
         solve();
