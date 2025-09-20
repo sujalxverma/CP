@@ -117,47 +117,33 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-/*
-    1. Count all odds-odds pair.
-    2. Count all evens-evens pair.
-    3. Count all equal elements pair.
-    4. Count all pairs with xor : 2.
-*/
-
 void solve()
 {
-    ll n;
+    int n;
     cin >> n;
-    vector<ll> a(n);
-    map<int, int> mp;
-    for (ll i = 0; i < n; i++)
+    vector<int> a(n);
+    for (int i = 0; i < n; i++)
     {
         cin >> a[i];
-        mp[a[i]]++;
     }
-    ll sum = 0;
-    for(auto x : mp){
-        // divide sum by 2 later.
-        sum -= (x.second)*1LL*(x.second-1);
-        auto it = mp.lower_bound(x.first^2);
-        if(it != mp.end() && (it->first == (x.first^2))){
-            sum -= (x.second)*(1LL)*(it->second);
-        }
+    vector<int> p(n);
+    p[0] = a[0];
+    map<int, int> mp;
+    for (int i = 1; i < n; i++)
+    {
+        p[i] = p[i - 1] + a[i];
     }
-    sum /= 2;
-    ll evens = 0;
-    ll odds = 0;
-    for(auto x : mp){
-        if((x.first&1) == 0){
-            evens += x.second;
-        }else{
-            odds += x.second;
-        }   
+    for (int i = 0; i < n; i++)
+    {
+        mp[p[i] % 3]++;
     }
-    sum += (odds*(odds-1))/2;
-    sum += (evens*(evens-1))/2;
-    cout<<sum<<"\n";
-
+    if(p[n-1]%3 != 0){
+        cout<<"0 0"<<"\n";
+        return;
+    }
+    cout<<"1 2"<<"\n";
+    return ;
+    
 }
 
 int main()
@@ -171,7 +157,6 @@ int main()
     cout.tie(nullptr);
     ll t;
     cin >> t;
-
     while (t--)
     {
         solve();

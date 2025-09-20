@@ -1,4 +1,4 @@
-// VERMA
+// VERMA 
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -26,8 +26,7 @@ const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LINF = 1e18;
 
-inline bool prime(int num)
-{
+inline bool prime(int num) {
     if (num <= 1)
         return false;
     if (num == 2)
@@ -39,10 +38,8 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b)
-{
-    while (b != 0)
-    {
+inline int gcd(int a, int b) {
+    while (b != 0) {
         int temp = b;
         b = a % b;
         a = temp;
@@ -50,8 +47,7 @@ inline int gcd(int a, int b)
     return a;
 }
 
-inline int lcm(int a, int b)
-{
+inline int lcm(int a, int b) {
     return a / gcd(a, b) * b;
 }
 
@@ -74,12 +70,10 @@ inline int lcm(int a, int b)
 inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
 inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
 inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp)
-{
+inline int mod_pow(int base, int exp) {
     int result = 1;
     base %= MOD;
-    while (exp > 0)
-    {
+    while (exp > 0) {
         if (exp % 2 == 1)
             result = (1LL * result * base) % MOD;
         base = (1LL * base * base) % MOD;
@@ -89,17 +83,14 @@ inline int mod_pow(int base, int exp)
 }
 
 template <typename T>
-void printVector(const T &val)
-{
+void printVector(const T &val) {
     cerr << val;
 }
 
 template <typename T>
-void printVector(const vector<T> &v)
-{
+void printVector(const vector<T> &v) {
     cerr << "[ ";
-    for (const auto &elem : v)
-    {
+    for (const auto &elem : v) {
         printVector(elem);
         cerr << " ";
     }
@@ -118,46 +109,29 @@ void printVector(const vector<T> &v)
 //                                          Here you go
 
 /*
-    1. Count all odds-odds pair.
-    2. Count all evens-evens pair.
-    3. Count all equal elements pair.
-    4. Count all pairs with xor : 2.
+    1. To set the least 0 bit, it will take 2^i (i->index of that bit from right side).
 */
 
-void solve()
-{
-    ll n;
-    cin >> n;
-    vector<ll> a(n);
-    map<int, int> mp;
-    for (ll i = 0; i < n; i++)
-    {
-        cin >> a[i];
-        mp[a[i]]++;
-    }
-    ll sum = 0;
-    for(auto x : mp){
-        // divide sum by 2 later.
-        sum -= (x.second)*1LL*(x.second-1);
-        auto it = mp.lower_bound(x.first^2);
-        if(it != mp.end() && (it->first == (x.first^2))){
-            sum -= (x.second)*(1LL)*(it->second);
-        }
-    }
-    sum /= 2;
-    ll evens = 0;
-    ll odds = 0;
-    for(auto x : mp){
-        if((x.first&1) == 0){
-            evens += x.second;
-        }else{
-            odds += x.second;
-        }   
-    }
-    sum += (odds*(odds-1))/2;
-    sum += (evens*(evens-1))/2;
-    cout<<sum<<"\n";
+void solve(){
+   ll n,k;
+   cin >> n >> k;
+   vector<ll>a(n);
+   ll ans = 0;
+   for(ll i = 0; i < n ; i++){
+    cin >> a[i];
+    ans += setbits(a[i]);
+   }
 
+   for(ll i = 0; i < 60 ; i++){
+     ll bits = (1LL << i);
+     for(ll x : a){
+        if(!(x&bits) && k>=bits ){
+            ans+=1;
+            k-=bits;
+        }
+     }
+   }
+   cout<<ans<<"\n";
 }
 
 int main()
@@ -171,7 +145,6 @@ int main()
     cout.tie(nullptr);
     ll t;
     cin >> t;
-
     while (t--)
     {
         solve();

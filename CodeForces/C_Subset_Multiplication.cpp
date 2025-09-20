@@ -117,49 +117,24 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-/*
-    1. Count all odds-odds pair.
-    2. Count all evens-evens pair.
-    3. Count all equal elements pair.
-    4. Count all pairs with xor : 2.
-*/
-
 void solve()
 {
+
     ll n;
     cin >> n;
-    vector<ll> a(n);
-    map<int, int> mp;
-    for (ll i = 0; i < n; i++)
-    {
+    vector<long long> a(n);
+    for (ll i = 0; i < n; ++i)
         cin >> a[i];
-        mp[a[i]]++;
-    }
-    ll sum = 0;
-    for(auto x : mp){
-        // divide sum by 2 later.
-        sum -= (x.second)*1LL*(x.second-1);
-        auto it = mp.lower_bound(x.first^2);
-        if(it != mp.end() && (it->first == (x.first^2))){
-            sum -= (x.second)*(1LL)*(it->second);
-        }
-    }
-    sum /= 2;
-    ll evens = 0;
-    ll odds = 0;
-    for(auto x : mp){
-        if((x.first&1) == 0){
-            evens += x.second;
-        }else{
-            odds += x.second;
-        }   
-    }
-    sum += (odds*(odds-1))/2;
-    sum += (evens*(evens-1))/2;
-    cout<<sum<<"\n";
 
+    ll g = 0;
+    ll l = 1;
+    for(ll i = n-1; i >= 0 ; i--){
+        g = gcd(g,a[i]);
+        ll term = a[i]/g ; // x must be multiple of this term.
+        l = lcm(l , term);
+    }
+    cout<<l<<"\n";
 }
-
 int main()
 {
 #ifndef ONLINE_JUDGE
@@ -171,7 +146,6 @@ int main()
     cout.tie(nullptr);
     ll t;
     cin >> t;
-
     while (t--)
     {
         solve();

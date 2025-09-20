@@ -117,47 +117,79 @@ void printVector(const vector<T> &v)
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-/*
-    1. Count all odds-odds pair.
-    2. Count all evens-evens pair.
-    3. Count all equal elements pair.
-    4. Count all pairs with xor : 2.
-*/
+vector<pair<int, int>> mp(vector<int> &a, vector<int> &b, int &steps)
+{
+    vector<pair<int, int>> m;
+    int n = a.size();
+    for (int i = 0; i < n; i++)
+    {
+        if (a[i] > b[i])
+        {
+            swap(a[i], b[i]);
+
+            
+            steps++;
+            m.push_back({3, i + 1});
+        }
+    }
+    bool f = false;
+    while (!f)
+    {
+
+        for (int i = 0; i < n - 1; i++)
+        {
+            if (a[i] > a[i + 1])
+            {
+                swap(a[i], a[i + 1]);
+                
+                steps++;
+                m.push_back({1, i + 1});
+            }
+            if (b[i] > b[i + 1])
+            {
+                swap(b[i], b[i + 1]);
+               
+                steps++;
+                m.push_back({2, i + 1});
+            }
+        }
+        bool c = true;
+        for (int i = 0; i < n - 1; i++)
+        {
+            if (a[i] > a[i + 1])
+            {
+                c = false;
+            }
+            if (b[i] > b[i + 1])
+            {
+                c = false;
+            }
+        }
+        if (c == true)
+        {
+            f = true;
+        }
+    }
+    return m;
+}
 
 void solve()
 {
-    ll n;
+    int n;
     cin >> n;
-    vector<ll> a(n);
-    map<int, int> mp;
-    for (ll i = 0; i < n; i++)
-    {
+    vector<int> a(n), b(n);
+    for (int i = 0; i < n; i++)
         cin >> a[i];
-        mp[a[i]]++;
-    }
-    ll sum = 0;
-    for(auto x : mp){
-        // divide sum by 2 later.
-        sum -= (x.second)*1LL*(x.second-1);
-        auto it = mp.lower_bound(x.first^2);
-        if(it != mp.end() && (it->first == (x.first^2))){
-            sum -= (x.second)*(1LL)*(it->second);
-        }
-    }
-    sum /= 2;
-    ll evens = 0;
-    ll odds = 0;
-    for(auto x : mp){
-        if((x.first&1) == 0){
-            evens += x.second;
-        }else{
-            odds += x.second;
-        }   
-    }
-    sum += (odds*(odds-1))/2;
-    sum += (evens*(evens-1))/2;
-    cout<<sum<<"\n";
+    for (int i = 0; i < n; i++)
+        cin >> b[i];
 
+    int steps = 0;
+    vector<pair<int, int>> m = mp(a,b,steps);
+    cout<<steps<<"\n";
+    for(auto x : m){
+        cout<<x.first<<" "<<x.second<<"\n";
+    }
+    return ;
 }
 
 int main()
@@ -171,7 +203,6 @@ int main()
     cout.tie(nullptr);
     ll t;
     cin >> t;
-
     while (t--)
     {
         solve();
