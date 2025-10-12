@@ -109,53 +109,53 @@ void printVector(const vector<T> &v) {
 //                                          Here you go
 
 void solve(){
-    int n;
-    cin >> n;
-    vector<int>a(n);
-    map<int,vector<int>>mp;
-    for(int i = 0 ; i < n ; i++){
-        cin >> a[i];
-        mp[a[i]].push_back(i);
-    }
-    vector<int>b(n);
+    int n,q;
+    cin >> n >> q;
+    vector<int>a(n+1,0);
     
-    int count = 1;
-    for(auto x : mp){
-        int freq = x.second.size() / x.first;
-        int r = x.second.size() % x.first;
-        if(r != 0){
-            cout<<-1<<"\n";
-            return ;
-        }
-        int counter = 0;
-        while (freq > 0)
-        {
-            /* code */
-            // int k = x.first;
-            // while(k > 0){
-            //     b.push_back(count);
-            //     k--;
-            // }
-            int k = x.first;
-            while(k--){
-                b[x.second[counter]] = count;
-                counter++;
-            }
-            count++;
-            freq--;
-        }
-        counter = 0;
+    vector<vector<int>>prefix(2,vector<int>(n+1,0)); // 1 based indexing.
+    vector<int>diff(n+1,-1);
+    vector<int>diffsum(n+1,0);
+    for(int i = 1; i <= n ; i++){
+        cin >> a[i];
+    }
+
+    for(int i = 1 ; i<= n ; i++ ){
+        prefix[0][i] =  prefix[0][i-1];
+        prefix[1][i] =  prefix[1][i-1];
+
+        prefix[a[i]][i]++;
+
+        diff[i] = (a[i] != a[i-1]);
+        diffsum[i] = diffsum[i] + diff[i];
         
     }
-    if(b.size() > n ){
-        cout<<-1<<"\n";
-            return ;
+
+    while(q--){
+        int l,r;
+        cin >> l >> r;
+        
+        if((prefix[0][r] - prefix[0][l-1])%3  != 0 || (prefix[0][r] - prefix[0][l-1])%3 != 0){
+            cout<<-1<<"\n";
+            continue ;
+        }
+
+        int sum = (prefix[0][r] - prefix[0][l-1])/3 + (prefix[1][r] - prefix[1][l-1])/3;
+        if(diffsum[r] - diffsum[l] == (r-l)){
+            sum++;
+        }
+        cout<<sum<<"\n";
+
+
+
     }
-    for(auto x : b){
-        cout<<x<<" ";
-    }
-    cout<<"\n";return ;
+
     
+
+
+   
+           
+
 }
 
 int main()

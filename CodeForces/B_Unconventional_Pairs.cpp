@@ -112,50 +112,13 @@ void solve(){
     int n;
     cin >> n;
     vector<int>a(n);
-    map<int,vector<int>>mp;
-    for(int i = 0 ; i < n ; i++){
-        cin >> a[i];
-        mp[a[i]].push_back(i);
+    for(int i = 0; i < n ; i++) cin >> a[i];
+    sorting(a);
+    int diff = 0;
+    for(int i = 0 ; i < n ; i+=2){
+        diff = max(diff , abs(a[i] - a[i+1]));
     }
-    vector<int>b(n);
-    
-    int count = 1;
-    for(auto x : mp){
-        int freq = x.second.size() / x.first;
-        int r = x.second.size() % x.first;
-        if(r != 0){
-            cout<<-1<<"\n";
-            return ;
-        }
-        int counter = 0;
-        while (freq > 0)
-        {
-            /* code */
-            // int k = x.first;
-            // while(k > 0){
-            //     b.push_back(count);
-            //     k--;
-            // }
-            int k = x.first;
-            while(k--){
-                b[x.second[counter]] = count;
-                counter++;
-            }
-            count++;
-            freq--;
-        }
-        counter = 0;
-        
-    }
-    if(b.size() > n ){
-        cout<<-1<<"\n";
-            return ;
-    }
-    for(auto x : b){
-        cout<<x<<" ";
-    }
-    cout<<"\n";return ;
-    
+    cout<<diff<<"\n";
 }
 
 int main()

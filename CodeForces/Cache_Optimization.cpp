@@ -1,4 +1,4 @@
-// VERMA 
+// VERMA
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -26,7 +26,8 @@ const int MOD = 1e9 + 7;
 const int INF = 1e9;
 const ll LINF = 1e18;
 
-inline bool prime(int num) {
+inline bool prime(int num)
+{
     if (num <= 1)
         return false;
     if (num == 2)
@@ -38,8 +39,10 @@ inline bool prime(int num) {
             return false;
     return true;
 }
-inline int gcd(int a, int b) {
-    while (b != 0) {
+inline int gcd(int a, int b)
+{
+    while (b != 0)
+    {
         int temp = b;
         b = a % b;
         a = temp;
@@ -47,7 +50,8 @@ inline int gcd(int a, int b) {
     return a;
 }
 
-inline int lcm(int a, int b) {
+inline int lcm(int a, int b)
+{
     return a / gcd(a, b) * b;
 }
 
@@ -70,10 +74,12 @@ inline int lcm(int a, int b) {
 inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
 inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
 inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp) {
+inline int mod_pow(int base, int exp)
+{
     int result = 1;
     base %= MOD;
-    while (exp > 0) {
+    while (exp > 0)
+    {
         if (exp % 2 == 1)
             result = (1LL * result * base) % MOD;
         base = (1LL * base * base) % MOD;
@@ -83,14 +89,17 @@ inline int mod_pow(int base, int exp) {
 }
 
 template <typename T>
-void printVector(const T &val) {
+void printVector(const T &val)
+{
     cerr << val;
 }
 
 template <typename T>
-void printVector(const vector<T> &v) {
+void printVector(const vector<T> &v)
+{
     cerr << "[ ";
-    for (const auto &elem : v) {
+    for (const auto &elem : v)
+    {
         printVector(elem);
         cerr << " ";
     }
@@ -108,54 +117,77 @@ void printVector(const vector<T> &v) {
 //------------------------------------------------------------------------------------------------------------//
 //                                          Here you go
 
-void solve(){
+void solve()
+{
     int n;
     cin >> n;
-    vector<int>a(n);
-    map<int,vector<int>>mp;
-    for(int i = 0 ; i < n ; i++){
+    vector<int> a(n);
+    map<int, int> mp;
+
+    for (int i = 0; i < n; i++)
+    {
         cin >> a[i];
-        mp[a[i]].push_back(i);
+        mp[a[i]]++;
     }
-    vector<int>b(n);
-    
-    int count = 1;
-    for(auto x : mp){
-        int freq = x.second.size() / x.first;
-        int r = x.second.size() % x.first;
-        if(r != 0){
-            cout<<-1<<"\n";
-            return ;
-        }
-        int counter = 0;
-        while (freq > 0)
+
+    int distinct = mp.size();
+    vector<int> ans(n, 2 * n);
+    if (mp.size() == n)
+    {
+        for (auto x : ans)
         {
-            /* code */
-            // int k = x.first;
-            // while(k > 0){
-            //     b.push_back(count);
-            //     k--;
-            // }
-            int k = x.first;
-            while(k--){
-                b[x.second[counter]] = count;
-                counter++;
-            }
-            count++;
-            freq--;
+            cout << x << " ";
         }
-        counter = 0;
-        
+        cout << "\n";
+        return;
     }
-    if(b.size() > n ){
-        cout<<-1<<"\n";
-            return ;
+    
+    for (int k = 1; k <= distinct; k++)
+    {
+        int sum = 0;
+        deque<int> dq;
+        set<int> s;
+        int q = k;
+        for (int i = 0; i < n; i++)
+        {
+            if (s.find(a[i]) == s.end() && q > 0)
+            {
+                sum += 2;
+                dq.push_back(a[i]);
+                s.insert(a[i]);
+                q--;
+            }
+            else if (s.find(a[i]) == s.end() && q <= 0)
+            {
+                s.erase(dq.front());
+                dq.pop_front();
+                sum += 2;
+
+                s.insert(a[i]);
+                
+                dq.push_back(a[i]);
+                q--;
+            }
+            else
+            {
+                sum += 1;
+                auto it = find(dq.begin(), dq.end(), a[i]);
+                if (it != dq.end())
+                {
+                    dq.erase(it); // removes the first 2
+                    dq.push_back(a[i]);
+                }
+            }
+        }
+        ans[k-1] = sum;
     }
-    for(auto x : b){
+    for(int i = distinct ; i < n ; i++){
+        ans[i] = ans[distinct-1];
+    }
+    for(auto x : ans){
         cout<<x<<" ";
     }
-    cout<<"\n";return ;
-    
+    cout<<"\n";
 }
 
 int main()

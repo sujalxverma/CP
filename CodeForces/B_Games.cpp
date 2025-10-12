@@ -109,53 +109,36 @@ void printVector(const vector<T> &v) {
 //                                          Here you go
 
 void solve(){
-    int n;
-    cin >> n;
+    int n,m;
+    cin >> n >> m;
     vector<int>a(n);
-    map<int,vector<int>>mp;
-    for(int i = 0 ; i < n ; i++){
+    vector<int>b(m);
+
+    for(int i = 0; i < n ; i++){
         cin >> a[i];
-        mp[a[i]].push_back(i);
     }
-    vector<int>b(n);
-    
-    int count = 1;
-    for(auto x : mp){
-        int freq = x.second.size() / x.first;
-        int r = x.second.size() % x.first;
-        if(r != 0){
-            cout<<-1<<"\n";
-            return ;
-        }
-        int counter = 0;
-        while (freq > 0)
-        {
-            /* code */
-            // int k = x.first;
-            // while(k > 0){
-            //     b.push_back(count);
-            //     k--;
-            // }
-            int k = x.first;
-            while(k--){
-                b[x.second[counter]] = count;
-                counter++;
+    for(int i = 0 ; i< m ; i++){
+        cin >> b[i];
+    }
+    vector<int>c;
+    for(int i = 0; i < n ; i++){
+        for(int j = 0; j < m ; j++){
+            if(a[i] == b[j]){
+                c.push_back(a[i]);
             }
-            count++;
-            freq--;
         }
-        counter = 0;
-        
     }
-    if(b.size() > n ){
-        cout<<-1<<"\n";
-            return ;
+    int s = c.size();
+
+    if(a.size()-s > b.size()-s){
+        cout<< 2*(b.size() - s) + 2 <<"\n";
+        return ;
+    } 
+    else{
+        cout<< 2*(a.size() - s) + 1 <<"\n";
+        return ;
     }
-    for(auto x : b){
-        cout<<x<<" ";
-    }
-    cout<<"\n";return ;
-    
+
 }
 
 int main()
