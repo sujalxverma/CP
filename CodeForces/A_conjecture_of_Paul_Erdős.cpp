@@ -1,71 +1,99 @@
+// VERMA
 #include "bits/stdc++.h"
 using namespace std;
-
 typedef long long ll;
-const int MAXN = 1e9 + 1;
+typedef vector<int> vi;
+typedef vector<long long> vl;
 
-bitset<MAXN> is_prime;
-set<ll> s;
+const int MOD = 1e9 + 7;
+const int INF = 1e9;
+const ll LINF = 1e18;
 
-ll N = 1e9;
+//------------------------------------------------------------------------------------------------------------//
+//                                          Here you go
 
-// Generate all numbers of form x^2 + y^4 ≤ N
-set<ll> allY4() {
-    set<ll> ans;
-    for (ll y = 1; ; y++) {
-        ll y4 = y * y * y * y;
-        if (y4 > N) break;
-        ll maxi = sqrt(N - y4);
-        for (ll x = 1; x <= maxi; x++) {
-            ll val = x * x + y4;
-            ans.insert(val);
+vector<bool> f(1e7 + 1, false);
+// to get all primes from 1 to n.
+void sieveOfEratosthenes(ll n)
+{
+    vector<ll> numbers(n + 1, 0); // 0 = prime, 1 = not prime
+
+    for (ll i = 2; i * i <= n; i++)
+    {
+        if (numbers[i])
+            continue;
+
+        for (ll j = i * i; j <= n; j += i)
+        {
+            numbers[j] = 1; // mark as not prime
         }
     }
-    return ans;
-}
 
-// Sieve of Eratosthenes up to limit
-void sieve(ll limit) {
-    is_prime.set(); // set all to true
-    is_prime[0] = is_prime[1] = 0;
-
-    for (ll i = 2; i * i <= limit; i++) {
-        if (is_prime[i]) {
-            for (ll j = i * i; j <= limit; j += i)
-                is_prime[j] = 0;
+    for (ll i = 2; i <= n; i++)
+    {
+        if (!numbers[i])
+        {
+            f[i] = true;
         }
     }
 }
+ll N = 1e7;
+set<ll> found;
+vector<bool> prefixCheck(1e7 + 1, false);
+ll maxX = (ll)floor(sqrt(1e7));
+ll maxY = (ll)floor(sqrt(maxX));
+vector<ll> prefix(1e7 + 1, 0);
 
-// Solve for a single query
-void solve() {
-    ll a;
-    cin >> a;
-    ll c = 0;
-    for (auto num : s) {
-        if (num > a) break;
-        if (is_prime[num]) c++;
+void helper()
+{
+
+    for (ll i = 1; i <= maxY; i++)
+    {
+        ll a = i * i * i * i;
+        ll maxX = (ll)floor(sqrt(N - a));
+
+        for (ll j = 1; j <= maxX; j++)
+        {
+            ll b = j * j;
+            ll s = a + b;
+            if (prefixCheck[s] == 1)
+            {
+                continue;
+            }
+            if (f[s] == 1)
+            {
+                prefixCheck[s] = 1;
+            }
+        }
     }
-    cout << c << "\n";
+
+    prefix[0] = prefixCheck[0];
+    for (ll i = 1; i <= N; i++)
+    {
+        prefix[i] = prefix[i - 1] + prefixCheck[i];
+    }
 }
 
-int main() {
-#ifndef ONLINE_JUDGE
-    freopen("Error.txt", "w", stderr);
-#endif
+void solve()
+{
+    ll n;
+    cin >> n;
+    cout << prefix[n] << "\n";
+}
+
+int main()
+{
 
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
+    cout.tie(nullptr);
     ll t;
     cin >> t;
-
-    s = allY4();       // Generate all x^2 + y^4 values
-    sieve(N);          // Precompute primes up to N
-
-    while (t--) {
+    // precompute sieve.
+    sieveOfEratosthenes(1e7 + 1);
+    helper();
+    while (t--)
+    {
         solve();
     }
-
-    return 0;
 }
