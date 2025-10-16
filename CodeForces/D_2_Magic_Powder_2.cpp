@@ -116,8 +116,119 @@ void _pr(const vector<T> &v)
 #define debug(x) ((void)0)
 #endif
 
+/* This also worked
+static inline bool f(const vector<long long>& a,
+                            const vector<long long>& b,
+                            long long m, long long k) {
+    long long need = 0;
+    int n = (int)a.size();
+    for (int i = 0; i < n; i++) {
+        long long req = m * a[i] - b[i];
+        if (req > 0) {
+            need += req;
+            if (need > k) return false;
+        }
+    }
+    return true; // i.e., need <= k
+}
+ 
+ 
 void solve()
-{ // TODO: implement per test case solution.
+{
+    // TODO: implement per test case solution.
+    ll n, k;
+    cin >> n >> k;
+    vector<ll> a(n);
+    vector<ll> b(n);
+    for (ll i = 0; i < n; i++)
+        cin >> a[i];
+    for (ll i = 0; i < n; i++)
+        cin >> b[i];
+    ll s = 1;
+    ll e = 1e10;
+    ll ans = 0;
+    // if(n == 1){
+    //     cout<< (b[0]+k)/a[0]<<"\n";
+    //     return ;
+    // }
+    while (s <= e)
+    {
+        ll m = s + (e - s) / 2;
+        if (f(a, b, m, k))
+        {
+            ans = m;
+            s = m + 1;
+        }
+        else
+        {
+            e = m - 1;
+        }
+    }
+    ll sum = 0;
+    for(ll i = 0; i < n ; i++){
+        sum += a[i];
+    }
+    if(ans == 1e18){
+        cout<<ans+ (ll)(k/sum) <<"\n";
+        return ;
+    }
+    cout<<ans<<"\n";
+} */
+
+
+static inline bool f(const vector<long long> &a,
+                     const vector<long long> &b,
+                     long long m, long long k)
+{
+    __int128 need = 0; // 128-bit accumulator
+    int n = (int)a.size();
+    for (int i = 0; i < n; i++)
+    {
+        __int128 prod = (__int128)m * (__int128)a[i]; // 128-bit product
+        __int128 req = prod - (__int128)b[i];         // 128-bit diff
+        if (req > 0)
+        {
+            need += req;
+            if (need > (__int128)k)
+                return false; // early exit
+        }
+    }
+    return true; // need <= k
+}
+
+void solve()
+{
+    // TODO: implement per test case solution.
+    ll n, k;
+    cin >> n >> k;
+    vector<ll> a(n);
+    vector<ll> b(n);
+    for (ll i = 0; i < n; i++)
+        cin >> a[i];
+    for (ll i = 0; i < n; i++)
+        cin >> b[i];
+    ll s = 1;
+    ll e = (ll)1e18;
+    ll ans = 0;
+    // if(n == 1){
+    //     cout<< (b[0]+k)/a[0]<<"\n";
+    //     return ;
+    // }
+    while (s <= e)
+    {
+        ll m = s + (e - s) / 2;
+        if (f(a, b, m, k))
+        {
+            ans = m;
+            s = m + 1;
+        }
+        else
+        {
+            e = m - 1;
+        }
+    }
+
+    cout << ans << "\n";
 }
 
 int main()
@@ -129,8 +240,8 @@ int main()
     auto begin = chrono::steady_clock::now();
 
     int T = 1;
-    if (!(cin >> T))
-        return 0;
+    // if (!(cin >> T))
+    //     return 0;
     while (T--)
         solve();
 
