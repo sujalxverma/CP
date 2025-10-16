@@ -31,10 +31,6 @@ static inline int trailingzero(unsigned int x) { return __builtin_ctz(x); }
 static inline int parity(unsigned int x) { return __builtin_parity(x); }
 
 // Math utils
-std::function<int(int, int)> gcd = [](int a, int b)
-{
-    return b == 0 ? a : gcd(b, a % b);
-};
 static inline bool is_prime_ll(long long n)
 {
     if (n < 2)
@@ -114,7 +110,40 @@ void _pr(const vector<T> &v)
 #endif
 
 void solve()
-{ // TODO: implement per test case solution.
+{
+    // TODO: implement per test case solution.
+    int n;
+    cin >> n;
+    int k;
+    cin >> k;
+    vector<pair<ll,ll>>p(n);
+    for(int i= 0; i < n ; i++){
+        cin >> p[i].first;
+    }
+    ll ans = 0;
+    for(int i= 0; i < n ; i++){
+        cin >> p[i].second;
+        if(p[i].first > p[i].second){
+            swap(p[i].first,p[i].second);
+            
+        }
+        ans += abs(p[i].first - p[i].second);
+    }
+    sort(p.begin(),p.end());
+
+    for(int i = 0; i < n-1 ; i++){
+        if(p[i].second >= p[i+1].first){
+            cout<<ans<<"\n";
+            return ;
+        }
+    }
+    ll mini = 2e9;
+    for(int i = 0 ; i < n -1 ; i++){
+        mini = min(mini , (p[i+1].first - p[i].second));
+    }
+
+    cout<<ans + 2*mini<<"\n";
+
 }
 
 int main()
