@@ -1,4 +1,3 @@
-// VERMA
 #include "bits/stdc++.h"
 using namespace std;
 typedef long long ll;
@@ -11,21 +10,12 @@ typedef unordered_map<int, int> umap;
 #define no cout << "NO" << endl
 #define even(a) (((a) % 2) == 0 ? 1 : 0)
 #define rev(v) reverse(v.begin(), v.end())
+#define gcd(a, b) ([](int x, int y) {while (y != 0) { int temp = y;y = x % y; x = temp;}return x; })(a, b)
+#define lcm(a, b) (a * b / gcd(a, b))
 #define sorting(v) sort(v.begin(), v.end())
-#define line cout << "\n"
+#define line cout << endl
 #define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
 #define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x) __builtin_ctzll(x)
-#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
-
-const int MOD = 1e9 + 7;
-const int INF = 1e9;
-const ll LINF = 1e18;
-
 inline bool prime(int num)
 {
     if (num <= 1)
@@ -39,22 +29,6 @@ inline bool prime(int num)
             return false;
     return true;
 }
-inline int gcd(int a, int b)
-{
-    while (b != 0)
-    {
-        int temp = b;
-        b = a % b;
-        a = temp;
-    }
-    return a;
-}
-
-inline int lcm(int a, int b)
-{
-    return a / gcd(a, b) * b;
-}
-
 #define ROTATE_VEC(v, k)                                 \
     do                                                   \
     {                                                    \
@@ -71,22 +45,7 @@ inline int lcm(int a, int b)
         }                                                \
     } while (0)
 
-inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
-inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
-inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp)
-{
-    int result = 1;
-    base %= MOD;
-    while (exp > 0)
-    {
-        if (exp % 2 == 1)
-            result = (1LL * result * base) % MOD;
-        base = (1LL * base * base) % MOD;
-        exp /= 2;
-    }
-    return result;
-}
+const int MOD = 100000;
 
 template <typename T>
 void printVector(const T &val)
@@ -114,61 +73,35 @@ void printVector(const vector<T> &v)
 #define debug(x)
 #endif
 
-//------------------------------------------------------------------------------------------------------------//
-//                                          Here you go
+//------------------------------------------------------------------------------------------
+//                  Here you go
 
 void solve()
 {
     int n;
     cin >> n;
-    vector<ll> a(n);
-    vector<ll> b(n);
-    map<int, pair<ll, ll>> mp;
-    for (int i = 0; i < n; i++)
-    {
-        cin >> a[i];
-        mp[i].first = a[i];
-    }
-    for (int j = 0; j < n; j++)
-        cin >> b[j];
+    vi a(n + 1);
+    vi b(n + 1);
+    vi c(n + 1);
+    rep(i, 1, n + 1) cin >> a[i];
+    rep(i, 1, n + 1) cin >> b[i];
+    rep(i, 1, n + 1) cin >> c[i];
 
-    if (a[n - 1] != b[n - 1])
+    vi mp(n + 1, 0);
+    rep(i, 1, n + 1)
     {
-        cout << "NO" << "\n";
-        return;
+        mp[b[c[i]]] += 1;
     }
-
-    for (int i = n - 2; i >= 0; i--)
+    ll count = 0;
+    rep(i, 1, n + 1)
     {
-        if (a[i] == b[i])
-        {
-            // nothing
-            mp[i].second = a[i];
-        }
-        else
-        {
-            ll f_1 = a[i] ^ mp[i + 1].first;
-            ll f_2 = a[i] ^ mp[i + 1].second;
-
-            if (f_1 == b[i])
-            {
-                mp[i].second = f_1;
-            }
-            else if (f_2 == b[i])
-            {
-                mp[i].second = f_2;
-            }else{
-                cout<<"NO"<<"\n";
-                return ;
-            }
-        }
+        count += mp[a[i]];
     }
-    cout<<"YES"<<"\n";
-    return ;
+    cout << count << endl;
 }
-
 int main()
 {
+
 #ifndef ONLINE_JUDGE
     freopen("Error.txt", "w", stderr);
 #endif
@@ -176,10 +109,10 @@ int main()
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     cout.tie(nullptr);
-    ll t;
-    cin >> t;
-    while (t--)
-    {
-        solve();
-    }
+    // ll t;
+    // cin >> t;
+    // while (t--)
+    // {
+    solve();
+    // }
 }

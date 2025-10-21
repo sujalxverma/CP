@@ -21,7 +21,7 @@ bool prime(long long n)
 vector<ll> factors(ll n)
 {
     vector<ll> ans;
-    for (ll i = 2; i <= sqrt(n); i++)
+    for (ll i = 2; i*i <= n; i++)
     {
         if (n % i == 0)
         {
