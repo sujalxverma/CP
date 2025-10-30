@@ -12,7 +12,7 @@ using vl = vector<long long>;
 
 std::mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 
-constexpr int MOD = 998244353;
+constexpr int MOD = 1'000'000'007;
 constexpr int INF = 1'000'000'000;
 constexpr ll LINF = (ll)4e18; // wider than 1e18 for safety
 
@@ -116,60 +116,43 @@ void _pr(const vector<T> &v)
 #define debug(x) ((void)0)
 #endif
 
-ll factorial(int n)
-{
-    ll result = 1;
-    for (int i = 2; i <= n; ++i)
-    {
-        result *= i;
-    }
-    return result;
-}
-
-ll nCr(int n, int r)
-{
-    if (r > n)
-        return 0;
-    return factorial(n) / (factorial(r) * factorial(n - r));
-}
-
 void solve()
 {
-    string s;
-    cin >> s;
-    ll n = s.length();
+    // TODO: implement per test case solution.
+    ll n, k;
+    cin >> n >> k;
 
-    vector<ll> blocks;
-    ll cnt = 1;
-
-    for (ll i = 1; i < n; ++i)
+    ll maxi = n * (n + 1) / 2;
+    ll mini = n;
+    if (k < mini || k > maxi)
     {
-        if (s[i] == s[i - 1])
+        cout << "-1\n";
+        return;
+    }
+
+    if (k == mini)
+    {
+        cout << 1 << "\n";
+        for (int i = 2; i <= n; i++)
         {
-            cnt++;
+            cout << 1 << " " << i << "\n";
         }
-        else
+        return;
+    }
+    if (k == maxi)
+    {
+        cout << 1 << "\n";
+        for (int i = 1; i <= n - 1; i++)
         {
-            blocks.push_back(cnt);
-            cnt = 1;
+            cout << n << " " << i << "\n";
         }
+        return;
     }
-    blocks.push_back(cnt); // Don't forget the last block!
+   
+   
 
-    ll ans = 1;
 
-    ll k = n;
-    for (auto block : blocks)
-    {
-        ans = ((ans % MOD) * block) % MOD;
-        k--;
-    }
-
-    for (ll i = 1; i <= k; i++)
-    {
-        ans = ((ans % MOD) * i) % MOD;
-    }
-    cout << k << " " << ans << "\n";
+    return ;
 }
 
 int main()

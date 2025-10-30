@@ -12,7 +12,7 @@ using vl = vector<long long>;
 
 std::mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 
-constexpr int MOD = 998244353;
+constexpr int MOD = 1'000'000'007;
 constexpr int INF = 1'000'000'000;
 constexpr ll LINF = (ll)4e18; // wider than 1e18 for safety
 
@@ -77,19 +77,6 @@ static inline int mod_pow(int a, long long e)
 }
 static inline int mod_inv(int a) { return mod_pow(a, MOD - 2); } // MOD prime
 
-// Algorithms helpers
-template <class It>
-static inline void rotate_left(It first, It last, long long k)
-{
-    long long n = last - first;
-    if (n <= 0)
-        return;
-    k %= n;
-    if (k < 0)
-        k += n;
-    std::rotate(first, first + k, last);
-}
-
 // Debug
 #ifndef ONLINE_JUDGE
 template <typename T>
@@ -116,60 +103,52 @@ void _pr(const vector<T> &v)
 #define debug(x) ((void)0)
 #endif
 
-ll factorial(int n)
-{
-    ll result = 1;
-    for (int i = 2; i <= n; ++i)
-    {
-        result *= i;
-    }
-    return result;
-}
-
-ll nCr(int n, int r)
-{
-    if (r > n)
-        return 0;
-    return factorial(n) / (factorial(r) * factorial(n - r));
-}
-
 void solve()
 {
-    string s;
-    cin >> s;
-    ll n = s.length();
-
-    vector<ll> blocks;
-    ll cnt = 1;
-
-    for (ll i = 1; i < n; ++i)
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    set<ll> nums;
+    for (ll i = 0; i < n; i++)
     {
-        if (s[i] == s[i - 1])
+        cin >> a[i];
+        nums.insert(a[i]);
+    }
+    if (n == 1)
+    {
+        cout << 1 << "\n";
+        return;
+    }
+    ll g = 0;
+
+    for (ll i = 1; i < n; i++)
+    {
+        g = gcd(g, abs(a[i] - a[i - 1]));
+    }
+    // cout<<g<<"\n";
+    ll maxi = *max_element(a.begin(), a.end());
+    ll steps = 0;
+    for (ll i = 0; i < n; i++)
+    {
+        steps += abs(maxi - a[i]) / g;
+    }
+    // now add element in it.
+    // cout<<steps<<"\n";
+    bool f = true;
+    for (ll i = 1; i < n; i++)
+    {
+        if (nums.find(maxi - (i * g)) == nums.end())
         {
-            cnt++;
-        }
-        else
-        {
-            blocks.push_back(cnt);
-            cnt = 1;
+            steps += (i);
+            f = false;
+            break;
         }
     }
-    blocks.push_back(cnt); // Don't forget the last block!
-
-    ll ans = 1;
-
-    ll k = n;
-    for (auto block : blocks)
+    if (f)
     {
-        ans = ((ans % MOD) * block) % MOD;
-        k--;
+        steps += (n);
     }
-
-    for (ll i = 1; i <= k; i++)
-    {
-        ans = ((ans % MOD) * i) % MOD;
-    }
-    cout << k << " " << ans << "\n";
+    cout << steps << "\n";
 }
 
 int main()

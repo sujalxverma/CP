@@ -12,7 +12,7 @@ using vl = vector<long long>;
 
 std::mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
 
-constexpr int MOD = 998244353;
+constexpr int MOD = 1'000'000'007;
 constexpr int INF = 1'000'000'000;
 constexpr ll LINF = (ll)4e18; // wider than 1e18 for safety
 
@@ -116,60 +116,92 @@ void _pr(const vector<T> &v)
 #define debug(x) ((void)0)
 #endif
 
-ll factorial(int n)
-{
-    ll result = 1;
-    for (int i = 2; i <= n; ++i)
-    {
-        result *= i;
-    }
-    return result;
-}
-
-ll nCr(int n, int r)
-{
-    if (r > n)
-        return 0;
-    return factorial(n) / (factorial(r) * factorial(n - r));
-}
-
 void solve()
 {
-    string s;
-    cin >> s;
-    ll n = s.length();
+    // TODO: implement per test case solution.
+    ll n;
+    cin >> n;
+    vector<ll> a(n);
+    vector<ll> b(n);
+    vector<ll> c(n);
 
-    vector<ll> blocks;
-    ll cnt = 1;
+    vector<ll> odd_centres(n);
+    vector<ll> even_centres(n);
 
-    for (ll i = 1; i < n; ++i)
+    for (ll i = 0; i < n; i++)
     {
-        if (s[i] == s[i - 1])
+        cin >> a[i];
+        c[n - i - 1] = a[i];
+    }
+    for (ll i = 0; i < n; i++)
+    {
+        cin >> b[i];
+    }
+
+    vector<ll> old_prefix(n);
+    vector<ll> old_suffix(n);
+    // vector<ll>new_prefix(n);
+    old_prefix[0] = a[0] * b[0];
+    // create old prefix
+    for (ll i = 1; i < n; i++)
+    {
+        old_prefix[i] = old_prefix[i - 1] + (a[i] * b[i]);
+    }
+    // create old suffix
+    old_suffix[n - 1] = a[n - 1] * b[n - 1];
+    for (ll i = n - 2; i >= 0; i--)
+    {
+        old_suffix[i] = old_suffix[i + 1] + (a[i] * b[i]);
+    }
+    auto leftSum = [&](ll l) -> ll
+    {
+        if (l <= 0)
+            return 0;
+        return old_prefix[l - 1];
+    };
+    auto rightSum = [&](ll r) -> ll
+    {
+        if (r + 1 >= n)
+            return 0;
+        return old_suffix[r + 1];
+    };
+
+    // odd length.
+    ll ans = old_prefix[n - 1];
+    for (ll c = 0; c < n; c++)
+    {
+        ll l = c;
+        ll r = c;
+        ll mid = (a[c] * b[c]);
+
+        ans = max(ans, mid + leftSum(l) + rightSum(r));
+
+        while (l - 1 >= 0 && r + 1 < n)
         {
-            cnt++;
+            --l;
+            r++;
+            mid += (a[l] * b[r] + a[r] * b[l]);
+            ans = max(ans, mid + leftSum(l) + rightSum(r));
         }
-        else
+    }
+
+    for (ll c = 0; c + 1 < n; ++c)
+    {
+        ll l = c, r = c + 1;
+        long long mid = a[l] * b[r] + a[r] * b[l];
+
+        // Include untouched prefix [0..l-1] and suffix [r+1..n-1]
+        ans = max(ans, mid + leftSum(l) + rightSum(r));
+
+        while (l - 1 >= 0 && r + 1 < n)
         {
-            blocks.push_back(cnt);
-            cnt = 1;
+            --l;
+            ++r;
+            mid += a[l] * b[r] + a[r] * b[l];
+            ans = max(ans, mid + leftSum(l) + rightSum(r));
         }
     }
-    blocks.push_back(cnt); // Don't forget the last block!
-
-    ll ans = 1;
-
-    ll k = n;
-    for (auto block : blocks)
-    {
-        ans = ((ans % MOD) * block) % MOD;
-        k--;
-    }
-
-    for (ll i = 1; i <= k; i++)
-    {
-        ans = ((ans % MOD) * i) % MOD;
-    }
-    cout << k << " " << ans << "\n";
+    cout << ans << "\n";
 }
 
 int main()
@@ -181,8 +213,7 @@ int main()
     auto begin = chrono::steady_clock::now();
 
     int T = 1;
-    if (!(cin >> T))
-        return 0;
+    // if (!(cin >> T)) return 0;
     while (T--)
         solve();
 

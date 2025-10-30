@@ -16,7 +16,8 @@
     "set": "cpp",
     "string_view": "cpp",
     "unordered_set": "cpp",
-    "queue": "cpp"
+    "queue": "cpp",
+    "ratio": "cpp"
   },
   "C_Cpp.errorSquiggles": "enabled",
   "editor.tokenColorCustomizations": {

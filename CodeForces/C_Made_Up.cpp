@@ -87,7 +87,7 @@ void solve()
     rep(i, 1, n+1) cin >> b[i];
     rep(i, 1, n+1) cin >> c[i];
 
-   vi mp(n+1,0);
+    vi mp(n+1,0);
     rep(i, 1, n+1)
     {
         mp[b[c[i]]]+=1;
