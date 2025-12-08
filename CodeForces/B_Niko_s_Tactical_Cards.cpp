@@ -2,37 +2,46 @@
 using namespace std;
 using ll = long long;
 
-ll f(vector<ll>& a, vector<ll>& b, ll k, ll index) {
-    if (index >= a.size()) return k; // return current score at end
+/*
+1. To take blue case in ith , we need k to be min, as to maximize (bi - k).
+2. To take red case in ith, k should be maxi.
+3. for every ith, maxi = max(maxi - a[i] , b[i] - mini );
+4. mini = max(mini - a[i] , b[i] - maxi ); , to get minium effect.
+5. Atlast maxi is the final answer.
+*/
 
-    // Option 1: choose red card
-    ll first = f(a, b, k - a[index], index + 1);
-
-    // Option 2: choose blue card
-    ll second = f(a, b, b[index] - k, index + 1);
-
-    return max(first, second);
-}
-
-
-void solve() {
+void solve()
+{
     ll n;
     cin >> n;
     vector<ll> a(n), b(n);
-    for (ll i = 0; i < n; i++) cin >> a[i];
-    for (ll i = 0; i < n; i++) cin >> b[i];
+    for (ll i = 0; i < n; i++)
+        cin >> a[i];
+    for (ll i = 0; i < n; i++)
+        cin >> b[i];
 
-    ll s = f(a, b, 0, 0); // start with k = 0
-    cout << s << "\n";
+    ll mini = 0;
+    ll maxi = 0;
+
+    for (ll i = 0; i < n; i++)
+    {
+        ll nmaxi = max(maxi - a[i], b[i] - mini);
+        ll nmini = min(mini - a[i], b[i] - maxi);
+        maxi = nmaxi;
+        mini = nmini;
+    }
+    cout << maxi << "\n";
 }
 
-int main() {
+int main()
+{
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
     int t;
     cin >> t;
-    while (t--) solve();
+    while (t--)
+        solve();
 
     return 0;
 }

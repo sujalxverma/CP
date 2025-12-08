@@ -1,130 +1,98 @@
-// VERMA 
 #include "bits/stdc++.h"
 using namespace std;
-typedef long long ll;
-typedef vector<int> vi;
-typedef vector<long long> vl;
-#define rep(i, a, b) for (int i = a; i < b; i++)
-#define rep2(i, a, b) for (long long i = a; i < b; i++)
-typedef unordered_map<int, int> umap;
-#define yes cout << "YES" << endl
-#define no cout << "NO" << endl
-#define even(a) (((a) % 2) == 0 ? 1 : 0)
-#define rev(v) reverse(v.begin(), v.end())
-#define sorting(v) sort(v.begin(), v.end())
-#define line cout << "\n"
-#define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
-#define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x) __builtin_ctzll(x)
-#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
+using ll = long long;
 
-const int MOD = 1e9 + 7;
-const int INF = 1e9;
-const ll LINF = 1e18;
-
-inline bool prime(int num) {
-    if (num <= 1) return false;
-    if (num == 2) return true;
-    if (num % 2 == 0) return false;
-    for (int i = 3; 1LL * i * i <= num; i += 2) if (num % i == 0) return false;
-    return true;
-}
-inline int gcd_int(int a, int b) {
-    while (b != 0) { int t = b; b = a % b; a = t; }
-    return a;
-}
-inline int lcm_int(int a, int b) { return a / gcd_int(a, b) * b; }
-
-#define ROTATE_VEC(v, k)                                 \
-    do {                                                 \
-        int __n = (int)(v).size();                       \
-        if (__n > 0) {                                   \
-            int __k = (k) % __n;                         \
-            if (__k != 0) {                              \
-                reverse((v).begin(), (v).end());         \
-                reverse((v).begin(), (v).begin() + __k); \
-                reverse((v).begin() + __k, (v).end());   \
-            }                                            \
-        }                                                \
-    } while (0)
-
-inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
-inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
-inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-inline int mod_pow(int base, int exp) {
-    int result = 1; base %= MOD;
-    while (exp > 0) {
-        if (exp & 1) result = (1LL * result * base) % MOD;
-        base = (1LL * base * base) % MOD;
-        exp >>= 1;
-    }
-    return result;
-}
-
-template <typename T>
-void printVector(const T &val) { cerr << val; }
-template <typename T>
-void printVector(const vector<T> &v) {
-    cerr << "[ ";
-    for (const auto &elem : v) { printVector(elem); cerr << " "; }
-    cerr << "]";
-}
-#ifndef ONLINE_JUDGE
-#define debug(x) do { cerr << #x << " "; printVector(x); cerr << endl; } while (0)
-#else
-#define debug(x)
-#endif
-
-//------------------------------------------------------------------------------------------------------------//
-//                                          Here you go
-
-void solve(){
-    ll a, b; 
-    cin >> a >> b;
-
-    // b odd
-    if (b & 1LL) {
-        if (a & 1LL) {
-            cout << a * b + 1 << '\n';
-        } else {
-            cout << -1 << '\n';
+// all factors of 'n' including 1.
+vector<ll> factors(ll n)
+{
+    vector<ll> ans;
+    for (ll i = 2; i * i <= n; i++)
+    {
+        if (n % i == 0)
+        {
+            ans.push_back(i);
+            if (i != n / i)
+            { // avoid duplicates
+                ans.push_back(n / i);
+            }
         }
-        return;
     }
-
-    // b even: count trailing zeros of b
-    ll bb = b;
-    int z = 0;
-    while ((bb & 1LL) == 0) { bb >>= 1LL; ++z; }
-
-    // special impossible case: a odd and exactly one factor of 2 in b
-    if ((a & 1LL) && z == 1) {
-        cout << -1 << '\n';
-        return;
+    if (n > 1)
+    {
+        ans.push_back(1);
+        ans.push_back(n);
     }
-
-    // candidates per original approach
-    ll mini = (a & 1LL) ? 2LL : 1LL;
-    ll s1 = a * mini + b / mini;
-    ll s2 = a * (b / 2LL) + 2LL;
-
-    cout << max(s1, s2) << '\n';
+    return ans;
 }
+void solve()
+{
+    ll a, b;
+    cin >> a >> b;
+    if (b == 1)
+    {
+        if (((a + b) & 1) == 1)
+        {
+            cout << "-1\n";
+            return;
+        }
+        else
+        {
+            cout << a + b << "\n";
+            return;
+        }
+    }
+    if (a == 1)
+    {
+        if ((a + b) % 2 == 0)
+        {
+            cout << a + b << "\n";
+            return;
+        }
+    }
+    vector<ll> f = factors(b);
+    ll ans = -1;
+    if ((a + b) % 2 == 0)
+    {
+        ans = (a + b);
+    }
+    for (ll i = 0; i < (f.size())/2 + 1; i++)
+    {
+        if (f[i] == 1)
+        {
+            continue;
+        }
+        ll x = a;
+        ll y = b;
 
-int main(){
-#ifndef ONLINE_JUDGE
-    freopen("Error.txt", "w", stderr);
-#endif
+        while (y > 1)
+        {
+            if (y % (f[i]) != 0)
+            {
+                break;
+            }
+            else
+            {
+                y = y / f[i];
+                x *= f[i];
+                if (((x + y) & 1) == 0)
+                {
+                    ans = max(ans, x + y);
+                }
+            }
+        }
+    }
+
+    cout << ans << "\n";
+}
+int main()
+{
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    cout.tie(nullptr);
-
-    ll t; 
+    int t;
     cin >> t;
-    while (t--) solve();
+    while (t--)
+    {
+        solve();
+    }
     return 0;
 }
