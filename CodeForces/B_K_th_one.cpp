@@ -34,26 +34,26 @@ struct SegmentTree
         build(a, 0, 0, size);
     }
 
-    void set(int i, long long v, int x, int lx, int rx)
+    void set(int i, int x, int lx, int rx)
     {
         if (rx - lx == 1)
         {
-            sums[x] = v;
+            sums[x] = !sums[x];
             return;
         }
 
         int m = (lx + rx) / 2;
         if (i < m)
-            set(i, v, 2 * x + 1, lx, m);
+            set(i, 2 * x + 1, lx, m);
         else
-            set(i, v, 2 * x + 2, m, rx);
+            set(i, 2 * x + 2, m, rx);
 
         sums[x] = sums[2 * x + 1] + sums[2 * x + 2];
     }
 
-    void set(int i, long long v)
+    void set(int i)
     {
-        set(i, v, 0, 0, size);
+        set(i, 0, 0, size);
     }
 
     long long sum(int x, int l, int r, int lx, int rx)
@@ -73,6 +73,26 @@ struct SegmentTree
     long long sum(int l, int r)
     {
         return sum(0, l, r, 0, size);
+    }
+
+    int kthone(int k, int x, int lx, int rx)
+    {
+        if (rx - lx == 1)
+            return lx;
+
+        int m = (lx + rx) / 2;
+
+        if (sums[2 * x + 1] > k)
+            return kthone(k, 2 * x + 1, lx, m);
+        else
+            return kthone(k - sums[2 * x + 1], 2 * x + 2, m, rx);
+    }
+
+    int kthone(int k)
+    {
+        if (sums[0] <= k)
+            return -1; // not found
+        return kthone(k, 0, 0, size);
     }
 };
 
@@ -100,15 +120,15 @@ int main()
         if (op == 1)
         {
             int i;
-            long long v;
-            cin >> i >> v;
-            st.set(i, v);
+
+            cin >> i;
+            st.set(i);
         }
         else
         {
-            int l, r;
-            cin >> l >> r;
-            cout << st.sum(l, r) << "\n";   // [l, r)
+            int k;
+            cin >> k;
+            cout << st.kthone(k) << "\n"; // [l, r)
         }
     }
     return 0;

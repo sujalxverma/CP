@@ -1,9 +1,11 @@
 // in terms of edges.
 // height of a tree
-int height(const vector<vector<int>>& g, int node) {
+int height(const vector<vector<int>> &g, int node)
+{
     int maxheight = 0;
 
-    for (int v : g[node]) {
+    for (int v : g[node])
+    {
         maxheight = max(maxheight, height(g, v));
     }
 
@@ -113,11 +115,13 @@ INTUITION
 ===============================================================================
 */
 
-int treeDiameter(const vector<vector<int>>& g) {
+int treeDiameter(const vector<vector<int>> &g)
+{
     int n = g.size();
 
     // local DFS lambda: finds farthest node and distance from a start
-    auto dfs = [&](int start) {
+    auto dfs = [&](int start)
+    {
         vector<int> dist(n, -1);
         stack<int> st;
         st.push(start);
@@ -125,21 +129,25 @@ int treeDiameter(const vector<vector<int>>& g) {
 
         int farthestNode = start;
 
-        while (!st.empty()) {
+        while (!st.empty())
+        {
             int u = st.top();
             st.pop();
 
-            for (int v : g[u]) {
-                if (dist[v] == -1) {
+            for (int v : g[u])
+            {
+                if (dist[v] == -1)
+                {
                     dist[v] = dist[u] + 1;
                     st.push(v);
-                    if (dist[v] > dist[farthestNode]) {
+                    if (dist[v] > dist[farthestNode])
+                    {
                         farthestNode = v;
                     }
                 }
             }
         }
-        return pair<int,int>{farthestNode, dist[farthestNode]};
+        return pair<int, int>{farthestNode, dist[farthestNode]};
     };
 
     // 1st DFS from arbitrary node (0)
@@ -151,63 +159,84 @@ int treeDiameter(const vector<vector<int>>& g) {
     return diameter; // number of edges
 }
 
+/*
+SEGMENT TREE
+0-BASED INDEXING.
 
-// segment tree
-// calculating sum over the range [l,r)
-struct SegmentTree
+Possible results of query,
+    1. Exactly matches / completely inside the range.
+    2. Partial overlap.
+    3. Neither overlap nor matches.
+*/
+struct Node
 {
+    long long val; // change type as needed
 
+    Node(long long v = 0)
+    {
+        val = v;
+    }
+};
+
+struct SegTree
+{
     int size;
-    vector<ll> sums;
+    vector<Node> tree;
+    Node NEUTRAL = Node(0); // neutral element for merge
+
+    // merge two nodes
+    // can be modified.
+    Node merge(const Node &a, const Node &b)
+    {
+        return Node(a.val + b.val); // example: sum segment tree
+    }
+
+    // initialize tree
     void init(int n)
     {
         size = 1;
         while (size < n)
-            size *= 2;
-        sums.assign(2 * size, 0LL);
+            size <<= 1;
+        tree.assign(2 * size, NEUTRAL);
     }
 
-    void build(vector<int> &a, int x, int lx, int rx)
+    // build from array
+    void build(vector<int> &arr, int x, int lx, int rx)
     {
-        // [lx , rx)
         if (rx - lx == 1)
         {
-            if (lx < (int)a.size())
-            {
-                sums[x] = a[lx];
-            }
+            if (lx < (int)arr.size())
+                tree[x] = Node(arr[lx]);
             return;
         }
-        int m = lx + (rx - lx) / 2;
 
-        build(a, 2 * x + 1, lx, m);
-        build(a, 2 * x + 2, m, rx);
-
-        sums[x] = sums[2 * x + 1] + sums[2 * x + 2];
+        int mid = (lx + rx) / 2;
+        build(arr, 2 * x + 1, lx, mid);
+        build(arr, 2 * x + 2, mid, rx);
+        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
     }
 
-    void build(vector<int> &a)
+    void build(vector<int> &arr)
     {
-        build(a, 0, 0, size);
+        build(arr, 0, 0, size);
     }
 
+    // point update: set position i to value v
     void set(int i, int v, int x, int lx, int rx)
     {
         if (rx - lx == 1)
         {
-            sums[x] = v;
+            tree[x] = Node(v);
             return;
         }
-        int m = lx + (rx - lx) / 2;
-        if (i < m)
-        {
-            set(i, v, 2 * x + 1, lx, m);
-        }
+
+        int mid = (lx + rx) / 2;
+        if (i < mid)
+            set(i, v, 2 * x + 1, lx, mid);
         else
-        {
-            set(i, v, 2 * x + 2, m, rx);
-        }
-        sums[x] = sums[2 * x + 1] + sums[2 * x + 2];
+            set(i, v, 2 * x + 2, mid, rx);
+
+        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
     }
 
     void set(int i, int v)
@@ -215,25 +244,23 @@ struct SegmentTree
         set(i, v, 0, 0, size);
     }
 
-    long long sum(int l, int r, int x, int lx, int rx)
+    // range query [l, r)
+    // int x -> current node of the tree.
+    Node query(int l, int r, int x, int lx, int rx)
     {
-        if (lx >= r || l >= rx)
-        {
-            return 0;
-        }
-        if (lx >= l && rx <= r)
-        {
-            return sums[x];
-        }
-        int m = lx + (rx - lx) / 2;
-        ll s1 = sum(l, r, 2 * x + 1, lx, m);
-        ll s2 = sum(l, r, 2 * x + 2, m, rx);
+        if (rx <= l || r <= lx)
+            return NEUTRAL;
+        if (l <= lx && rx <= r)
+            return tree[x];
 
-        return s1 + s2;
+        int mid = (lx + rx) / 2;
+        Node left = query(l, r, 2 * x + 1, lx, mid);
+        Node right = query(l, r, 2 * x + 2, mid, rx);
+        return merge(left, right);
     }
 
-    long long sum(int l, int r)
+    Node query(int l, int r)
     {
-        return sum(l, r, 0, 0, size);
+        return query(l, r, 0, 0, size);
     }
 };
