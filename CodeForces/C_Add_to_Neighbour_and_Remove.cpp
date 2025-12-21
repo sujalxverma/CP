@@ -1,41 +1,38 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-
 void solve(){
     int n;
     cin >> n;
-    vector<int>a(n);
-    for(auto &x : a){
-        cin >> x;
+    int a[n];
+    int sum = 0;
+    for(int i = 0;  i < n ; i++){
+        cin >> a[i];
+        sum += a[i];
     }
-    int i = 0;
-    int j = n-1;
-    int count = 0;
-    int prev = 0;
-    while(i <= j){
-        if(a[i] == a[j]){
-            i++;
-            j--;
-        }
-        else{
-            if(a[i] > a[j]){
-                a[j-1] += a[j];
-                j--; 
-                count++;
+    
+    for(int i = n ; i >= 1 ; i--){
+        
+        if(sum % i == 0){
+            bool f = true;    
+            int curSum = 0;
+            for(int j = 0; j < n ; j++){
+                curSum += a[j];
+                if(curSum > (sum/i)){
+                    f = false;
+                    break;
+                }
+                else if(curSum == (sum/i)){
+                    curSum = 0;
+                }
             }
-            else{
-                a[i+1] += a[i];
-                i++;
-                count++;
+
+            if(f){
+                cout<<n - i <<"\n";
+                break;
             }
         }
     }
-    for(auto x : a){
-        cout<<x<<" ";
-    }
-    cout<<"\n";
-    cout<<count<<"\n";
 }
 
 int main() {

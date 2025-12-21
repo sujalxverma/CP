@@ -1,102 +1,87 @@
 #include "bits/stdc++.h"
 using namespace std;
-using ll = long long;
-const int INF = 1e9 + 7;
-struct SegmentTree
+const int inf = 1e9;
+
+struct Node
 {
+    int val; // change type as needed
+    int count;
 
+    Node(int v, int c)
+    {
+        val = v;
+        count = c;
+    }
+};
+
+struct SegTree
+{
     int size;
-    vector<pair<int, int>> tree;
+    vector<Node> tree;
+    Node NEUTRAL = Node(inf, 0); // neutral element for merge
 
-    // pair<int, int> merge(pair<int, int> a, pair<int, int> b)
-    // {
-    //     if (a.first < b.first)
-    //         return a;
-    //     if (b.first < a.first)
-    //         return b;
-    //     return {a.first, a.second + b.second};
-    // }
+    // merge two nodes
+    // can be modified.
+    Node merge(const Node &a, const Node &b)
+    {
 
+        if (a.val < b.val)
+        {
+            return a;
+        }
+        else if (a.val > b.val)
+        {
+            return b;
+        }
+        return {a.val, a.count + b.count};
+    }
+
+    // initialize tree
     void init(int n)
     {
         size = 1;
         while (size < n)
-            size *= 2;
-        tree.assign(2 * size, {INF, 0});
+            size <<= 1;
+        tree.assign(2 * size, NEUTRAL);
     }
 
-    void build(vector<int> &a, int x, int lx, int rx)
+    // build from array
+    void build(vector<int> &arr, int x, int lx, int rx)
     {
-        // [lx , rx)
         if (rx - lx == 1)
         {
-            if (lx < (int)a.size())
-            {
-                tree[x] = {a[lx], 1};
-            }
+            if (lx < (int)arr.size())
+                tree[x] = Node(arr[lx], 1);
             return;
         }
-        int m = lx + (rx - lx) / 2;
 
-        build(a, 2 * x + 1, lx, m);
-        build(a, 2 * x + 2, m, rx);
-
-        if (tree[2 * x + 1].first > tree[2 * x + 2].first)
-        {
-            tree[x].first = tree[2 * x + 2].first;
-            tree[x].second = tree[2 * x + 2].second;
-        }
-        else if (tree[2 * x + 1].first < tree[2 * x + 2].first)
-        {
-            tree[x].first = tree[2 * x + 1].first;
-            tree[x].second = tree[2 * x + 1].second;
-        }
-        else
-        {
-            tree[x].first = tree[2 * x + 1].first;
-            tree[x].second = tree[2 * x + 1].second + tree[2 * x + 2].second;
-        }
+        int mid = (lx + rx) / 2;
+        build(arr, 2 * x + 1, lx, mid);
+        build(arr, 2 * x + 2, mid, rx);
+        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
     }
 
-    void build(vector<int> &a)
+    void build(vector<int> &arr)
     {
-        build(a, 0, 0, size);
+        build(arr, 0, 0, size);
     }
 
+    // point update: set position i to value v
     void set(int i, int v, int x, int lx, int rx)
     {
         if (rx - lx == 1)
         {
-
-            tree[x].first = v;
-            tree[x].second = 1;
+            tree[x] = Node(v, 1);
             return;
         }
-        int m = lx + (rx - lx) / 2;
-        if (i < m)
-        {
-            set(i, v, 2 * x + 1, lx, m);
-        }
-        else
-        {
-            set(i, v, 2 * x + 2, m, rx);
-        }
 
-        if (tree[2 * x + 1].first > tree[2 * x + 2].first)
-        {
-            tree[x].first = tree[2 * x + 2].first;
-            tree[x].second = tree[2 * x + 2].second;
-        }
-        else if (tree[2 * x + 1].first < tree[2 * x + 2].first)
-        {
-            tree[x].first = tree[2 * x + 1].first;
-            tree[x].second = tree[2 * x + 1].second;
-        }
+        int mid = (lx + rx) / 2;
+        if (i < mid)
+            set(i, v, 2 * x + 1, lx, mid);
         else
-        {
-            tree[x].first = tree[2 * x + 1].first;
-            tree[x].second = tree[2 * x + 1].second + tree[2 * x + 2].second;
-        }
+            set(i, v, 2 * x + 2, mid, rx);
+
+        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
     }
 
     void set(int i, int v)
@@ -104,38 +89,24 @@ struct SegmentTree
         set(i, v, 0, 0, size);
     }
 
-    pair<int, int> minimumCount(int l, int r, int x, int lx, int rx)
+    // range query [l, r)
+    // int x -> current node of the tree.
+    Node query(int l, int r, int x, int lx, int rx)
     {
-        if (lx >= r || l >= rx)
-        {
-            // range exceeded the desired.
-            return {1e9, 0};
-        }
-        if (lx >= l && rx <= r)
-        {
-            return {tree[x].first, tree[x].second};
-        }
-        int m = lx + (rx - lx) / 2;
-        auto s1 = minimumCount(l, r, 2 * x + 1, lx, m);
-        auto s2 = minimumCount(l, r, 2 * x + 2, m, rx);
+        if (rx <= l || r <= lx)
+            return NEUTRAL;
+        if (l <= lx && rx <= r)
+            return tree[x];
 
-        if (s1.first < s2.first)
-        {
-            return s1;
-        }
-        else if (s2.first < s1.first)
-        {
-            return s2;
-        }
-        else
-        {
-            return {s1.first, s1.second + s2.second};
-        }
+        int mid = (lx + rx) / 2;
+        Node left = query(l, r, 2 * x + 1, lx, mid);
+        Node right = query(l, r, 2 * x + 2, mid, rx);
+        return merge(left, right);
     }
 
-    pair<int, int> minimumCount(int l, int r)
+    Node query(int l, int r)
     {
-        return minimumCount(l, r, 0, 0, size);
+        return query(l, r, 0, 0, size);
     }
 };
 
@@ -145,36 +116,32 @@ int main()
     cin.tie(nullptr);
     int n, q;
     cin >> n >> q;
-
-    SegmentTree st;
-    st.init(n);
     vector<int> a(n);
     for (int i = 0; i < n; i++)
-    {
-        int v;
-        cin >> v;
-        a[i] = v;
-    }
+        cin >> a[i];
 
+    SegTree st;
+    st.init(n);
     st.build(a);
+
     while (q--)
     {
-        int op;
-        cin >> op;
-        if (op == 1)
+        int k;
+        cin >> k;
+        if (k == 1)
         {
-            // set value.
-            int i, v;
-            cin >> i >> v;
-            st.set(i, v);
+            // update
+            int a, b;
+            cin >> a >> b;
+            st.set(a, b);
         }
         else
         {
-            int l, r;
-            cin >> l >> r;
-            cout << st.minimumCount(l, r).first << " " << st.minimumCount(l, r).second << "\n";
+            int a, b;
+            cin >> a >> b;
+            auto ans = st.query(a, b);
+            cout << ans.val << " " << ans.count << "\n";
         }
     }
-
     return 0;
 }

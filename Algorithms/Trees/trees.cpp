@@ -167,6 +167,14 @@ Possible results of query,
     1. Exactly matches / completely inside the range.
     2. Partial overlap.
     3. Neither overlap nor matches.
+
+    
+| Symbol     | Meaning                                             |
+| ---------- | --------------------------------------------------- |
+| [l, r)   | **Query range** (what the user asked for)           |
+| [lx, rx) | **Node range** (what this node covers)              |
+| x        | Index of the current node in the segment tree array |
+
 */
 struct Node
 {
