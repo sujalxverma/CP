@@ -272,3 +272,60 @@ struct SegTree
         return query(l, r, 0, 0, size);
     }
 };
+
+// Iterative Segment Tree.
+struct SegTree {
+    int size;
+    vector<int> tree;
+
+    // change this according to problem
+    int NEUTRAL = 0;
+
+    int merge(int a, int b) {
+        // CHANGE THIS
+        return max(a, b);
+    }
+
+    void init(int n) {
+        size = 1;
+        while (size < n) size <<= 1;
+        tree.assign(2 * size, NEUTRAL);
+    }
+
+    void build(const vector<int>& a) {
+        // insert leaves
+        for (int i = 0; i < (int)a.size(); i++) {
+            tree[size + i] = a[i];
+        }
+        // build parents
+        for (int i = size - 1; i >= 1; i--) {
+            tree[i] = merge(tree[2 * i], tree[2 * i + 1]);
+        }
+    }
+
+    // point update: a[pos] = val
+    void set_val(int pos, int val) {
+        int idx = size + pos;
+        tree[idx] = val;
+        idx >>= 1;
+        while (idx >= 1) {
+            tree[idx] = merge(tree[2 * idx], tree[2 * idx + 1]);
+            idx >>= 1;
+        }
+    }
+
+    // range query on [l, r)
+    int query(int l, int r) {
+        int resL = NEUTRAL, resR = NEUTRAL;
+        l += size;
+        r += size;
+
+        while (l < r) {
+            if (l & 1) resL = merge(resL, tree[l++]);
+            if (r & 1) resR = merge(tree[--r], resR);
+            l >>= 1;
+            r >>= 1;
+        }
+        return merge(resL, resR);
+    }
+};
