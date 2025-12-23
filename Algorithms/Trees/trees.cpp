@@ -274,39 +274,47 @@ struct SegTree
 };
 
 // Iterative Segment Tree.
+/* ===== CHANGE THIS NODE AS PER PROBLEM ===== */
+struct Node {
+    int val;
+
+    Node(int v = 0) : val(v) {}
+};
+
+/* ===== SEGMENT TREE ===== */
 struct SegTree {
     int size;
-    vector<int> tree;
+    vector<Node> tree;
 
-    // change this according to problem
-    int NEUTRAL = 0;
+    // Neutral element (identity for merge)
+    Node NEUTRAL = Node(0);
 
-    int merge(int a, int b) {
-        // CHANGE THIS
-        return max(a, b);
+    // Merge function
+    Node merge(const Node &a, const Node &b) {
+        return Node(max(a.val, b.val));  // example: max segment tree
     }
 
+    // Initialize with n elements
     void init(int n) {
         size = 1;
         while (size < n) size <<= 1;
         tree.assign(2 * size, NEUTRAL);
     }
 
-    void build(const vector<int>& a) {
-        // insert leaves
+    // Build from array (0-based)
+    void build(const vector<int> &a) {
         for (int i = 0; i < (int)a.size(); i++) {
-            tree[size + i] = a[i];
+            tree[size + i] = Node(a[i]);
         }
-        // build parents
         for (int i = size - 1; i >= 1; i--) {
             tree[i] = merge(tree[2 * i], tree[2 * i + 1]);
         }
     }
 
-    // point update: a[pos] = val
+    // Point update: a[pos] = val (0-based)
     void set_val(int pos, int val) {
         int idx = size + pos;
-        tree[idx] = val;
+        tree[idx] = Node(val);
         idx >>= 1;
         while (idx >= 1) {
             tree[idx] = merge(tree[2 * idx], tree[2 * idx + 1]);
@@ -314,18 +322,26 @@ struct SegTree {
         }
     }
 
-    // range query on [l, r)
-    int query(int l, int r) {
-        int resL = NEUTRAL, resR = NEUTRAL;
+    // Range query on [l, r) (0-based, half-open)
+    Node query(int l, int r) {
+        Node left_res = NEUTRAL;
+        Node right_res = NEUTRAL;
+
         l += size;
         r += size;
 
         while (l < r) {
-            if (l & 1) resL = merge(resL, tree[l++]);
-            if (r & 1) resR = merge(tree[--r], resR);
+            if (l & 1) {
+                left_res = merge(left_res, tree[l]);
+                l++;
+            }
+            if (r & 1) {
+                r--;
+                right_res = merge(tree[r], right_res);
+            }
             l >>= 1;
             r >>= 1;
         }
-        return merge(resL, resR);
+        return merge(left_res, right_res);
     }
 };

@@ -18,6 +18,9 @@ int gcd(int a, int b)
     2) count    : how many elements in this segment
                   are exactly equal to gcdValue
 */
+
+
+
 struct Node
 {
     int gcdValue;
