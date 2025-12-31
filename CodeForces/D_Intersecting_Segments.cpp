@@ -39,7 +39,7 @@ struct SegTree
         if (rx - lx == 1)
         {
             if (lx < (int)arr.size())
-                tree[x] = Node(1);
+                tree[x] = Node(0);
             return;
         }
 
@@ -79,62 +79,69 @@ struct SegTree
 
     // range query [l, r)
     // int x -> current node of the tree.
-    // kth one from right.
-    // k-th one from right
-    int query(int k, int x, int lx, int rx)
+    Node query(int l, int r, int x, int lx, int rx)
     {
+        if (rx <= l || r <= lx)
+            return NEUTRAL;
+        if (l <= lx && rx <= r)
+            return tree[x];
 
-        if (rx - lx == 1)
-        {
-            return lx;
-        }
-
-        int m = (lx + rx) / 2;
-        long long rightCount = tree[2 * x + 2].val;
-
-        if (rightCount < k)
-        {
-            // go left
-            return query(k - rightCount, 2 * x + 1, lx, m);
-        }
-        else
-        {
-            // go right
-            return query(k, 2 * x + 2, m, rx);
-        }
+        int mid = (lx + rx) / 2;
+        Node left = query(l, r, 2 * x + 1, lx, mid);
+        Node right = query(l, r, 2 * x + 2, mid, rx);
+        return merge(left, right);
     }
 
-    int query(int k)
+    Node query(int l, int r)
     {
-        return query(k, 0, 0, size);
+        return query(l, r, 0, 0, size);
     }
 };
+
 int main()
 {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+
     int n;
     cin >> n;
-    vector<int> a(n);
-    for (auto &x : a)
+    vector<int> v(2 * n);
+    for (int i = 0; i < 2 * n; i++)
     {
-        cin >> x;
+        cin >> v[i];
     }
-    vector<int> b(n);
-
     SegTree st;
-    st.init(n);
-    st.build(a);
-    for (int i = n - 1; i >= 0; i--)
+    st.init(2 * n);
+
+    st.build(v);
+
+    vector<pair<int, int>> p(n + 1, {-1, -1});
+    vector<int> ans(n + 1, 0);
+    for (int i = 0; i < 2 * n; i++)
     {
-        int val = st.query(a[i] + 1);
-        // why a[i]+1, because it will give location where (k+1)th one is present.
-        b[i] = val + 1;
-        st.set(val, 0);
+        if (p[v[i]].first == -1)
+        {
+            // first time.
+            p[v[i]].first = i;
+        }
+        else
+        {
+            p[v[i]].second = i;
+            st.set(p[v[i]].first, 1);
+            ans[v[i]] = (p[v[i]].second - p[v[i]].first - 1) - 2 * st.query(p[v[i]].first + 1, p[v[i]].second - 1).val;
+            /*
+            int k =  st.set(p[v[i]].first, 1);
+            k points lie inside segment say, [x,x],which means from R = [ s_x +1 to f_x -1 ] , only 2*k coordinates lie.
+            therfore, remaining, ans = (Range) - 2*k, point intersect with [x,x], only one coordinate present.
+            
+            */
+        }
     }
-    for (auto &x : b)
+
+    for (int i = 1; i <= n; i++)
     {
-        cout << x << " ";
+        cout << ans[i] << " ";
     }
+
     return 0;
 }

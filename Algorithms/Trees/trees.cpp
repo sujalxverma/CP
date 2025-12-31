@@ -189,6 +189,7 @@ struct Node
 struct SegTree
 {
     int size;
+    int real_size;
     vector<Node> tree;
     Node NEUTRAL = Node(0); // neutral element for merge
 
@@ -202,6 +203,7 @@ struct SegTree
     // initialize tree
     void init(int n)
     {
+        real_size = n;
         size = 1;
         while (size < n)
             size <<= 1;
@@ -343,5 +345,79 @@ struct SegTree {
             r >>= 1;
         }
         return merge(left_res, right_res);
+    }
+};
+
+
+// Lazy Propogation Segment Tree.
+// sum query for range and updatation.
+struct SegTree {
+    int n;
+    vector<long long> tree, lazy;
+
+    SegTree(int n) {
+        this->n = n;
+        tree.resize(4 * n, 0);
+        lazy.resize(4 * n, 0);
+    }
+
+    // Build from initial array
+    void build(int node, int start, int end, const vector<long long> &a) {
+        if (start == end) {
+            tree[node] = a[start];
+            return;
+        }
+
+        int mid = (start + end) / 2;
+        build(node * 2, start, mid, a);
+        build(node * 2 + 1, mid + 1, end, a);
+
+        tree[node] = tree[node * 2] + tree[node * 2 + 1];
+    }
+
+    void push(int node, int start, int end) {
+        if (lazy[node] != 0) {
+            tree[node] += (end - start + 1) * lazy[node];
+
+            if (start != end) { // have children
+                lazy[node * 2] += lazy[node];
+                lazy[node * 2 + 1] += lazy[node];
+            }
+
+            lazy[node] = 0;
+        }
+    }
+
+    void update(int node, int start, int end, int l, int r, long long val) {
+        push(node, start, end);
+
+        if (r < start || end < l)
+            return;
+
+        if (l <= start && end <= r) {
+            lazy[node] += val;
+            push(node, start, end);
+            return;
+        }
+
+        int mid = (start + end) / 2;
+        update(node * 2, start, mid, l, r, val);
+        update(node * 2 + 1, mid + 1, end, l, r, val);
+
+        tree[node] = tree[node * 2] + tree[node * 2 + 1];
+    }
+
+    long long query(int node, int start, int end, int l, int r) {
+        push(node, start, end);
+
+        if (r < start || end < l)
+            return 0;
+
+        if (l <= start && end <= r)
+            return tree[node];
+
+        int mid = (start + end) / 2;
+        return query(node * 2, start, mid, l, r)
+             + query(node * 2 + 1, mid + 1, end, l, r);
     }
 };
