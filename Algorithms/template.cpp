@@ -1,9 +1,9 @@
 // VERMA
 #include "bits/stdc++.h"
-using namespace std;
 #include <random>
 #include <chrono>
 #include <numeric>
+using namespace std;
 
 using ll = long long;
 using ld = long double;
@@ -77,54 +77,12 @@ static inline int mod_pow(int a, long long e)
 }
 static inline int mod_inv(int a) { return mod_pow(a, MOD - 2); } // MOD prime
 
-// Algorithms helpers
-template <class It>
-static inline void rotate_left(It first, It last, long long k)
-{
-    long long n = last - first;
-    if (n <= 0)
-        return;
-    k %= n;
-    if (k < 0)
-        k += n;
-    std::rotate(first, first + k, last);
-}
-
-// Debug
-#ifndef ONLINE_JUDGE
-template <typename T>
-void _pr(const T &v) { cerr << v; }
-template <typename T>
-void _pr(const vector<T> &v)
-{
-    cerr << "[ ";
-    for (auto &e : v)
-    {
-        _pr(e);
-        cerr << ' ';
-    }
-    cerr << "]";
-}
-#define debug(x)             \
-    do                       \
-    {                        \
-        cerr << #x << " = "; \
-        _pr(x);              \
-        cerr << '\n';        \
-    } while (0)
-#else
-#define debug(x) ((void)0)
-#endif
-
 void solve()
 { // TODO: implement per test case solution.
 }
 
 int main()
 {
-#ifndef ONLINE_JUDGE
-    freopen("Error.txt", "w", stderr);
-#endif
     fastio();
     auto begin = chrono::steady_clock::now();
 

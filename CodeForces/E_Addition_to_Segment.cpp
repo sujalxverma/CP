@@ -1,6 +1,6 @@
 #include "bits/stdc++.h"
 using namespace std;
-
+using ll = long long;
 struct Node
 {
     long long val; // change type as needed
@@ -38,7 +38,7 @@ struct SegTree
    
 
     // point update: set position i to value v
-    void set(int l, int r, int v, int x, int lx, int rx)
+    void set(int l, int r, ll v, int x, int lx, int rx)
     {
         if (lx >= real_size) return;              
         if (rx <= l || r <= lx)
@@ -55,14 +55,14 @@ struct SegTree
         set(l, r, v, 2 * x + 2, m, rx);
     }
 
-    void set(int l, int r, int v)
+    void set(int l, int r, ll v)
     {
         set(l, r, v, 0, 0, size);
     }
 
     // range query [l, r)
     // int x -> current node of the tree.
-    void query(int i, int &ans, int x, int lx, int rx)
+    void query(int i, ll &ans, int x, int lx, int rx)
     {
         ans += tree[x].val; // ALWAYS add current node
 
@@ -81,7 +81,7 @@ struct SegTree
         }
     }
 
-    void query(int i, int &ans)
+    void query(int i, ll &ans)
     {
         query(i, ans, 0, 0, size);
     }
@@ -111,7 +111,7 @@ int main()
         {
             int i;
             cin >> i;
-            int ans = 0;
+            ll ans = 0;
             st.query(i, ans);
             cout << ans << "\n";
         }

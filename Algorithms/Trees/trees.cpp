@@ -254,7 +254,7 @@ struct SegTree
         set(i, v, 0, 0, size);
     }
 
-    // range query [l, r)
+    // range query [l, r), to include r => [l,r+1)
     // int x -> current node of the tree.
     Node query(int l, int r, int x, int lx, int rx)
     {
@@ -325,6 +325,7 @@ struct SegTree {
     }
 
     // Range query on [l, r) (0-based, half-open)
+    // range query [l, r), to include r => [l,r+1)
     Node query(int l, int r) {
         Node left_res = NEUTRAL;
         Node right_res = NEUTRAL;

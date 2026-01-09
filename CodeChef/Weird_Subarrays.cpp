@@ -1,38 +1,39 @@
 #include "bits/stdc++.h"
 using namespace std;
-
-int f(vector<int>&a , int idx,int prev , vector<int>&dp){
-    if(idx == 0){
-        if(a[0] <= prev){
-            return 1;
-        }return 0;
-    }
-
-    if(a[idx] <)
-
-
-}
-
-void solve(){
-    int  n;
-    cin >> n;
-    vector<int>a(n);
-    for(auto &x : a){
-        cin >> x;
-    }
-    vector<int>dp(n,-1);
-    int ans = f(a,n-1,1e9,dp);
-
-    cout<<ans<<"\n";
-}
-
-int main() {
+using ll = long long;
+int main()
+{
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
     int t;
     cin >> t;
-    while(t--){
-        solve();
+    while (t--)
+    {
+        int n;
+        cin >> n;
+        int a[n];
+        for (int i = 0; i < n; i++)
+            cin >> a[i];
+
+        ll ans = 0;
+        vector<int> hills;
+        hills.push_back(0);
+        for (int i = 1; i < n - 1; i++)
+        {
+            if (a[i] > a[i - 1] && a[i] > a[i + 1])
+            {
+                hills.push_back(i);
+            }
+        }
+        hills.push_back(n - 1);
+        ans += n; // indidvidual contribution.
+
+        for (int i = 0; i < (int)hills.size() - 1; i++)
+        {
+            int len = (hills[i + 1] - hills[i] + 1);
+            ans += ll(len * (len - 1) / 2);
+        }
+        cout << ans << "\n";
     }
     return 0;
 }
