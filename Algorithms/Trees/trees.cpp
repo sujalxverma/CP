@@ -168,7 +168,7 @@ Possible results of query,
     2. Partial overlap.
     3. Neither overlap nor matches.
 
-    
+
 | Symbol     | Meaning                                             |
 | ---------- | --------------------------------------------------- |
 | [l, r)   | **Query range** (what the user asked for)           |
@@ -277,14 +277,16 @@ struct SegTree
 
 // Iterative Segment Tree.
 /* ===== CHANGE THIS NODE AS PER PROBLEM ===== */
-struct Node {
+struct Node
+{
     int val;
 
     Node(int v = 0) : val(v) {}
 };
 
 /* ===== SEGMENT TREE ===== */
-struct SegTree {
+struct SegTree
+{
     int size;
     vector<Node> tree;
 
@@ -292,33 +294,41 @@ struct SegTree {
     Node NEUTRAL = Node(0);
 
     // Merge function
-    Node merge(const Node &a, const Node &b) {
-        return Node(max(a.val, b.val));  // example: max segment tree
+    Node merge(const Node &a, const Node &b)
+    {
+        return Node(max(a.val, b.val)); // example: max segment tree
     }
 
     // Initialize with n elements
-    void init(int n) {
+    void init(int n)
+    {
         size = 1;
-        while (size < n) size <<= 1;
+        while (size < n)
+            size <<= 1;
         tree.assign(2 * size, NEUTRAL);
     }
 
     // Build from array (0-based)
-    void build(const vector<int> &a) {
-        for (int i = 0; i < (int)a.size(); i++) {
+    void build(const vector<int> &a)
+    {
+        for (int i = 0; i < (int)a.size(); i++)
+        {
             tree[size + i] = Node(a[i]);
         }
-        for (int i = size - 1; i >= 1; i--) {
+        for (int i = size - 1; i >= 1; i--)
+        {
             tree[i] = merge(tree[2 * i], tree[2 * i + 1]);
         }
     }
 
     // Point update: a[pos] = val (0-based)
-    void set_val(int pos, int val) {
+    void set_val(int pos, int val)
+    {
         int idx = size + pos;
         tree[idx] = Node(val);
         idx >>= 1;
-        while (idx >= 1) {
+        while (idx >= 1)
+        {
             tree[idx] = merge(tree[2 * idx], tree[2 * idx + 1]);
             idx >>= 1;
         }
@@ -326,19 +336,23 @@ struct SegTree {
 
     // Range query on [l, r) (0-based, half-open)
     // range query [l, r), to include r => [l,r+1)
-    Node query(int l, int r) {
+    Node query(int l, int r)
+    {
         Node left_res = NEUTRAL;
         Node right_res = NEUTRAL;
 
         l += size;
         r += size;
 
-        while (l < r) {
-            if (l & 1) {
+        while (l < r)
+        {
+            if (l & 1)
+            {
                 left_res = merge(left_res, tree[l]);
                 l++;
             }
-            if (r & 1) {
+            if (r & 1)
+            {
                 r--;
                 right_res = merge(tree[r], right_res);
             }
@@ -349,22 +363,25 @@ struct SegTree {
     }
 };
 
-
 // Lazy Propogation Segment Tree.
 // sum query for range and updatation.
-struct SegTree {
+struct SegTree
+{
     int n;
     vector<long long> tree, lazy;
 
-    SegTree(int n) {
+    SegTree(int n)
+    {
         this->n = n;
         tree.resize(4 * n, 0);
         lazy.resize(4 * n, 0);
     }
 
     // Build from initial array
-    void build(int node, int start, int end, const vector<long long> &a) {
-        if (start == end) {
+    void build(int node, int start, int end, const vector<long long> &a)
+    {
+        if (start == end)
+        {
             tree[node] = a[start];
             return;
         }
@@ -376,11 +393,14 @@ struct SegTree {
         tree[node] = tree[node * 2] + tree[node * 2 + 1];
     }
 
-    void push(int node, int start, int end) {
-        if (lazy[node] != 0) {
+    void push(int node, int start, int end)
+    {
+        if (lazy[node] != 0)
+        {
             tree[node] += (end - start + 1) * lazy[node];
 
-            if (start != end) { // have children
+            if (start != end)
+            { // have children
                 lazy[node * 2] += lazy[node];
                 lazy[node * 2 + 1] += lazy[node];
             }
@@ -389,13 +409,15 @@ struct SegTree {
         }
     }
 
-    void update(int node, int start, int end, int l, int r, long long val) {
+    void update(int node, int start, int end, int l, int r, long long val)
+    {
         push(node, start, end);
 
         if (r < start || end < l)
             return;
 
-        if (l <= start && end <= r) {
+        if (l <= start && end <= r)
+        {
             lazy[node] += val;
             push(node, start, end);
             return;
@@ -408,7 +430,8 @@ struct SegTree {
         tree[node] = tree[node * 2] + tree[node * 2 + 1];
     }
 
-    long long query(int node, int start, int end, int l, int r) {
+    long long query(int node, int start, int end, int l, int r)
+    {
         push(node, start, end);
 
         if (r < start || end < l)
@@ -418,7 +441,93 @@ struct SegTree {
             return tree[node];
 
         int mid = (start + end) / 2;
-        return query(node * 2, start, mid, l, r)
-             + query(node * 2 + 1, mid + 1, end, l, r);
+        return query(node * 2, start, mid, l, r) + query(node * 2 + 1, mid + 1, end, l, r);
     }
+};
+
+// Sparse Table
+// Min-sparse-table
+
+#include <bits/stdc++.h>
+using namespace std;
+
+/*
+  Sparse Table for Range Minimum Query (RMQ)
+
+  Preprocessing: O(n log n)
+  Query time:    O(1)
+  Space:         O(n log n)
+
+  Works only for static arrays.
+*/
+
+struct SparseTable
+{
+    int n, LOG;
+    vector<vector<int>> st; // st[k][i] = min on range [i, i + 2^k - 1]
+    vector<int> log2val;    // precomputed floor(log2(i))
+
+    SparseTable(const vector<int> &a)
+    {
+        n = (int)a.size();
+        LOG = 32 - __builtin_clz(n);
+
+        st.assign(LOG, vector<int>(n));
+        log2val.assign(n + 1, 0);
+
+        build_logs();
+        build_table(a);
+    }
+
+    void build_logs()
+    {
+        for (int i = 2; i <= n; i++)
+            log2val[i] = log2val[i / 2] + 1;
+    }
+
+    void build_table(const vector<int> &a)
+    {
+        // base layer (k = 0)
+        for (int i = 0; i < n; i++)
+            st[0][i] = a[i];
+
+        // build higher layers
+        for (int k = 1; k < LOG; k++)
+        {
+            for (int i = 0; i + (1 << k) <= n; i++)
+            {
+                st[k][i] = min(st[k - 1][i],
+                               st[k - 1][i + (1 << (k - 1))]);
+            }
+        }
+    }
+
+    // Query minimum on range [l, r] (0-indexed, inclusive), may contain overlap.
+    int query(int l, int r) const
+    {
+        int len = r - l + 1;
+        int k = log2val[len];
+        return min(st[k][l],
+                   st[k][r - (1 << k) + 1]);
+    }               
+
+    int query(int l, int r) const
+    {
+        int p = log2(r - l + 1);
+        int ans = 1e9;
+        int len = r - l + 1;
+        // No overlap
+        for (int i = p; i >= 0; i--)
+        {
+            if ((1 << i) <= len)
+            {
+                ans = min(ans, st[i][l]);
+                len -= (1 << i);
+                l += (1 << i);
+            }
+        }
+        cout << ans << "\n";
+    }
+
+    // No overlap
 };
