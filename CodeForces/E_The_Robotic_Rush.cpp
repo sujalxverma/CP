@@ -28,72 +28,40 @@ int main()
         }
         string s;
         cin >> s;
-
-        for (int i = 0; i < k; i++)
+        sort(begin(b), end(b));
+        vector<ll> prefix(n);
+        prefix[0] = (s[0] == 'L' ? -1 : 1);
+        for (int i = 1; i < n; i++)
         {
-            if (s[i] == 'L')
-            {
-                int count = 0;
-                for (int j = 0; j < n; j++)
-                {
-                    if (a[j] == inf)
-                    {
-                        continue; // ignore
-                    }
-                    else
-                    {
-                        a[j] -= 1;
-                    }
-                }
-                // check which survive
-                for (int j = 0; j < n; j++)
-                {
-                    if (a[j] == inf)
-                        continue;
-                    if (pos.find(a[j]) != pos.end())
-                    {
-                        a[j] = inf;
-                    }
-                    else
-                    {
-                        count++;
-                    }
-                }
+            prefix[i] = prefix[i - 1] + (s[0] == 'L' ? -1 : 1);
+        }
 
-                cout << count << " ";
+        // traversing robots.
+        for (int i = 0; i < n; i++)
+        {
+            // nearest spike left to robot.
+            ll left = inf;
+            ll right = 1e18;
+            if (b[0] > a[i])
+            {
+                // no leftmost exist.
             }
             else
             {
-                int count = 0;
-                for (int j = 0; j < n; j++)
-                {
-                    if (a[j] == inf)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        a[j] += 1;
-                    }
-                }
-                // check which survive
-                for (int j = 0; j < n; j++)
-                {
-                    if (a[j] == inf)
-                        continue;
-                    if (pos.find(a[j]) != pos.end())
-                    {
-                        a[j] = inf;
-                    }
-                    else
-                    {
-                        count++;
-                    }
-                }
-
-                cout << count << " ";
+                auto idx = lower_bound(b.begin(), b.end(), a[i]) - b.begin();
+                left = b[idx - 1];
+            }
+            if (b[m - 1] < a[i])
+            {
+                // no rightmost exist
+            }
+            else
+            {
+                auto idx = upper_bound(b.begin(), b.end(), a[i]) - b.begin();
+                right = b[idx];
             }
         }
+
         cout << "\n";
     }
     return 0;
