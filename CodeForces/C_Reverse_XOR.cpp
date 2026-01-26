@@ -1,39 +1,29 @@
 #include "bits/stdc++.h"
 using namespace std;
-int reverse_bits(int x)
+using ll = long long;
+
+// check if number can be formed or not.
+bool check(string s)
 {
-    int msb = 31 - __builtin_clz(x);
-    int rev = 0;
-
-    for (int i = 0; i <= msb; i++)
+    int n = (int)s.length();
+    if (n % 2 != 0 && s[n / 2] != '0')
     {
-        if ((x >> i) & 1)
-        {
-            rev |= (1 << (msb - i));
-        }
+        return false;
     }
-    return rev;
-}
-
-int num(int n)
-{
-    for (int x = 0; x <= 1e7; x++)
+    int i = 0;
+    int j = n - 1;
+    while (i <= j)
     {
-        if (x == 0) {
-            if (n == 0) return 0;
-            continue;
-        }
-
-        int fx = reverse_bits(x);
-
-        if ((x ^ fx) == n)
+        if (s[i] != s[j])
         {
-            return x;
+            return false;
         }
+        i++;
+        j--;
     }
-    return -1;
-}
 
+    return true;
+}
 
 int main()
 {
@@ -43,17 +33,53 @@ int main()
     cin >> t;
     while (t--)
     {
-        int n;
+        ll n;
         cin >> n;
-        int ans = num(n);
-        if (ans == -1)
+        if (n == 0)
         {
-            cout << "NO\n";
+            cout << "YES\n";
+            continue;
+        }
+        ll bits = floor(log2(n)) + 1;
+
+        string s = "";
+
+        for (int i = 0; i < bits; i++)
+        {
+            if ((n & (1LL << i)) != 0)
+            {
+                s = '1' + s;
+            }
+            else
+            {
+                s = '0' + s;
+            }
+        }
+        // cout << "\n";
+        if (n == 0)
+        {
+            s = '0';
+        }
+        // cout << s << "\n";
+
+        // check without appending zero.
+        if (check(s))
+        {
+            // now make that number x.
+            cout << "YES\n";
         }
         else
         {
-            cout << "YES\n" ;
-            cout<< ans << "\n";
+            s = '0' + s;
+            if (check(s))
+            {
+                // now make that number x.
+                cout << "YES\n";
+            }
+            else
+            {
+                cout << "NO\n";
+            }
         }
     }
     return 0;

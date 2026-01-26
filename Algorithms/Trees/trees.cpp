@@ -509,7 +509,7 @@ struct SparseTable
         int k = log2val[len];
         return min(st[k][l],
                    st[k][r - (1 << k) + 1]);
-    }               
+    }
 
     int query(int l, int r) const
     {
@@ -531,3 +531,132 @@ struct SparseTable
 
     // No overlap
 };
+
+// SQRT Decomposition.
+/*
+========================================================
+                SQRT DECOMPOSITION – THEORY
+========================================================
+
+Sqrt Decomposition is a technique used to answer range
+queries efficiently on a static or semi-dynamic array.
+It is especially useful when both preprocessing and
+query answering need to be balanced.
+
+--------------------------------------------------------
+CORE IDEA
+--------------------------------------------------------
+Given an array of size n:
+• Divide the array into blocks of size approximately √n
+• Number of blocks is also approximately √n
+• Precompute useful information (such as sum, min, max)
+  for each block
+
+This allows a query to skip entire blocks when possible
+instead of iterating element-by-element.
+
+--------------------------------------------------------
+BLOCK CONSTRUCTION
+--------------------------------------------------------
+Let:
+n   = size of array
+len = ⌈√n⌉  → size of each block
+
+Block index of element i:
+    block = i / len
+
+We create an auxiliary array:
+    b[block] = aggregate value of that block
+Example:
+    For range sum queries,
+    b[x] stores the sum of all elements in block x.
+
+--------------------------------------------------------
+QUERY PROCESSING (Range [l, r])
+--------------------------------------------------------
+While traversing from l to r:
+1. If current index i is at the start of a block
+   AND the entire block lies inside [l, r]:
+       → take the precomputed block value in O(1)
+       → move i by len
+2. Otherwise:
+       → process element individually
+       → move i by 1
+
+This ensures we do not unnecessarily iterate through
+elements already summarized in a block.
+
+--------------------------------------------------------
+TIME COMPLEXITY
+--------------------------------------------------------
+Preprocessing:
+    O(n)
+
+Each Query:
+    O(√n)
+    (at most √n block jumps + √n single elements)
+
+--------------------------------------------------------
+SPACE COMPLEXITY
+--------------------------------------------------------
+O(√n) extra space for block array
+
+--------------------------------------------------------
+WHEN TO USE
+--------------------------------------------------------
+• Static or rarely updated arrays
+• Multiple range queries
+• Constraints where O(n) per query is too slow,
+  but advanced data structures (Segment Tree / Fenwick)
+  may be unnecessary or overkill
+
+--------------------------------------------------------
+COMPARISON
+--------------------------------------------------------
+Technique           Query Time     Update Time
+------------------------------------------------
+Naive               O(n)           O(1)
+Sqrt Decomposition  O(√n)          O(1) / O(√n)
+Segment Tree        O(log n)       O(log n)
+
+--------------------------------------------------------
+SUMMARY
+--------------------------------------------------------
+Sqrt Decomposition trades memory and preprocessing
+for faster queries by grouping data into blocks of
+size √n and skipping work using precomputed results.
+========================================================
+*/
+
+// input data
+int n;
+vector<int> a(n);
+
+// preprocessing
+// ll blocks = floor(sqrt(n));
+// ll len = (n + blocks - 1) / blocks;
+int len = (int)sqrt(n + .0) + 1; // size of the block and the number of blocks
+vector<int> b(len);
+for (int i = 0; i < n; ++i)
+    b[i / len] += a[i];
+
+// answering the queries
+for (;;)
+{
+    int l, r;
+    // read input data for the next query
+    int sum = 0;
+    for (int i = l; i <= r;)
+        if (i % len == 0 && i + len - 1 <= r)
+        {
+            // if the whole block starting at i belongs to [l, r]
+            sum += b[i / len];
+            i += len;
+        }
+        else
+        {
+            sum += a[i];
+            ++i;
+        }
+}
+// We can update the value at an index i, and thus b[k] += (a[new] - a[old]) , k = i/blocks.
