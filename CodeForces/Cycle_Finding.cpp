@@ -1,18 +1,6 @@
 #include "bits/stdc++.h"
 using namespace std;
-
 using ll = long long;
-const ll INF = -1e18;
-
-
-vector<ll>cycle(vector<vector<ll>>&g , int node){
-
-    queue<pair<ll,ll>>q;
-    q.push({node , -1});
-
-    
-
-}
 
 int main()
 {
@@ -23,94 +11,68 @@ int main()
     cin >> n >> m;
 
     vector<tuple<ll, ll, ll>> edges;
-    vector<vector<ll>> graph(n + 1);
-    vector<vector<ll>> reverse_graph(n + 1);
-
     for (ll i = 0; i < m; i++)
     {
         ll u, v, w;
         cin >> u >> v >> w;
         edges.push_back({u, v, w});
-        graph[u].push_back(v);
-        reverse_graph[v].push_back(u);
     }
+    // sort(begin(edges) , end(edges));
 
-    // -------- Bellman-Ford (maximum path version) --------
-    vector<ll> d(n + 1, INF);
-    d[1] = 0;
+    vector<ll> d(n + 1, 0); // important change
+    vector<ll> parent(n + 1);
 
-    for (ll i = 1; i < n; i++)
+    ll x = -1;
+
+    // Bellman-Ford
+    for (int i = 1; i <= n; i++)
     {
-        bool updated = false;
+        x = -1;
         for (auto [u, v, w] : edges)
         {
-            if (d[u] != INF && d[u] + w > d[v])
+            if (d[u] + w < d[v])
             {
                 d[v] = d[u] + w;
-                updated = true;
-            }
-        }
-        if (!updated)
-            break;
-    }
-
-    // -------- Detect nodes affected by positive cycle --------
-    vector<bool> in_cycle(n + 1, false);
-
-    for (auto [u, v, w] : edges)
-    {
-        if (d[u] != INF && d[u] + w > d[v])
-        {
-            in_cycle[v] = true;
-        }
-    }
-
-    // -------- BFS from 1 (reachable from source) --------
-    vector<bool> reach_from_1(n + 1, false);
-    queue<ll> q;
-    q.push(1);
-    reach_from_1[1] = true;
-
-    while (!q.empty())
-    {
-        ll node = q.front();
-        q.pop();
-        for (ll nxt : graph[node])
-        {
-            if (!reach_from_1[nxt])
-            {
-                reach_from_1[nxt] = true;
-                q.push(nxt);
+                parent[v] = u;
+                x = v;
             }
         }
     }
-
-    // -------- BFS from n on reversed graph (can reach n) --------
-    vector<bool> reach_to_n(n + 1, false);
-    q.push(n);
-    reach_to_n[n] = true;
-
-    while (!q.empty())
+    for (ll i = 0; i < m; i++)
     {
-        ll node = q.front();
-        q.pop();
-        for (ll nxt : reverse_graph[node])
+        auto [u, v, w] = edges[i];
+        if (d[u] != 1e18 && d[u] + w < d[v])
         {
-            if (!reach_to_n[nxt])
-            {
-
-                reach_to_n[nxt] = true;
-
-                q.push(nxt);
-            }
+            d[v] = d[u] + w;
+            parent[v] = u;
+            x = v;
         }
     }
 
-    // -------- Final check --------
-    
-    if((int)in_cycle.size() == 0){
-        cout<<"NO\n";
-    }else{
-        
+    if (x == -1)
+    {
+        cout << "NO\n";
+        return 0;
     }
+    for (ll i = 0; i < n; i++)
+    {
+        x = parent[x];
+    }
+    cout<<"YES\n";
+    // now x points to start of a cycle.
+    vector<ll> cycles;
+    cycles.push_back(x);
+    x = parent[x];
+    while (x != cycles[0])
+    {
+        cycles.push_back(x);
+        x = parent[x];
+    }
+    cycles.push_back(x);
+    reverse(begin(cycles), end(cycles));
+    for (auto &X : cycles)
+    {
+        cout << X << " ";
+    }
+    cout << "\n";
 }
