@@ -23,3 +23,20 @@ int main()
 
     return 0;
 }
+
+/*
+#include <iostream>
+using namespace std;
+
+int main() {
+
+#ifdef TEST
+    cout << "Test version" << endl;
+#else
+    cout << "Production version" << endl;
+#endif
+
+    return 0;
+}
+
+*/
