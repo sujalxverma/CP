@@ -211,19 +211,19 @@ struct SegTree
     }
 
     // build from array
-    void build(vector<int> &arr, int x, int lx, int rx)
+    void build(vector<int> &arr, int node, int lx, int rx)
     {
         if (rx - lx == 1)
         {
             if (lx < (int)arr.size())
-                tree[x] = Node(arr[lx]);
+                tree[node] = Node(arr[lx]);
             return;
         }
 
         int mid = (lx + rx) / 2;
-        build(arr, 2 * x + 1, lx, mid);
-        build(arr, 2 * x + 2, mid, rx);
-        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
+        build(arr, 2 * node + 1, lx, mid);
+        build(arr, 2 * node + 2, mid, rx);
+        tree[node] = merge(tree[2 * node + 1], tree[2 * node + 2]);
     }
 
     void build(vector<int> &arr)
@@ -232,21 +232,21 @@ struct SegTree
     }
 
     // point update: set position i to value v
-    void set(int i, int v, int x, int lx, int rx)
+    void set(int i, int v, int node, int lx, int rx)
     {
         if (rx - lx == 1)
         {
-            tree[x] = Node(v);
+            tree[node] = Node(v);
             return;
         }
 
         int mid = (lx + rx) / 2;
         if (i < mid)
-            set(i, v, 2 * x + 1, lx, mid);
+            set(i, v, 2 * node + 1, lx, mid);
         else
-            set(i, v, 2 * x + 2, mid, rx);
+            set(i, v, 2 * node + 2, mid, rx);
 
-        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
+        tree[node] = merge(tree[2 * node + 1], tree[2 * node + 2]);
     }
 
     void set(int i, int v)
@@ -256,16 +256,16 @@ struct SegTree
 
     // range query [l, r), to include r => [l,r+1)
     // int x -> current node of the tree.
-    Node query(int l, int r, int x, int lx, int rx)
+    Node query(int l, int r, int node, int lx, int rx)
     {
         if (rx <= l || r <= lx)
             return NEUTRAL;
         if (l <= lx && rx <= r)
-            return tree[x];
+            return tree[node];
 
         int mid = (lx + rx) / 2;
-        Node left = query(l, r, 2 * x + 1, lx, mid);
-        Node right = query(l, r, 2 * x + 2, mid, rx);
+        Node left = query(l, r, 2 * node + 1, lx, mid);
+        Node right = query(l, r, 2 * node + 2, mid, rx);
         return merge(left, right);
     }
 
@@ -365,86 +365,136 @@ struct SegTree
 
 // Lazy Propogation Segment Tree.
 // sum query for range and updatation.
-struct SegTree
+struct Node
 {
-    int n;
-    vector<long long> tree, lazy;
+    long long val; // stores sum of segment
 
-    SegTree(int n)
+    Node(long long v = 0)
     {
-        this->n = n;
-        tree.resize(4 * n, 0);
-        lazy.resize(4 * n, 0);
-    }
-
-    // Build from initial array
-    void build(int node, int start, int end, const vector<long long> &a)
-    {
-        if (start == end)
-        {
-            tree[node] = a[start];
-            return;
-        }
-
-        int mid = (start + end) / 2;
-        build(node * 2, start, mid, a);
-        build(node * 2 + 1, mid + 1, end, a);
-
-        tree[node] = tree[node * 2] + tree[node * 2 + 1];
-    }
-
-    void push(int node, int start, int end)
-    {
-        if (lazy[node] != 0)
-        {
-            tree[node] += (end - start + 1) * lazy[node];
-
-            if (start != end)
-            { // have children
-                lazy[node * 2] += lazy[node];
-                lazy[node * 2 + 1] += lazy[node];
-            }
-
-            lazy[node] = 0;
-        }
-    }
-
-    void update(int node, int start, int end, int l, int r, long long val)
-    {
-        push(node, start, end);
-
-        if (r < start || end < l)
-            return;
-
-        if (l <= start && end <= r)
-        {
-            lazy[node] += val;
-            push(node, start, end);
-            return;
-        }
-
-        int mid = (start + end) / 2;
-        update(node * 2, start, mid, l, r, val);
-        update(node * 2 + 1, mid + 1, end, l, r, val);
-
-        tree[node] = tree[node * 2] + tree[node * 2 + 1];
-    }
-
-    long long query(int node, int start, int end, int l, int r)
-    {
-        push(node, start, end);
-
-        if (r < start || end < l)
-            return 0;
-
-        if (l <= start && end <= r)
-            return tree[node];
-
-        int mid = (start + end) / 2;
-        return query(node * 2, start, mid, l, r) + query(node * 2 + 1, mid + 1, end, l, r);
+        val = v;
     }
 };
 
+struct SegTree
+{
+    int size;
+    int real_size;
+    vector<Node> tree;
+    vector<char> marked;
+    vector<long long> lazy; // lazy array for range add
+    Node NEUTRAL = Node(0);
+
+    // merge function (sum)
+    Node merge(const Node &a, const Node &b)
+    {
+        return Node(a.val + b.val);
+    }
+
+    void init(int n)
+    {
+        real_size = n;
+        size = 1;
+        while (size < n)
+            size <<= 1;
+
+        tree.assign(2 * size, NEUTRAL);
+        lazy.assign(2 * size, 0LL);
+        marked.assign(2 * size, false);  // false -> no pending operation
+    }
+
+    // build
+    void build(vector<int> &arr, int node, int lx, int rx)
+    {
+        if (rx - lx == 1)
+        {
+            if (lx < (int)arr.size())
+                tree[node] = Node(arr[lx]);
+            return;
+        }
+
+        int mid = (lx + rx) / 2;
+        build(arr, 2 * node + 1, lx, mid);
+        build(arr, 2 * node + 2, mid, rx);
+        tree[node] = merge(tree[2 * node + 1], tree[2 * node + 2]);
+    }
+
+    void build(vector<int> &arr)
+    {
+        build(arr, 0, 0, size);
+    }
+
+    // apply lazy value to node
+    void apply(int node, int lx, int rx, long long v)
+    {
+        tree[node].val += (rx - lx) * v; // update segment sum
+        lazy[node] += v;
+        marked[node] = true;
+    }
+
+    // push lazy to children
+    void push(int node, int lx, int rx)
+    {
+        if (!marked[node] || rx - lx == 1)
+            return;
+
+        int mid = (lx + rx) / 2;
+
+        apply(2 * node + 1, lx, mid, lazy[node]);
+        apply(2 * node + 2, mid, rx, lazy[node]);
+
+        lazy[node] = 0;
+        marked[node] = false;
+    }
+
+    // range add [l, r)
+    void update(int l, int r, long long v, int node, int lx, int rx)
+    {
+        if (rx <= l || r <= lx)
+            return;
+
+        if (l <= lx && rx <= r)
+        {
+            apply(node, lx, rx, v);
+            return;
+        }
+
+        push(node, lx, rx);
+
+        int mid = (lx + rx) / 2;
+        update(l, r, v, 2 * node + 1, lx, mid);
+        update(l, r, v, 2 * node + 2, mid, rx);
+
+        tree[node] = merge(tree[2 * node + 1], tree[2 * node + 2]);
+    }
+
+    void update(int l, int r, long long v)
+    {
+        update(l, r, v, 0, 0, size);
+    }
+
+    // range query [l, r)
+    Node query(int l, int r, int node, int lx, int rx)
+    {
+        if (rx <= l || r <= lx)
+            return NEUTRAL;
+
+        if (l <= lx && rx <= r)
+            return tree[node];
+
+        push(node, lx, rx);
+
+        int mid = (lx + rx) / 2;
+        Node left = query(l, r, 2 * node + 1, lx, mid);
+        Node right = query(l, r, 2 * node + 2, mid, rx);
+
+        return merge(left, right);
+    }
+
+    Node query(int l, int r)
+    {
+        return query(l, r, 0, 0, size);
+    }
+};
 // Sparse Table
 // Min-sparse-table
 

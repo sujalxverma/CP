@@ -6,7 +6,7 @@ As per problem.
 1. If G(N,E) : N - 1 == E, then its a tree.
 2. But N == E, and no double edges and self loop, and it is one component only, then
    it means graph has 1 cylce.
-3. If V can reach cyclic nodes before M, then Yes, else NO.
+3. If V can reach any cyclic node before M, then Yes, else NO.
 */
 
 vector<vector<int>> g;

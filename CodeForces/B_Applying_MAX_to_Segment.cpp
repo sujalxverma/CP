@@ -58,7 +58,7 @@ struct SegTree
         if (start <= lx && rx <= end)
         {
             // can update this range.
-            lazy[node] += value;
+            lazy[node] = max(value , lazy[node]);
             return;
         }
 
@@ -77,17 +77,17 @@ struct SegTree
     {
         if (rx - lx == 1)
         {
-            return tree[node] + lazy[node];
+            return max(tree[node] , lazy[node]);
         }
 
         long long mid = (lx + rx) / 2;
         if (idx < mid)
         {
-            return query(idx, 2 * node + 1, lx, mid) + lazy[node];
+            return max(query(idx, 2 * node + 1, lx, mid) , lazy[node]);
         }
         else
         {
-            return query(idx, 2 * node + 2, mid, rx) + lazy[node];
+            return max(query(idx, 2 * node + 2, mid, rx) , lazy[node]);
         }
     }
 
