@@ -1,124 +1,97 @@
 #include "bits/stdc++.h"
 using namespace std;
-
-unordered_map<int, int> mp;
-vector<int> arr;
-vector<int> compressedValues;
-struct Node
-{
-    int val; // change type as needed
-
-    Node(int v)
-    {
-        val = v;
-    }
-};
+using ll = long long;
+vector<ll> employee;
+vector<ll> salary;
 
 struct SegTree
 {
-    int size;
-    vector<Node> tree;
-    Node NEUTRAL = Node(0); // neutral element for merge
+    ll size;
+    vector<ll> tree;
 
-    // merge two nodes
-    // can be modified.
-    Node merge(const Node &a, const Node &b)
-    {
-        return Node(a.val + b.val); // example: sum segment tree
-    }
-
-    // initialize tree
-    void init(int n)
+    void init(ll n)
     {
         size = 1;
         while (size < n)
-            size <<= 1;
-        tree.assign(2 * size, NEUTRAL);
+        {
+            size *= 2;
+        }
+        tree.assign(2 * size, 0);
     }
-
-    // build from array
-    void build(vector<int> &arr, int x, int lx, int rx)
+    void addUpdate(ll idx, ll node, ll lx, ll rx)
     {
         if (rx - lx == 1)
         {
-            if (lx < (int)arr.size())
-                tree[x] = Node(0);
+            tree[node] += 1;
             return;
         }
 
-        int mid = (lx + rx) / 2;
-        build(arr, 2 * x + 1, lx, mid);
-        build(arr, 2 * x + 2, mid, rx);
-        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
-    }
+        ll mid = (lx + rx) / 2;
 
-    void build(vector<int> &arr)
-    {
-        build(arr, 0, 0, size);
-    }
-
-    // point update: set position i to value v
-    void setValue(int i, int x, int lx, int rx)
-    {
-        if (rx - lx == 1)
+        if (idx < mid)
         {
-            tree[x] = Node(1 + tree[x].val);
-            return;
+            addUpdate(idx, 2 * node + 1, lx, mid);
         }
-
-        int mid = (lx + rx) / 2;
-        if (i < mid)
-            setValue(i, 2 * x + 1, lx, mid);
         else
-            setValue(i, 2 * x + 2, mid, rx);
+        {
+            addUpdate(idx, 2 * node + 2, mid, rx);
+        }
 
-        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
+        tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
     }
 
-    void setValue(int i)
+    void addUpdate(ll idx)
     {
-        setValue(i, 0, 0, size);
+        addUpdate(idx, 0, 0, size);
     }
 
-    // point update : remove value.
-    void removeValue(int i, int x, int lx, int rx)
+    void removeUpdate(ll idx, ll node, ll lx, ll rx)
     {
         if (rx - lx == 1)
         {
-            tree[x] = Node(tree[x].val - 1);
+            tree[node] -= 1;
             return;
         }
 
-        int mid = (lx + rx) / 2;
-        if (i < mid)
-            removeValue(i, 2 * x + 1, lx, mid);
+        ll mid = (lx + rx) / 2;
+
+        if (idx < mid)
+        {
+            removeUpdate(idx, 2 * node + 1, lx, mid);
+        }
         else
-            removeValue(i, 2 * x + 2, mid, rx);
+        {
+            removeUpdate(idx, 2 * node + 2, mid, rx);
+        }
 
-        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
+        tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
     }
 
-    void removeValue(int i)
+    void removeUpdate(ll idx)
     {
-        removeValue(i, 0, 0, size);
+        removeUpdate(idx, 0, 0, size);
     }
 
-    // range query [l, r)
-    // int x -> current node of the tree.
-    Node query(int l, int r, int x, int lx, int rx)
+    ll query(ll l, ll r, ll node, ll lx, ll rx)
     {
-        if (rx <= l || r <= lx)
-            return NEUTRAL;
+        if (lx >= r || rx <= l)
+        {
+            return 0;
+        }
         if (l <= lx && rx <= r)
-            return tree[x];
+        {
+            return tree[node];
+        }
 
-        int mid = (lx + rx) / 2;
-        Node left = query(l, r, 2 * x + 1, lx, mid);
-        Node right = query(l, r, 2 * x + 2, mid, rx);
-        return merge(left, right);
+        ll mid = (lx + rx) / 2;
+
+        ll left = query(l, r, 2 * node + 1, lx, mid);
+        ll right = query(l, r, 2 * node + 2, mid, rx);
+
+        return (left + right);
     }
 
-    Node query(int l, int r)
+    ll query(ll l, ll r)
     {
         return query(l, r, 0, 0, size);
     }
@@ -128,95 +101,56 @@ int main()
 {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    int n, q;
+
+    ll n, q;
     cin >> n >> q;
-    vector<int> allValues;
-    // vector<int>arr(n);
-    // arr.resize(n);
-    mp.reserve(allValues.size());
-    mp.max_load_factor(0.7);
 
-    for (int i = 0; i < n; i++)
+    for (ll i = 0; i < n; i++)
     {
-        int k;
-        cin >> k;
-        arr.push_back(k);
-        allValues.push_back(k);
-    }
-    vector<tuple<char, int, int>> tp;
-    while (q--)
-    {
-
-        char c;
-        cin >> c;
-        if (c == '?')
-        {
-            int a, b;
-            cin >> a >> b;
-            allValues.push_back(a);
-            allValues.push_back(b);
-            tp.push_back({c, a, b});
-        }
-        else
-        {
-            int a, b;
-            cin >> a >> b;
-            allValues.push_back(a);
-            allValues.push_back(b);
-            tp.push_back({c, a, b});
-        }
+        ll x;
+        cin >> x;
+        employee.push_back(x);
     }
 
-    sort(allValues.begin(), allValues.end());
-    allValues.erase(unique(allValues.begin(), allValues.end()), allValues.end());
-
-    // map<int,int>mp;
-    compressedValues.resize(n);
-    for (size_t i = 0; i < allValues.size(); ++i)
-
+    vector<tuple<char, ll, ll>> queries;
+    for (ll i = 0; i < q; i++)
     {
-        mp[allValues[i]] = i;
+        char t;
+        ll idx;
+        ll v;
+        cin >> t >> idx >> v;
+        queries.push_back({t, idx, v});
+        employee.push_back(v);
     }
-    for (int i = 0; i < n; i++)
-    {
-        compressedValues[i] = mp[arr[i]];
-    }
-    // for (auto x : compressedValues)
-    // {
-    //     cout << x << "\n";
-    // }
+    salary = employee;
+    sort(begin(salary), end(salary));
+    // Index compressing.
+    salary.erase(unique(begin(salary), end(salary)), end(salary));
+
     SegTree st;
-    st.init(allValues.size());
-    // st.build(allValues);
-
+    st.init((int)salary.size());
     for (int i = 0; i < n; i++)
     {
-        st.setValue(compressedValues[i]);
+        st.addUpdate(lower_bound(salary.begin(), salary.end(), employee[i]) - salary.begin());
     }
-
-    for (auto x : tp)
+    for (auto &[t, l, r] : queries)
     {
-        auto [ch, a, b] = x;
-        if (ch == '!')
+        if (t == '!')
         {
-            int k = a - 1; // convert to 0-based
-            int newSalary = b;
-
-            st.removeValue(compressedValues[k]);
-            compressedValues[k] = mp[newSalary];
-            st.setValue(compressedValues[k]);
+            // change salary.
+            ll idx = l;
+            ll value = r;
+            ll previdx = lower_bound(begin(salary), end(salary), employee[idx - 1]) - begin(salary);
+            ll newidx = lower_bound(begin(salary), end(salary), value) - begin(salary);
+            employee[idx - 1] = value;
+            st.addUpdate(newidx);
+            st.removeUpdate(previdx);
         }
         else
         {
-            auto ans = st.query(mp[a], mp[b] + 1);
-            cout << ans.val << "\n";
-
-            // These lines are much faster.
-            // int L = lower_bound(allValues.begin(), allValues.end(), a) - allValues.begin();
-            // int R = upper_bound(allValues.begin(), allValues.end(), b) - allValues.begin();
-
-            // auto ans = st.query(L, R);
-            // cout << ans.val << "\n";
+            ll starting = lower_bound(begin(salary), end(salary), l) - begin(salary);
+            ll ending = upper_bound(begin(salary), end(salary), r) - begin(salary);
+            cout << st.query(starting, ending) << "\n";
         }
     }
 

@@ -1,129 +1,95 @@
 #include "bits/stdc++.h"
 using namespace std;
-using ll =  long long ;
-struct Node
-{
-    int val; // change type as needed
-
-    Node(int v)
-    {
-        val = v;
-    }
-};
+using ll = long long;
+vector<ll> a;
 
 struct SegTree
 {
     int size;
-    vector<Node> tree;
-    Node NEUTRAL = Node(0); // neutral element for merge
+    vector<ll> tree;
 
-    // merge two nodes
-    // can be modified.
-    Node merge(const Node &a, const Node &b)
-    {
-        return Node(a.val + b.val); // example: sum segment tree
-    }
-
-    // initialize tree
     void init(int n)
     {
         size = 1;
         while (size < n)
-            size <<= 1;
-        tree.assign(2 * size, NEUTRAL);
+        {
+            size *= 2;
+        }
+        tree.assign(2 * size, 0);
     }
 
-    // build from array
-    void build(vector<int> &arr, int x, int lx, int rx)
+    void update(ll value, int idx, int node, int lx, int rx)
     {
         if (rx - lx == 1)
         {
-            if (lx < (int)arr.size())
-                tree[x] = Node(0);
+            tree[node] = value;
             return;
         }
-
         int mid = (lx + rx) / 2;
-        build(arr, 2 * x + 1, lx, mid);
-        build(arr, 2 * x + 2, mid, rx);
-        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
-    }
-
-    void build(vector<int> &arr)
-    {
-        build(arr, 0, 0, size);
-    }
-
-    // point update: set position i to value v
-    void set(int i, int v, int x, int lx, int rx)
-    {
-        if (rx - lx == 1)
+        if (idx < mid)
         {
-            tree[x] = tree[x].val + 1;
-            return;
+            update(value, idx, 2 * node + 1, lx, mid);
         }
-
-        int mid = (lx + rx) / 2;
-        if (i < mid)
-            set(i, v, 2 * x + 1, lx, mid);
         else
-            set(i, v, 2 * x + 2, mid, rx);
+        {
+            update(value, idx, 2 * node + 2, mid, rx);
+        }
 
-        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
+        tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
     }
 
-    void set(int i, int v)
+    void update(ll value, int idx)
     {
-        set(i, v, 0, 0, size);
+        update(value, idx, 0, 0, size);
     }
 
-    // range query [l, r)
-    // int x -> current node of the tree.
-    Node query(int l, int r, int x, int lx, int rx)
+    ll query(int l, int r, int node, int lx, int rx)
     {
-        if (rx <= l || r <= lx)
-            return NEUTRAL;
+        // no overlaping, out of required range.
+        if (lx >= r || rx <= l)
+        {
+            return 0;
+        }
         if (l <= lx && rx <= r)
-            return tree[x];
+        {
+            return tree[node];
+        }
 
         int mid = (lx + rx) / 2;
-        Node left = query(l, r, 2 * x + 1, lx, mid);
-        Node right = query(l, r, 2 * x + 2, mid, rx);
-        return merge(left, right);
+        ll left = query(l, r, 2 * node + 1, lx, mid);
+        ll right = query(l, r, 2 * node + 2, mid, rx);
+
+        return left + right;
     }
 
-    Node query(int l, int r)
+    ll query(int l, int r)
     {
         return query(l, r, 0, 0, size);
     }
 };
 
-
-
-int main() {
+int main()
+{
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+
     int n;
     cin >> n;
-    vector<int>a(n);
-    for(int i = 0; i < n ; i++){
-        cin >> a[i];
-    }
-    vector<int>b(n);
-    for(int i = 0; i < n ; i++){
-        b[i] = i+1;
+    a.resize(n);
+    for (auto &x : a)
+    {
+        cin >> x;
+        x--;
     }
 
     SegTree st;
     st.init(n);
-    st.build(b);
 
-    for(int i = 0; i < n ; i++){
-        cout<<st.query(a[i]-1,n).val<<" ";
-        st.set(a[i]-1 , 1);
-
+    for (int i = 0; i < n; i++)
+    {
+        cout << st.query(a[i] + 1, n) << " ";
+        st.update(1, a[i]);
     }
-    
 
     return 0;
 }

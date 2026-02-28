@@ -1,78 +1,95 @@
 #include "bits/stdc++.h"
 using namespace std;
+using ll = long long;
+vector<ll> a;
 
-struct SegmentTree
+struct SegTree
 {
     int size;
-    vector<long long> sums;
+    vector<ll> tree;
 
     void init(int n)
     {
         size = 1;
         while (size < n)
-            size <<= 1;
-        sums.assign(2 * size, 0LL);
+        {
+            size *= 2;
+        }
+        tree.assign(2 * size, 0);
     }
 
-    void build(vector<long long> &a, int x, int lx, int rx)
+    void build(int node, int lx, int rx)
     {
         if (rx - lx == 1)
         {
-            if (lx < (int)a.size())
-                sums[x] = a[lx];
+            if (lx < (int)a.size()) // if lx lies inside array range.
+            {
+                tree[node] = a[lx];
+                return;
+            }
             return;
         }
 
-        int m = (lx + rx) / 2;
-        build(a, 2 * x + 1, lx, m);
-        build(a, 2 * x + 2, m, rx);
-        sums[x] = sums[2 * x + 1] + sums[2 * x + 2];
-    }
+        int mid = (lx + rx) / 2;
 
-    void build(vector<long long> &a)
+        build(2 * node + 1, lx, mid);
+        build(2 * node + 2, mid, rx);
+
+        tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+    }
+    // lx and rx lies within [0,size)
+    void build()
     {
-        build(a, 0, 0, size);
+        build(0, 0, size);
     }
 
-    void set(int i, long long v, int x, int lx, int rx)
+    void update(ll value, int idx, int node, int lx, int rx)
     {
         if (rx - lx == 1)
         {
-            sums[x] = v;
+            tree[node] = value;
             return;
         }
-
-        int m = (lx + rx) / 2;
-        if (i < m)
-            set(i, v, 2 * x + 1, lx, m);
+        int mid = (lx + rx) / 2;
+        if (idx < mid)
+        {
+            update(value, idx, 2 * node + 1, lx, mid);
+        }
         else
-            set(i, v, 2 * x + 2, m, rx);
+        {
+            update(value, idx, 2 * node + 2, mid, rx);
+        }
 
-        sums[x] = sums[2 * x + 1] + sums[2 * x + 2];
+        tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
     }
 
-    void set(int i, long long v)
+    void update(ll value, int idx)
     {
-        set(i, v, 0, 0, size);
+        update(value, idx, 0, 0, size);
     }
 
-    long long sum(int x, int l, int r, int lx, int rx)
+    ll query(int l, int r, int node, int lx, int rx)
     {
-        if (rx <= l || r <= lx)
-            return 0LL;
-
+        // no overlaping, out of required range.
+        if (lx >= r || rx <= l)
+        {
+            return 0;
+        }
         if (l <= lx && rx <= r)
-            return sums[x];
+        {
+            return tree[node];
+        }
 
-        int m = (lx + rx) / 2;
-        long long s1 = sum(2 * x + 1, l, r, lx, m);
-        long long s2 = sum(2 * x + 2, l, r, m, rx);
-        return s1 + s2;
+        int mid = (lx + rx) / 2;
+        ll left = query(l, r, 2 * node + 1, lx, mid);
+        ll right = query(l, r, 2 * node + 2, mid, rx);
+
+        return left + right;
     }
 
-    long long sum(int l, int r)
+    ll query(int l, int r)
     {
-        return sum(0, l, r, 0, size);
+        return query(l, r, 0, 0, size);
     }
 };
 
@@ -83,33 +100,35 @@ int main()
 
     int n, q;
     cin >> n >> q;
+    a.resize(n);
+    for (auto &x : a)
+        cin >> x;
 
-    vector<long long> a(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
+    // for (auto &x : a)
+    //     cout << x << " ";
 
-    SegmentTree st;
+    SegTree st;
     st.init(n);
-    st.build(a);
+    st.build();
 
     while (q--)
     {
-        int op;
-        cin >> op;
-
-        if (op == 1)
+        int t;
+        cin >> t;
+        if (t == 1)
         {
-            int i;
-            long long v;
-            cin >> i >> v;
-            st.set(i, v);
+            int idx;
+            ll value;
+            cin >> idx >> value;
+            st.update(value, idx);
         }
         else
         {
             int l, r;
             cin >> l >> r;
-            cout << st.sum(l, r) << "\n";   // [l, r)
+            cout << st.query(l, r) << "\n";
         }
     }
+
     return 0;
 }
