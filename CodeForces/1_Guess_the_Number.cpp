@@ -26,6 +26,8 @@ int main() {
         }
     }
 
+
+
     // 5) final answer
     cout << "! " << l << '\n';
     cout.flush();       // 6) flush

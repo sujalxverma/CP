@@ -12,7 +12,11 @@ struct Node
 };
 
 struct SegTree
+
 {
+
+  
+  
     int size;
     vector<Node> tree;
     Node NEUTRAL = Node(0); // neutral element for merge
@@ -98,6 +102,11 @@ struct SegTree
     }
 };
 
+/*
+Considering each element y, let x ->number of elements greater than y , and z ->number of elements lesser than y
+Therefore considering triplets by taking y as centre is : (x * z).
+*/
+
 int main()
 {
     ios::sync_with_stdio(false);
@@ -144,6 +153,8 @@ int main()
         ans += (x.first * x.second);
     }
     cout << ans << "\n";
+
+    
 
     return 0;
 }
