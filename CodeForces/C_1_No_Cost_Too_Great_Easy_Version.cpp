@@ -1,133 +1,81 @@
-// VERMA
 #include "bits/stdc++.h"
-using namespace std;
-#include <random>
 #include <chrono>
-#include <numeric>
+using namespace std;
+using namespace std::chrono;
+const int MAXN = 300005;
+int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
 
-using ll = long long;
-using ld = long double;
-using vi = vector<int>;
-using vl = vector<long long>;
+  auto start = high_resolution_clock::now();
 
-std::mt19937_64 rng(chrono::steady_clock::now().time_since_epoch().count());
-
-constexpr int MOD = 1'000'000'007;
-constexpr int INF = 1'000'000'000;
-constexpr ll LINF = (ll)4e18;
-
-static inline void fastio()
-{
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-}
-
-#ifndef ONLINE_JUDGE
-template <typename T>
-void _pr(const T &v) { cerr << v; }
-template <typename T>
-void _pr(const vector<T> &v)
-{
-    cerr << "[ ";
-    for (auto &e : v)
-    {
-        _pr(e);
-        cerr << ' ';
-    }
-    cerr << "]";
-}
-#define debug(x)             \
-    do                       \
-    {                        \
-        cerr << #x << " = "; \
-        _pr(x);              \
-        cerr << '\n';        \
-    } while (0)
-#else
-#define debug(x) ((void)0)
-#endif
-
-void solve()
-{
+  int t;
+  cin >> t;
+  while (t--) {
     int n;
     cin >> n;
-    vector<int> a(n), b(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
-    for (int j = 0; j < n; j++)
-        cin >> b[j];
+    vector<int> a(n);
+    int o = 0;
+    int e = 0;
 
-    map<int, int> mp;
-
-    for (int i = 0; i < n; i++)
-    {
-        int val = a[i];
-        for (int j = 2; j * j <= val; j++)
-        {
-            if (val % j == 0)
-            {
-                mp[j]++;
-                while (val % j == 0)
-                    val /= j;
-            }
-        }
-        if (val > 1)
-            mp[val]++;
+    for (int i = 0; i < n; i++) {
+      cin >> a[i];
+      if (a[i] % 2 == 0) {
+        e++;
+      } else {
+        o++;
+      }
     }
 
-    for (auto &[prime, count] : mp)
-    {
-        if (prime == 1)
-            continue;
-        if (count >= 2)
-        {
-            cout << 0 << "\n";
-            return;
+    for (int i = 0; i < n; i++) {
+      int x;
+      cin >> x;
+    }
+    // all b[i] = 1, no need to take input.
+    if (e >= 2) {
+      cout << "0\n";
+      continue;
+    }
+    vector<int> f(MAXN, 0);
+    for (int i = 0; i < n; i++) {
+      if (a[i] == 1)
+        continue;
+      for (int j = 2; j <= a[i]; j++) {
+        if (a[i] % j == 0) {
+          f[j]++;
+          while (a[i] % j == 0) {
+            a[i] = a[i] / j;
+          }
         }
+      }
     }
 
-    for (int i = 0; i < n; i++)
-    {
-        int val = a[i] + 1;
-        for (int j = 2; j * j <= val; j++)
-        {
-            if (val % j == 0)
-            {
-                if (mp.count(j))
-                {
-                    cout << 1 << "\n";
-                    return;
-                }
-                while (val % j == 0)
-                    val /= j;
-            }
-        }
-        if (val > 1 && mp.count(val))
-        {
-            cout << 1 << "\n";
-            return;
-        }
+    int cnt = 0;
+    for (int i = 1; i < MAXN; i++) {
+      cnt = max(cnt, f[i]);
     }
 
-    cout << 2 << "\n";
-}
+    if (e == 1) {
+      if (cnt >= 2) {
+        cout << "0\n";
+      } else {
+        cout << "1\n";
+      }
+      continue;
+    }
+    if (e == 0) {
+      if (cnt >= 2) {
+        cout << "0\n";
+      } else {
+        cout << "2\n";
+      }
+      continue;
+    }
+  }
 
-int main()
-{
-#ifndef ONLINE_JUDGE
-    freopen("Error.txt", "w", stderr);
-#endif
-    fastio();
-    auto begin = chrono::steady_clock::now();
+  auto stop = high_resolution_clock::now();
+  auto duration = duration_cast<microseconds>(stop - start);
+  cerr << "Time taken: " << duration.count() << " microseconds\n";
 
-    int T = 1;
-    if (!(cin >> T))
-        return 0;
-    while (T--)
-        solve();
-
-    auto end = chrono::steady_clock::now();
-    auto ns = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
-    cerr << "Time measured: " << (ns * 1e-9) << " seconds.\n";
-    return 0;
+  return 0;
 }

@@ -34,5 +34,22 @@
         }
       }
     ]
-  }
+  },
+  "editor.formatOnType": true,
+  "editor.formatOnSave": true,
+  "[cpp]": {
+    "editor.defaultFormatter": "psycha0s.cpp-format"
+  },
+  "clangd.arguments": [
+    "--clang-tidy=false",
+    "--all-scopes-completion=false",
+    "--header-insertion=never"
+  ],
+  "clangd.onConfigChanged": "restart",
+  "editor.inlineSuggest.enabled": false,
+  "editor.codeLens": false,
+  "editor.lightbulb.enabled": "off",
+  "editor.inlayHints.enabled": "off",
+  "problems.decorations.enabled": false,
+  "editor.hover.enabled": "off"
 }

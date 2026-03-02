@@ -1,111 +1,94 @@
 #include "bits/stdc++.h"
+#include <chrono>
 using namespace std;
+using namespace std::chrono;
 
 using ll = long long;
-const ll INF = -1e18;
+const ll inf = -(1LL << 60);
 
-int main()
-{
-    ios::sync_with_stdio(false);
-    cin.tie(nullptr);
-
-    ll n, m;
-    cin >> n >> m;
-
-    vector<tuple<ll, ll, ll>> edges;
-    vector<vector<ll>> graph(n + 1);
-    vector<vector<ll>> reverse_graph(n + 1);
-
-    for (ll i = 0; i < m; i++)
-    {
-        ll u, v, w;
-        cin >> u >> v >> w;
-        edges.push_back({u, v, w});
-        graph[u].push_back(v);
-        reverse_graph[v].push_back(u);
+vector<ll> bfs(vector<vector<ll>> &g, ll node) {
+  ll n = g.size();
+  vector<ll> ans(n, 0);
+  queue<ll> q;
+  q.push(node);
+  vector<ll> v(n, 0);
+  v[node] = 1;
+  ans[node] = 1;
+  while (!q.empty()) {
+    auto u = q.front();
+    q.pop();
+    for (auto &k : g[u]) {
+      if (v[k] == 0) {
+        ans[k] = 1;
+        v[k] = 1;
+        q.push(k);
+      }
     }
+  }
+  return ans;
+}
 
-    // -------- Bellman-Ford (maximum path version) --------
-    vector<ll> d(n + 1, INF);
-    d[1] = 0;
+int main() {
+  ios::sync_with_stdio(false);
+  cin.tie(nullptr);
 
-    for (ll i = 1; i < n; i++)
-    {
-        bool updated = false;
-        for (auto [u, v, w] : edges)
-        {
-            if (d[u] != INF && d[u] + w > d[v])
-            {
-                d[v] = d[u] + w;
-                updated = true;
-            }
-        }
-        if (!updated)
-            break;
+  auto start = high_resolution_clock::now();
+
+  ll n, m;
+  cin >> n >> m;
+  vector<tuple<ll, ll, ll>> edges;
+  vector<vector<ll>> graph(n + 1);
+  vector<vector<ll>> revgraph(n + 1);
+
+  for (ll i = 0; i < m; i++) {
+    ll u, v, w;
+    cin >> u >> v >> w;
+    edges.push_back({u, v, w});
+    graph[u].push_back(v);
+    revgraph[v].push_back(u);
+  }
+
+  //   sort(edges.begin(), edges.end());
+  vector<ll> d(n + 1, inf);
+  d[1] = 0;
+  for (ll j = 1; j <= n - 1; j++) {
+    bool update = false;
+
+    for (auto &[u, v, w] : edges) {
+
+      if (d[u] != inf && d[u] + w > d[v]) {
+        d[v] = d[u] + w;
+        update = true;
+      }
     }
-
-    // -------- Detect nodes affected by positive cycle --------
-    vector<bool> in_cycle(n + 1, false);
-
-    for (auto [u, v, w] : edges)
-    {
-        if (d[u] != INF && d[u] + w > d[v])
-        {
-            in_cycle[v] = true;
-        }
+    if (!update) {
+      break;
     }
+  }
 
-    // -------- BFS from 1 (reachable from source) --------
-    vector<bool> reach_from_1(n + 1, false);
-    queue<ll> q;
-    q.push(1);
-    reach_from_1[1] = true;
+  vector<ll> cycle(n + 1, 0);
+  for (auto &[u, v, w] : edges) {
 
-    while (!q.empty())
-    {
-        ll node = q.front();
-        q.pop();
-        for (ll nxt : graph[node])
-        {
-            if (!reach_from_1[nxt])
-            {
-                reach_from_1[nxt] = true;
-                q.push(nxt);
-            }
-        }
+    if (d[u] != inf && d[u] + w > d[v]) {
+      cycle[v] = 1;
     }
+  }
 
-    // -------- BFS from n on reversed graph (can reach n) --------
-    vector<bool> reach_to_n(n + 1, false);
-    q.push(n);
-    reach_to_n[n] = true;
+  vector<ll> source = bfs(graph, 1);
+  vector<ll> target = bfs(revgraph, n);
 
-    while (!q.empty())
-    {
-        ll node = q.front();
-        q.pop();
-        for (ll nxt : reverse_graph[node])
-        {
-            if (!reach_to_n[nxt])
-            {
-
-                reach_to_n[nxt] = true;
-
-                q.push(nxt);
-            }
-        }
+  for (ll i = 1; i <= n; i++) {
+    if (cycle[i] && source[i] && target[i]) {
+      cout << "-1\n";
+      return 0;
     }
+  }
 
-    // -------- Final check --------
-    for (int i = 1; i <= n; i++)
-    {
-        if (in_cycle[i] && reach_from_1[i] && reach_to_n[i])
-        {
-            cout << -1 << "\n";
-            return 0;
-        }
-    }
+  cout << d[n] << "\n";
 
-    cout << d[n] << "\n";
-    return 0;
+  auto stop = high_resolution_clock::now();
+  auto duration = duration_cast<microseconds>(stop - start);
+  cerr << "Time taken: " << duration.count() << " microseconds\n";
+
+  return 0;
 }

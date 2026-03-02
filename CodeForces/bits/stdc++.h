@@ -1,29 +1,27 @@
 // bits/stdc++.h - custom version for macOS / Clang
 #pragma once
 
-#include <iostream>
-#include <vector>
 #include <algorithm>
+#include <array>
+#include <bitset>
+#include <cassert>
 #include <cmath>
 #include <cstring>
-#include <map>
-#include <set>
-#include <unordered_map>
-#include <unordered_set>
-#include <queue>
-#include <stack>
 #include <deque>
-#include <bitset>
 #include <functional>
-#include <numeric>
-#include <limits>
 #include <iomanip>
-#include <cassert>
+#include <iostream>
+#include <iterator>
+#include <limits>
+#include <list>
+#include <map>
+#include <numeric>
+#include <queue>
+#include <set>
 #include <sstream>
+#include <stack>
 #include <string>
 #include <tuple>
-#include <array>
-#include <list>
-#include <iterator>
-
-
+#include <unordered_map>
+#include <unordered_set>
+#include <vector>
