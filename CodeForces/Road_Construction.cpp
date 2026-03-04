@@ -2,8 +2,7 @@
 #include <chrono>
 using namespace std;
 using namespace std::chrono;
-using ll = long long;
-const ll mod = 998'244'353;
+
 class DSU {
 public:
   vector<int> parent, rank, size;
@@ -19,17 +18,17 @@ public:
     }
   }
 
-  int superParent(int node) {
+  int find(int node) {
     if (node == parent[node]) {
       return node;
     }
-    return parent[node] = superParent(parent[node]);
+    return parent[node] = find(parent[node]);
   }
 
   void unionByRank(int nodeA, int nodeB) {
     // it takes 2 nodes as argument.
-    int parentOfNodeA = superParent(nodeA);
-    int parentOfNodeB = superParent(nodeB);
+    int parentOfNodeA = find(nodeA);
+    int parentOfNodeB = find(nodeB);
 
     if (parentOfNodeA == parentOfNodeB) {
       return; // it simply means they are of part of same component.
@@ -48,8 +47,8 @@ public:
   }
   void unionBySize(int nodeA, int nodeB) // O(4@) -> O(constant)
   {                                      // it takes 2 nodes as argument.
-    int parentOfNodeA = superParent(nodeA);
-    int parentOfNodeB = superParent(nodeB);
+    int parentOfNodeA = find(nodeA);
+    int parentOfNodeB = find(nodeB);
 
     if (parentOfNodeA == parentOfNodeB) {
       return; // it simply means they are of part of same component.
@@ -70,12 +69,9 @@ public:
 };
 
 /*
-THE GREEDY APPROACH, USING DSU WE WILL MERGE EDGES FROM LARGEST TO SMALLEST,
-UNTIL THE NUMBER OF COMPONENTS <= 2.
-SAY IF CNT = 2, AND IF WE MERGE EDGES WHICH ARE NOT PART OF SAME COMPONENT, THEN
-IT WILL REDUCE THE NUMBER OF COMPONENT TO 1. AND AS WE ARE MOVING TO SMALLEST
-NODE WE CAN AVOID TO JOING THIS AND CONSIDER IT TO BE REMOVED EDGE.
-*/
+ * In every union operation, the find() (also known as find() in many texts)
+ * function must be called for both nodes.
+ */
 
 int main() {
   ios::sync_with_stdio(false);
@@ -85,31 +81,21 @@ int main() {
 
   int n, m;
   cin >> n >> m;
-
-  vector<int> u(m);
-  vector<int> v(m);
-  vector<ll> weights(m, 2);
-
-  for (int i = 0; i < m; i++) {
-    cin >> u[i] >> v[i];
-    weights[i] = (i == 0 ? 2 : (weights[i - 1] % mod * 2) % mod);
-  }
-
+  int ans = n;
+  int maxSize = 1;
   DSU dsu(n + 1);
-  ll ans = 0;
-  int component = n;
-  for (int i = m - 1; i >= 0; i--) {
-    if (dsu.superParent(u[i]) != dsu.superParent(v[i])) {
-      if (component > 2) {
-        component--;
-        dsu.unionBySize(u[i], v[i]);
-      } else {
-        ans = (ans % mod + weights[i] % mod) % mod;
-      }
+  for (int i = 1; i <= m; i++) {
+    int u, v;
+    cin >> u >> v;
+    if (dsu.find(u) != dsu.find(v)) {
+      dsu.unionBySize(v, u);
+      ans--;
+      maxSize =
+          max({maxSize, dsu.size[dsu.parent[v]], dsu.size[dsu.parent[u]]});
     }
-  }
 
-  cout << ans % mod << "\n";
+    cout << ans << " " << maxSize << "\n";
+  }
 
   auto stop = high_resolution_clock::now();
   auto duration = duration_cast<microseconds>(stop - start);

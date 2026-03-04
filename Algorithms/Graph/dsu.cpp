@@ -17,20 +17,20 @@ public:
         }
     }
 
-    int superParent(int node)
+    int find(int node)
     {
         if (node == parent[node])
         {
             return node;
         }
-        return parent[node] = superParent(parent[node]);
+        return parent[node] = find(parent[node]);
     }
 
     void unionByRank(int nodeA, int nodeB)
     {
         // it takes 2 nodes as argument.
-        int parentOfNodeA = superParent(nodeA);
-        int parentOfNodeB = superParent(nodeB);
+        int parentOfNodeA = find(nodeA);
+        int parentOfNodeB = find(nodeB);
 
         if (parentOfNodeA == parentOfNodeB)
         {
@@ -53,8 +53,8 @@ public:
     }
     void unionBySize(int nodeA, int nodeB)   // O(4@) -> O(constant)
     { // it takes 2 nodes as argument.
-        int parentOfNodeA = superParent(nodeA);
-        int parentOfNodeB = superParent(nodeB);
+        int parentOfNodeA = find(nodeA);
+        int parentOfNodeB = find(nodeB);
 
         if (parentOfNodeA == parentOfNodeB)
         {
@@ -75,5 +75,5 @@ public:
 };
 
 /*
-    * In every union operation, the superParent() (also known as find() in many texts) function must be called for both nodes.
+    * In every union operation, the find() (also known as find() in many texts) function must be called for both nodes.
 */
