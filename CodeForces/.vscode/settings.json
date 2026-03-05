@@ -51,5 +51,5 @@
   "editor.lightbulb.enabled": "off",
   "editor.inlayHints.enabled": "off",
   "problems.decorations.enabled": false,
-  "editor.hover.enabled": "off"
+  "editor.hover.enabled": "off",
 }
