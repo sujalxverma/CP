@@ -27,6 +27,46 @@ ll sumOfDigits(ll n) {
     return sum;
 }
 
+long long F(long long x, int k) {
+    if (x <= 0)
+        return 0;
+
+    string s = to_string(x);
+    int n = s.size();
+
+    long long powb[20];
+    powb[0] = 1;
+
+    for (int i = 1; i < 20; i++)
+        powb[i] = powb[i - 1] * (k + 1);
+
+    long long ans = 0;
+
+    // shorter lengths
+    for (int len = 1; len < n; len++)
+        ans += k * powb[len - 1];
+
+    // same length
+    for (int i = 0; i < n; i++) {
+
+        int d = s[i] - '0';
+        int start = (i == 0 ? 1 : 0);
+
+        for (int dig = start; dig < d && dig <= k; dig++)
+            ans += powb[n - i - 1];
+
+        if (d > k) {
+            ans += powb[n - i];
+            return ans;
+        }
+    }
+
+    return ans + 1;
+}
+long long countRange(long long s, long long e, int k) {
+    return F(e - 1, k) - F(s - 1, k);
+}
+
 /*
         ll l, r, k;
         cin >> l >> r >> k;
@@ -44,6 +84,14 @@ ll sumOfDigits(ll n) {
         cout << abs(end - start) << "\n";
 */
 
+/*
+If k is some power of 10, then answer is 0.
+One more Observation.
+If k%10 == 0, then also answer is 0.
+Actually, one more.
+If k>=10 , then answer is 0.
+*/
+
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
@@ -55,35 +103,58 @@ int main() {
     while (t--) {
         ll l, r, k;
         cin >> l >> r >> k;
-        if (k == 1) {
-            cout << (mod_pow(10, r, mod) - mod_pow(10, l, mod) + mod) % mod << "\n";
-            continue;
-        }
-
-        ll start = min(mod_pow(10, l, mod), mod_pow(10, r, mod));
-        ll end = max(mod_pow(10, l, mod), mod_pow(10, r, mod));
-        ll ans = 0;
-        for (ll i = start; i < end; i++) {
-            if (sumOfDigits((k % mod * i % mod) % mod) == k * sumOfDigits(i)) {
-                cout << i << "\n";
-                ans++;
-            }
-        }
-
+        cout << ((mod_pow(9 / k + 1, r, mod)) % mod - (mod_pow(9 / k + 1, l, mod)) % mod + mod) % mod << "\n";
         // ll l, r, k;
         // cin >> l >> r >> k;
+        // if (k >= 10) {
+        //     cout << "0\n";
+        //     continue;
+        // }
         // if (k == 1) {
-        //     cout << (mod_pow(10, r, mod) - mod_pow(10, l, mod) + mod) % mod << "\n";
+        //     cout << abs(mod_pow(10, r, mod) - mod_pow(10, l, mod)) << "\n";
         //     continue;
         // }
-        // if (l == 0) {
-        //     cout << mod_pow(2, r + 1, mod) - 1 << "\n";
-        //     continue;
-        // }
-        // ll end = mod_pow(2, r, mod) - 1;
-        // ll start = mod_pow(2, l, mod) - 1;
+        // if (k >= 5) {
+        //     ll start = mod_pow(2, l, mod) - 1;
+        //     ll end = mod_pow(2, r, mod) - 1;
 
-        // cout << abs(end - start) << "\n";
+        //     ll ans = abs(end - start);
+
+        //     cout << ans << "\n";
+        //     continue;
+        // }
+
+        // // ll start = mod_pow(2, l, mod) - 1;
+        // // ll end = mod_pow(2, r, mod) - 1;
+
+        // // ll ans = abs(end - start);
+
+        // // cout << ans << "\n";
+
+        // ll s = mod_pow(10, l, mod);
+        // ll e = mod_pow(10, r, mod);
+        // if (k == 2) {
+
+        //     cout << countRange(min(s, e), max(s, e), 4) << "\n";
+        // }
+        // if (k == 3) {
+        //     cout << countRange(min(s, e), max(s, e), 3) << "\n";
+        // }
+        // if (k == 4) {
+        //     cout << countRange(min(s, e), max(s, e), 2) << "\n";
+        // }
+        // continue;
+        // cout << s << " " << e << "\n";
+        // continue;
+        // int xt = 0;
+        // for (ll i = min(s, e); i < max(s, e); i++) {
+
+        //     if (sumOfDigits(i) * k == sumOfDigits((i % mod * k % mod) % mod)) {
+        //         cout << i << "\n";
+        //         xt++;
+        //     }
+        // }
+        // cout << xt;
     }
 
     auto stop = high_resolution_clock::now();
