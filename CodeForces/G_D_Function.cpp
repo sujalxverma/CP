@@ -1,156 +1,94 @@
-// VERMA
 #include "bits/stdc++.h"
+#include <chrono>
 using namespace std;
-typedef long long ll;
-typedef vector<int> vi;
-typedef vector<long long> vl;
-#define rep(i, a, b) for (int i = a; i < b; i++)
-#define rep2(i, a, b) for (long long i = a; i < b; i++)
-typedef unordered_map<int, int> umap;
-#define yes cout << "YES" << endl
-#define no cout << "NO" << endl
-#define even(a) (((a) % 2) == 0 ? 1 : 0)
-#define rev(v) reverse(v.begin(), v.end())
-#define sorting(v) sort(v.begin(), v.end())
-#define line cout << "\n"
-#define contains(vec, x) (std::find((vec).begin(), (vec).end(), (x)) != (vec).end())
-#define containsBS(vec, x) (std::binary_search((vec).begin(), (vec).end(), (x)))
-#define zerobits(x) __builtin_ctzll(x)
-#define setbits(x) __builtin_popcount(x)     // Count of set bits in int
-#define setbitsll(x) __builtin_popcountll(x) // Count of set bits in long long
-#define leadingzero(x) __builtin_clz(x)      // Leading zeros (int)
-#define trailingzero(x) __builtin_ctz(x)     // Trailing zeros (int)
-#define parity(x) __builtin_parity(x)        // 1 if odd number of set bits, else 0
+using namespace std::chrono;
+using ll = long long;
+const ll mod = 1e9 + 7;
 
-const int MOD = 1e9 + 7;
-const int INF = 1e9;
-const ll LINF = 1e18;
-
-inline bool prime(int num)
-{
-    if (num <= 1)
-        return false;
-    if (num == 2)
-        return true;
-    if (num % 2 == 0)
-        return false;
-    for (int i = 3; i * i <= num; i += 2)
-        if (num % i == 0)
-            return false;
-    return true;
-}
-inline int gcd(int a, int b)
-{
-    while (b != 0)
-    {
-        int temp = b;
-        b = a % b;
-        a = temp;
+// Modular Exponention
+ll mod_pow(ll base, ll exp, ll mod) {
+    ll res = 1;
+    base %= mod;
+    while (exp > 0) {
+        if (exp & 1)
+            res = (res * base) % mod;
+        base = (base * base) % mod;
+        exp >>= 1;
     }
-    return a;
+    return res;
 }
 
-inline int lcm(int a, int b)
-{
-    return a / gcd(a, b) * b;
-}
-
-#define ROTATE_VEC(v, k)                                 \
-    do                                                   \
-    {                                                    \
-        int __n = (int)(v).size();                       \
-        if (__n > 0)                                     \
-        {                                                \
-            int __k = (k) % __n;                         \
-            if (__k != 0)                                \
-            {                                            \
-                reverse((v).begin(), (v).end());         \
-                reverse((v).begin(), (v).begin() + __k); \
-                reverse((v).begin() + __k, (v).end());   \
-            }                                            \
-        }                                                \
-    } while (0)
-
-inline int mod_add(int a, int b) { return ((a % MOD) + (b % MOD)) % MOD; }
-inline int mod_sub(int a, int b) { return ((a % MOD) - (b % MOD) + MOD) % MOD; }
-inline int mod_mul(int a, int b) { return ((1LL * a % MOD) * (b % MOD)) % MOD; }
-
-template <typename T>
-void printVector(const T &val)
-{
-    cerr << val;
-}
-
-template <typename T>
-void printVector(const vector<T> &v)
-{
-    cerr << "[ ";
-    for (const auto &elem : v)
-    {
-        printVector(elem);
-        cerr << " ";
+ll sumOfDigits(ll n) {
+    ll sum = 0;
+    while (n > 0) {
+        sum += (n % 10);
+        n = n / 10;
     }
-    cerr << "]";
-}
-#ifndef ONLINE_JUDGE
-#define debug(x)       \
-    cerr << #x << " "; \
-    printVector(x);    \
-    cerr << endl;
-#else
-#define debug(x)
-#endif
-
-//------------------------------------------------------------------------------------------------------------//
-//                                          Here you go
-inline ll mod_pow(ll base, ll exp)
-{
-    ll result = 1;
-    base %= MOD;
-    while (exp > 0)
-    {
-        if (exp % 2 == 1)
-            result = (1LL * result * base) % MOD;
-        base = (1LL * base * base) % MOD;
-        exp /= 2;
-    }
-    return result;
+    return sum;
 }
 
+/*
+        ll l, r, k;
+        cin >> l >> r >> k;
+        if (k == 1) {
+            cout << (mod_pow(10, r, mod) - mod_pow(10, l, mod) + mod) % mod << "\n";
+            continue;
+        }
+        if (l == 0) {
+            cout << mod_pow(2, r + 1, mod) - 1 << "\n";
+            continue;
+        }
+        ll end = mod_pow(2, r + 1, mod) - 1;
+        ll start = mod_pow(2, l, mod) - 1;
 
-// void solve()
-// { ll l, r, k;
-//     cin >> l >> r >> k;
-//     ll base = 9 / k + 1;
-//     ll val_r = mod_pow(base, r);
-//     ll val_l = mod_pow(base, l);
-//     cout << (val_r - val_l + MOD) % MOD << "\n";
-// }
+        cout << abs(end - start) << "\n";
+*/
 
-void solve()
-{ ll l, r, k;
-    cin >> l >> r >> k;
-    ll base = 9 / k + 1;
-    ll val_r = mod_pow(base, r);
-    ll val_l = mod_pow(base, l);
-    cout << (val_r )<<"\n";
-     cout << (val_l )<<"\n";
-    
-}
-
-int main()
-{
-#ifndef ONLINE_JUDGE
-    freopen("Error.txt", "w", stderr);
-#endif
-
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    cout.tie(nullptr);
-    ll t;
+
+    auto start = high_resolution_clock::now();
+
+    int t;
     cin >> t;
-    while (t--)
-    {
-    solve();
+    while (t--) {
+        ll l, r, k;
+        cin >> l >> r >> k;
+        if (k == 1) {
+            cout << (mod_pow(10, r, mod) - mod_pow(10, l, mod) + mod) % mod << "\n";
+            continue;
+        }
+
+        ll start = min(mod_pow(10, l, mod), mod_pow(10, r, mod));
+        ll end = max(mod_pow(10, l, mod), mod_pow(10, r, mod));
+        ll ans = 0;
+        for (ll i = start; i < end; i++) {
+            if (sumOfDigits((k % mod * i % mod) % mod) == k * sumOfDigits(i)) {
+                cout << i << "\n";
+                ans++;
+            }
+        }
+
+        // ll l, r, k;
+        // cin >> l >> r >> k;
+        // if (k == 1) {
+        //     cout << (mod_pow(10, r, mod) - mod_pow(10, l, mod) + mod) % mod << "\n";
+        //     continue;
+        // }
+        // if (l == 0) {
+        //     cout << mod_pow(2, r + 1, mod) - 1 << "\n";
+        //     continue;
+        // }
+        // ll end = mod_pow(2, r, mod) - 1;
+        // ll start = mod_pow(2, l, mod) - 1;
+
+        // cout << abs(end - start) << "\n";
     }
+
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cerr << "Time taken: " << duration.count() << " microseconds\n";
+
+    return 0;
 }
