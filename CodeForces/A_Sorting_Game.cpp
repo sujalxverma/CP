@@ -25,19 +25,32 @@ int main() {
                 break;
             }
         }
-        bool f = false;
-
         for (int i = n - 1; i >= 0; i--) {
             if (s[i] == '0') {
                 ed = i;
                 break;
             }
         }
-
         if (st >= ed) {
             cout << "Bob\n";
             continue;
         }
+
+        int sta = -1;
+        int edn = -1;
+        for (int i = st; i <= ed; i++) {
+            if (s[i] == '0' && sta == -1) {
+                sta = i;
+                edn = i;
+            } else if (s[i] == '0' && sta != -1) {
+                edn = i;
+            }
+
+            if (s[i] == '1' && sta != -1 && edn != -1) {
+                break;
+            }
+        }
+
         int seg = 0;
         int cnt = 0;
         for (int i = st; i <= ed; i++) {
@@ -50,7 +63,10 @@ int main() {
                 }
             }
         }
-
+        if (cnt == n) {
+            cout << "Bob\n";
+            continue;
+        }
         if (cnt > 0) {
             seg++;
         }
@@ -59,6 +75,11 @@ int main() {
             continue;
         } else {
             cout << "Alice\n";
+            cout << edn - st + 1 << "\n";
+            for (int i = st + 1; i <= edn + 1; i++) {
+                cout << i << " ";
+            }
+            cout << "\n";
         }
     }
 
