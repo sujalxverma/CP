@@ -6,13 +6,13 @@ int main() {
     cin.tie(nullptr);
     int t;
     cin >> t;
-    while(t--){
+    while (t--) {
         int n;
         cin >> n;
-        for(int i = 1 ; i <= n ; i++){
-            cout<<i<<" ";
+        for (int i = 1; i <= n; i++) {
+            cout << i << " ";
         }
-        cout<<"\n";
+        cout << "\n";
     }
     return 0;
 }

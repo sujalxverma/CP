@@ -12,7 +12,7 @@ int main() {
 
         // 1) print query
         cout << mid << '\n';
-        cout.flush();   // 2) flush
+        cout.flush(); // 2) flush
 
         // 3) read response
         string response;
@@ -26,11 +26,9 @@ int main() {
         }
     }
 
-
-
     // 5) final answer
     cout << "! " << l << '\n';
-    cout.flush();       // 6) flush
+    cout.flush(); // 6) flush
 
-    return 0;           // 7) exit immediately
+    return 0; // 7) exit immediately
 }
