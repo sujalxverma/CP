@@ -1,62 +1,57 @@
-#include "bits/stdc++.h"
-#include <chrono>
+#include <iostream>
+#include <vector>
 using namespace std;
-using namespace std::chrono;
-using ll = long long;
-ll countSubstrings(string s, string t) {
-    int n = s.size(), m = t.size();
+string a, b;
+long long n, m;
+vector<vector<long long>> dp;
+/*
+ * Find number of substrings of a such that string b is its subsequence.
+ * How ?
+ * for each index i, find min r, such that it is a subsequence.
+ * then for every r' >= r, this hold true.
+ * thus its contribution is (n-r).
+ *
+ * Precomputation of next occurence.
+ * next[i][c] = smalong longest index >= i where character c appears.
+ * since only 26 characters, size is n*26
+ */
 
-    vector<vector<int>> next_pos(n + 2, vector<int>(26, -1));
+long long f(long long idx1, long long idx2) {
+    if (idx2 == m)
+        return (n - idx1 + 1);
+    if (idx1 == n)
+        return 0;
 
-    for (int c = 0; c < 26; c++)
-        next_pos[n][c] = -1;
+    if (n - idx1 < m - idx2)
+        return 0; // pruning
 
-    for (int i = n - 1; i >= 0; i--) {
-        next_pos[i] = next_pos[i + 1];
-        next_pos[i][s[i] - 'a'] = i;
+    long long &res = dp[idx1][idx2];
+    if (res != -1)
+        return res;
+
+    res = f(idx1 + 1, idx2);
+
+    if (a[idx1] == b[idx2]) {
+        res += f(idx1 + 1, idx2 + 1);
     }
 
-    ll ans = 0;
-
-    for (int l = 0; l < n; l++) {
-        int pos = l;
-        bool ok = true;
-
-        for (int j = 0; j < m; j++) {
-            if (pos >= n) {
-                ok = false;
-                break;
-            }
-            pos = next_pos[pos][t[j] - 'a'];
-            if (pos == -1) {
-                ok = false;
-                break;
-            }
-            pos++;
-        }
-
-        if (ok) {
-            int r = pos - 1;
-            ans += (n - r);
-        }
-    }
-
-    return ans;
+    return res;
 }
-
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    auto start = high_resolution_clock::now();
-
-    string a, b;
     cin >> a >> b;
-    ll n = (ll)a.length();
-    cout << n * (n + 1) / 2 - countSubstrings(a, b) << "\n";
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    // cerr << "Time taken: " << duration.count() << " microseconds\n";
 
-    return 0;
+    n = a.length();
+    m = b.length();
+
+    dp.assign(n, vector<long long>(m, -1));
+
+    long long ans = 0;
+    for (long long l = 0; l < n; l++) {
+        ans += f(l, 0);
+    }
+
+    cout << ans << "\n";
 }
