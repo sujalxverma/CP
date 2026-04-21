@@ -139,7 +139,7 @@ int main()
     cout << duration.count() << " second\n";
 }
 */
-
+// ----------------------------------------------------------------
 /*
     ~Thread using Non static member function.~
 
@@ -158,4 +158,68 @@ int main(){
     std :: thread t1 (&Base::run , &b , 10);
     t1.join();
 }
+*/
+// ----------------------------------------------------------------
+// Use of detach()
+/*
+detach() removes synchronization
+No guarantee that fun() gets CPU time before process exits
+Scheduler decides execution order
+Process exit kills unfinished threads
+
+
+void fun(int count)
+{
+    while (count--)
+    {
+        cout << "Ok..\n";
+    }
+    // sleep(3);
+}
+
+int main()
+{
+    std::thread t1(fun, 15);
+    // assert(t1.joinable()); t1.join();
+    t1.detach();
+    cout << "Done\n";
+}
+    */
+
+// ----------------------------------------------------------------
+/*
+
+Use of mutex to avoid race condition b/w two threads.
+
+#include <mutex>
+int val = 0;
+void process1()
+{
+    val++;
+}
+mutex m;
+
+void fun()
+{
+    // m.try_lock();
+    m.lock();
+    val++;
+    m.unlock();
+}
+
+int main()
+{
+
+    std::thread t1(fun);
+    std::thread t2(fun);
+    // assert(t1.joinable()); t1.join();
+
+    t1.join();
+    t2.join();
+    cout << val << "\n";
+    cout << "Done\n";
+}
+
+
+
 */
