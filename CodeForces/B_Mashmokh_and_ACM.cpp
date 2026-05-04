@@ -1,56 +1,50 @@
 #include "bits/stdc++.h"
+#include <chrono>
 using namespace std;
-using ll = long long;
-const ll mod = 1e9 + 7;
-
-ll f(vector<vector<ll>> &dp, int idx, ll num, ll n, ll k)
-{
-    if (idx == k)
-    {
-        return 1;
-    }
-
-    if (dp[idx][num] != -1)
-    {
-        return dp[idx][num] % mod;
-    }
-    ll ans = 0;
-    for (ll i = num; i <= n; i += num)
-    {
-        ans = (ans + f(dp, idx + 1, i, n, k)) % mod;
-    }
-    return dp[idx][num] = ans % mod;
-}
-
-ll f_tab(ll n, ll k)
-{
-    vector<vector<ll>> dp(k+1, vector<ll>(n + 1, -1));
-    for(ll i = 1 ; i <= n ; i++){
-        dp[k][i] = 1;
-    }
-    for(ll i = k-1 ; i >= 0 ; i--){
-        for(ll j = 1 ; j <= n ; j++){
-            ll ans = 0;
-            for(ll z = j ; z <= n ; z+=j){
-                ans = (ans + dp[i+1][z])%mod ;
-            }
-            dp[i][j] = ans;
-        }
-    }
-
-    return dp[0][1]%mod;
-}
-
-int main()
-{
+using namespace std::chrono;
+const long long mod = 1e9 + 7;
+/*
+1. dp[len][num] -> stores how many ways does the sequence can form, with length->len and ending number->num.
+2. initially dp[1][num] = 1, cause if length is 1, then that number is present alone in seq.
+3. then we traverse with len : 2 -> k.
+4. for every number (say A), we find all its factors, and if B is factor of A, then dp[len][A] += dp[len-1][B].
+5. At end we store count for all dp[k][number], means length is len, and seq ends with this->number.
+*/
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    ll n, k;
+
+    auto start = high_resolution_clock::now();
+
+    long long n, k;
     cin >> n >> k;
 
-    // vector<vector<ll>> dp(k, vector<ll>(n + 1, -1));
-    // ll ans = f(dp, 0, 1, n, k);
-    ll ans = f_tab(n,k);
-    cout << ans % mod << "\n";
+    vector<vector<long long>> dp(k + 1, vector<long long>(2001, 0));
+    for (long long i = 1; i <= 2000; i++) {
+        dp[1][i] = 1;
+    }
+
+    for (int len = 2; len <= k; len++) {
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j * j <= i; j++) {
+                if (i % j == 0) {
+                    dp[len][i] += dp[len - 1][j] % mod;
+                    if (i / j != j) {
+                        dp[len][i] += dp[len - 1][i / j] % mod;
+                    }
+                }
+            }
+        }
+    }
+    long long cnt = 0;
+    for (int i = 1; i <= n; i++) {
+        cnt = (cnt + dp[k][i]) % mod;
+    }
+    cout << cnt << "\n";
+
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    cerr << "Time taken: " << duration.count() << " microseconds\n";
+
     return 0;
 }
