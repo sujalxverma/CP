@@ -11,24 +11,35 @@ int main() {
 
     int n;
     cin >> n;
-    vector<int> a(n + 1);
-    for (int i = 1; i <= n; i++) {
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) {
         cin >> a[i];
     }
+    sort(begin(a), end(a));
 
-    sort(begin(a) + 1, end(a));
-
-    int idx = 0;
-    for (int i = 1; i <= n; i++) {
-        if (a[i] * 2 <= a[n]) {
-            // do nothing
-        } else {
-            idx = i;
+    int firstRange = n / 2;
+    int ans = n;
+    int ptr = firstRange;
+    for (int i = 0; i < firstRange; i++) {
+        int v = a[i];
+        while (ptr < n) {
+            if (a[ptr] >= 2 * v) {
+                ptr++;
+                ans--;
+                break;
+            } else {
+                ptr++;
+            }
+            if (ptr == n) {
+                break;
+            }
+        }
+        if (ptr == n) {
             break;
         }
     }
-    idx--;
-    cout << (n - idx) + (n - idx > idx ? 0 : (idx) - (n - idx)) << "\n";
+
+    cout << ans << "\n";
 
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
