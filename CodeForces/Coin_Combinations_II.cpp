@@ -1,34 +1,27 @@
 #include "bits/stdc++.h"
 using namespace std;
-using ll = long long;
-const ll mod = 1e9 + 7;
-
-/*
-It is a combnational DP,
-means 1 + 2 + 3 = x , is same as 2 + 3 + 1 = x. and so on.
-*/
-
-int main()
-{
+int n, c;
+const int mod = 1e9 + 7;
+int main(int args, char *argv[]) {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    ll m, n;
-    cin >> m >> n;
-    vector<ll> a(m);
-    for (int i = 0; i < m; i++)
+    cin >> n >> c;
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) {
         cin >> a[i];
-    sort(a.begin(), a.end());
-
-    vector<ll> dp(n + 1, 0);
+    }
+    vector<int> dp(c + 1, 0);
     dp[0] = 1;
-    for (ll i = 0; i < m; i++)
-    {
-        for (ll j = a[i]; j <= n; j++)
-        {
-            dp[j] += dp[j - a[i]] % mod;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j <= c; j++) {
+            if (a[i] <= j) {
+                dp[j] = (dp[j] + dp[j - a[i]]) % mod;
+            }
         }
     }
-    cout << dp[n] % mod << "\n";
+
+    cout << dp[c] << "\n";
+
     return 0;
 }
