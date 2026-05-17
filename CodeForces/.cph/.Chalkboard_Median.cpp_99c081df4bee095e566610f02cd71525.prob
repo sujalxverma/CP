@@ -1,0 +1,1 @@
+{"name":"Local: Chalkboard_Median","url":"/Users/sujalverma/Documents/Code/CP/CodeForces/Chalkboard_Median.cpp","tests":[{"id":1778933220144,"input":"5\n3\n2 3\n1 2\n8 9\n","output":"3\n2\n3"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/sujalverma/Documents/Code/CP/CodeForces/Chalkboard_Median.cpp","group":"local","local":true}
