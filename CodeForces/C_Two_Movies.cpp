@@ -1,54 +1,62 @@
 #include "bits/stdc++.h"
 using namespace std;
 
-int main()
-{
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+
     int t;
     cin >> t;
-    while (t--)
-    {
+    while (t--) {
         int n;
         cin >> n;
-        int a[n], b[n];
-        for (int i = 0; i < n; i++)
-        {
-            cin >> a[i];
-        }
-        for (int i = 0; i < n; i++)
-        {
-            cin >> b[i];
+        vector<int> a(n), b(n);
+        for (auto &x : a)
+            cin >> x;
+        for (auto &x : b)
+            cin >> x;
+
+        int mini = 0;
+        int maxi = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (mini <= maxi) {
+                if (a[i] >= b[i]) {
+                    if ((mini) + a[i] >= mini) {
+                        mini += a[i];
+                    } else {
+                        maxi += a[i];
+                    }
+                } else {
+                    if (mini + b[i] >= mini) {
+                        mini += b[i];
+                    } else {
+                        maxi += b[i];
+                    }
+                }
+            } else {
+                if (a[i] >= b[i]) {
+                    if ((maxi) + a[i] >= maxi) {
+                        maxi += a[i];
+                    } else {
+                        mini += a[i];
+                    }
+                } else {
+                    if (maxi + b[i] >= maxi) {
+                        maxi += b[i];
+                    } else {
+                        mini += b[i];
+                    }
+                }
+            }
+
+            // if (maxi < mini) {
+            //     swap(maxi, mini);
+            // }
         }
 
-        int first = 0;
-        int second = 0;
-        int ans = -1e8;
-        for (int i = 0; i < n; i++)
-        {
-            if (a[i] == -1 && b[i] == -1)
-            {
-                if (first >= second)
-                {
-                    first--;
-                }
-                else
-                {
-                    second--;
-                }
-            }
-            else if (a[i] == 1 && b[i] != 1)
-            {
-                first++;
-            }
-            else if (a[i] != 1 && b[i] == 1)
-            {
-                second++;
-                // do nothing
-            }
-            ans = max(ans, min(first, second));
-        }
-        cout<<ans<<"\n";
+        cout << min(mini, maxi) << endl;
     }
+
     return 0;
 }
