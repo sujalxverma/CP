@@ -399,7 +399,7 @@ struct SegTree
 
         tree.assign(2 * size, NEUTRAL);
         lazy.assign(2 * size, 0LL);
-        marked.assign(2 * size, false);  // false -> no pending operation
+        marked.assign(2 * size, false); // false -> no pending operation
     }
 
     // build
@@ -710,3 +710,446 @@ for (;;)
         }
 }
 // We can update the value at an index i, and thus b[k] += (a[new] - a[old]) , k = i/blocks.
+
+// ----------------
+// ----------------
+// Trie
+/*
+    ============================
+            TRIE DATA STRUCTURE
+    ============================
+
+    A Trie (Prefix Tree) is a special tree-like data structure
+    used to store strings efficiently.
+
+    ------------------------------------------------------------
+    MAIN IDEA
+    ------------------------------------------------------------
+
+    Each node represents a character.
+
+    Paths from root -> node form prefixes.
+
+    Example:
+
+        insert("apple")
+
+        root
+         |
+         a
+         |
+         p
+         |
+         p
+         |
+         l
+         |
+         e
+
+    Every edge stores one character.
+
+    A complete word is marked using:
+        leaf = true
+
+    ------------------------------------------------------------
+    WHY TRIE IS USEFUL
+    ------------------------------------------------------------
+
+    Compared to normal string storage:
+
+        vector<string>
+        set<string>
+        unordered_set<string>
+
+    Trie is extremely efficient for:
+
+        1. Prefix searching
+        2. Dictionary problems
+        3. Auto-complete
+        4. Lexicographical traversal
+        5. XOR problems (binary trie)
+        6. String matching
+
+    ------------------------------------------------------------
+    TIME COMPLEXITY
+    ------------------------------------------------------------
+
+    Let:
+        L = length of string
+
+    insert      -> O(L)
+    search      -> O(L)
+    prefix check-> O(L)
+
+    Independent of number of strings.
+
+    ------------------------------------------------------------
+    SPACE COMPLEXITY
+    ------------------------------------------------------------
+
+    Worst case:
+        O(total characters inserted)
+
+    Each node stores:
+        26 pointers
+        + leaf flag
+
+    ------------------------------------------------------------
+    STRUCTURE OF NODE
+    ------------------------------------------------------------
+
+    child[26]
+        Stores pointers to next characters.
+
+        child[0] -> 'a'
+        child[1] -> 'b'
+        ...
+        child[25] -> 'z'
+
+    leaf
+        true  -> complete word ends here
+        false -> only prefix till here
+
+    ------------------------------------------------------------
+    WORKING OF INSERT
+    ------------------------------------------------------------
+
+    Example:
+        insert("cat")
+
+    Step 1:
+        Start from root.
+
+    Step 2:
+        Check child['c'].
+
+        If absent:
+            create new node.
+
+    Step 3:
+        Move to node 'c'.
+
+    Step 4:
+        Repeat for 'a'.
+
+    Step 5:
+        Repeat for 't'.
+
+    Step 6:
+        Mark last node:
+            leaf = true
+
+    ------------------------------------------------------------
+    WORKING OF SEARCH
+    ------------------------------------------------------------
+
+    Example:
+        search("cat")
+
+    Traverse character by character.
+
+    If any required child does not exist:
+        return false
+
+    After traversal:
+
+        return node->leaf
+
+    WHY?
+
+    Because:
+
+        "cat" may exist as prefix only.
+
+    Example:
+        inserted = "cater"
+
+    Then:
+        c-a-t exists
+
+    But:
+        "cat" is NOT complete word.
+
+    So leaf checking is necessary.
+
+    ------------------------------------------------------------
+    WORKING OF PREFIX CHECK
+    ------------------------------------------------------------
+
+    Example:
+        isPrefix("app")
+
+    We only check whether path exists.
+
+    No need for leaf checking.
+
+    Because:
+        prefix only requires existence.
+
+    Example:
+        inserted = "apple"
+
+    Then:
+        "app" is valid prefix.
+
+    ------------------------------------------------------------
+    DIFFERENCE:
+    ------------------------------------------------------------
+
+        search("app")
+            checks FULL WORD
+
+        isPrefix("app")
+            checks only PREFIX
+
+    ------------------------------------------------------------
+    APPLICATIONS
+    ------------------------------------------------------------
+
+    1. AUTOCOMPLETE SYSTEM
+    ------------------------------------------------
+
+        Mobile keyboard suggestions
+        Google search suggestions
+
+        Example:
+            insert:
+                apple
+                app
+                apply
+
+            typing:
+                "app"
+
+            Trie quickly gives:
+                apple
+                app
+                apply
+
+    ------------------------------------------------------------
+    2. DICTIONARY / SPELL CHECKER
+    ------------------------------------------------
+
+        Fast word existence checking.
+
+    ------------------------------------------------------------
+    3. PREFIX COUNTING
+    ------------------------------------------------
+
+        Count how many words share same prefix.
+
+    ------------------------------------------------------------
+    4. XOR MAXIMIZATION (BINARY TRIE)
+    ------------------------------------------------
+
+        Important in CP.
+
+        Used in:
+            max xor pair
+            xor subarray
+            xor queries
+
+    ------------------------------------------------------------
+    5. LEXICOGRAPHICAL SORTING
+    ------------------------------------------------
+
+        DFS traversal of trie gives words
+        in dictionary order naturally.
+
+    ------------------------------------------------------------
+    6. STRING MATCHING
+    ------------------------------------------------
+
+        Multiple pattern searching.
+
+    ------------------------------------------------------------
+    7. IP ROUTING
+    ------------------------------------------------
+
+        Routers use tries for prefix matching.
+
+    ------------------------------------------------------------
+    IMPORTANT OBSERVATIONS
+    ------------------------------------------------------------
+
+    1.
+        Root node stores empty string.
+
+    2.
+        Trie is usually used for lowercase letters.
+
+    3.
+        For uppercase/digits:
+            increase alphabet size.
+
+    4.
+        Memory usage can become huge.
+
+    5.
+        Optimized versions:
+            compressed trie
+            ternary search tree
+            persistent trie
+
+    ------------------------------------------------------------
+    EXAMPLE
+    ------------------------------------------------------------
+
+        insert("apple")
+        insert("app")
+
+        search("app")      -> true
+        search("appl")     -> false
+
+        isPrefix("appl")   -> true
+        isPrefix("axy")    -> false
+
+    ------------------------------------------------------------
+    COMMON CP EXTENSIONS
+    ------------------------------------------------------------
+
+    Add:
+
+        int cntPrefix;
+        int cntEnd;
+
+    Useful for:
+
+        count words with prefix
+        erase word
+        kth lexicographic string
+
+    ------------------------------------------------------------
+    MEMORY NOTE
+    ------------------------------------------------------------
+
+    Since nodes are created dynamically:
+
+        new TrieNode()
+
+    they remain in heap memory.
+
+    Proper destructor/freeing is needed
+    in production systems.
+
+    In CP:
+        usually ignored.
+
+*/
+struct TrieNode
+{
+    bool leaf;
+    TrieNode *arr[26];
+    int endWith;
+    int countPrefix;
+    TrieNode()
+    {
+        leaf = false;
+        endWith = 0;
+        countPrefix = 0;
+        for (int i = 0; i < 26; i++)
+        {
+            arr[i] = nullptr; // point to nullptr.
+        }
+    }
+};
+
+struct Trie
+{
+    TrieNode *root;
+    Trie()
+    {
+        root = new TrieNode();
+    }
+
+    void insert(const string &word)
+    {
+        TrieNode *curr = root;
+        for (char ch : word)
+        {
+            if (curr->arr[ch - 'a'] == nullptr)
+            {
+                TrieNode *node = new TrieNode();
+                curr->arr[ch - 'a'] = node;
+            }
+            curr = curr->arr[ch - 'a'];
+            curr->countPrefix++;
+        }
+        curr->leaf = true;
+        curr->endWith++;
+    }
+
+    // if word exist in Trie or not.
+    bool search(const string &word)
+    {
+        TrieNode *curr = root;
+        for (char ch : word)
+        {
+            if (curr->arr[ch - 'a'] == nullptr)
+            { // if curr->arr[ch - 'a'] points to nullptr, it means this letter was not added into Trie.
+                // it was then its refrence node must have created, and that node points to nullptr.
+                return false;
+            }
+            curr = curr->arr[ch - 'a'];
+        }
+
+        return curr->leaf;
+    }
+
+    bool prefix(const string &word)
+    {
+        TrieNode *curr = root;
+        for (char ch : word)
+        {
+            if (curr->arr[ch - 'a'] == nullptr)
+            { // if curr->arr[ch - 'a'] points to nullptr, it means this letter was not added into Trie.
+                // it was then its refrence node must have created, and that node points to nullptr.
+                return false;
+            }
+            curr = curr->arr[ch - 'a'];
+        }
+
+        return true;
+    }
+
+    int countEndingWith(const string &word)
+    {
+        TrieNode *curr = root;
+        for (char ch : word)
+        {
+            if (curr->arr[ch - 'a'] == nullptr)
+            {
+                return 0;
+            }
+            curr = curr->arr[ch - 'a'];
+        }
+
+        return curr->endWith;
+    }
+    int countStartingWith(const string &word)
+    {
+        TrieNode *curr = root;
+        for (char ch : word)
+        {
+            if (curr->arr[ch - 'a'] == nullptr)
+            {
+                return 0;
+            }
+            curr = curr->arr[ch - 'a'];
+        }
+
+        return curr->countPrefix;
+    }
+    void erase(const string &word)
+    {
+        TrieNode *curr = root;
+
+        for (char ch : word)
+        {
+            curr = curr->arr[ch - 'a'];
+            curr->countPrefix--;
+        }
+
+        curr->endWith--;
+    }
+};

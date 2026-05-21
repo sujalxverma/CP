@@ -1,58 +1,52 @@
 #include "bits/stdc++.h"
 using namespace std;
-int n, k;
-pair<int, int> f(vector<int> a, int m) {
-    int op = k;
-    unordered_map<int, int> mp;
-    for (int i = 0; i < n; i++) {
-        int diff = max(0, m - a[i]);
-        if (op >= diff) {
-            a[i] = m;
-            op -= diff;
-            mp[a[i]]++;
-        } else {
-            mp[a[i]]++;
-        }
-    }
-    int v = 0;
-    int c = 0;
-    for (auto &[x, y] : mp) {
-        if (y > c) {
-            c = y;
-            v = x;
-        }
-    }
-    if (mp.count(m)) {
-        if (mp[v] == mp[m]) {
-        }
-    }
-    if (v == m) {
-        return {v, c};
-    }
-    return {-1, -1};
+long long n, k;
+
+long long check(vector<long long> &p, long long &cnt, long long &idx, long long &val) {
+    long long req = p[idx] - (idx - cnt >= 0 ? p[idx - cnt] : 0);
+    long long cost = cnt * val;
+    return (cost - req <= k);
 }
+
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+
     cin >> n >> k;
-    vector<int> a(n);
-    for (auto &x : a)
-        cin >> x;
-    int s = 0;
-    int e = 1e9;
-    int ans = 0;
-    int fr = 0;
+    vector<long long> a(n);
+    for (long long i = 0; i < n; i++) {
+        cin >> a[i];
+    }
+
     sort(begin(a), end(a));
-    while (s <= e) {
-        int m = s + (e - s) / 2;
-        auto [d, b] = f(a, m);
-        if (d == -1) {
-            s = m + 1;
+    vector<long long> p(n, a[0]);
+    for (long long i = 1; i < n; i++) {
+        p[i] = p[i - 1] + a[i];
+    }
+    long long val = 1e9;
+    long long freq = -1e9;
+    for (long long i = 0; i < n; i++) {
+        long long s = 1;
+        long long e = i + 1;
+        long long f = 0;
+        while (s <= e) {
+            long long m = s + (e - s) / 2;
+            if (check(p, m, i, a[i])) {
+                f = m;
+                s = m + 1;
+            } else {
+                e = m - 1;
+            }
+        }
+        if (f == freq) {
+            val = min(val, a[i]);
+        } else if (f > freq) {
+            val = a[i];
+            freq = f;
         } else {
-            ans = d;
-            fr = b;
+            // do nothing.
         }
     }
-    cout << ans << " " << fr << "\n";
+    cout << freq << " " << val << "\n";
     return 0;
 }

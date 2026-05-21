@@ -17,14 +17,16 @@ constexpr int INF = 1'000'000'000;
 constexpr ll LINF = (ll)4e18; // wider than 1e18 for safety
 
 // Fast IO
-static inline void fastio() {
+static inline void fastio()
+{
   ios::sync_with_stdio(false);
   cin.tie(nullptr);
 }
 
 // Bit helpers (careful with types)
 static inline int setbits(unsigned int x) { return __builtin_popcount(x); }
-static inline int setbitsll(unsigned long long x) {
+static inline int setbitsll(unsigned long long x)
+{
   return __builtin_popcountll(x);
 }
 static inline int leadingzero(unsigned int x) { return __builtin_clz(x); }
@@ -32,18 +34,21 @@ static inline int trailingzero(unsigned int x) { return __builtin_ctz(x); }
 static inline int parity(unsigned int x) { return __builtin_parity(x); }
 
 // Math utils
-int gcd(int a, int b) {
+int gcd(int a, int b)
+{
   if (b == 0)
     return a;
   else
     return gcd(b, a % b);
 }
-static inline bool is_prime_ll(long long n) {
+static inline bool is_prime_ll(long long n)
+{
   if (n < 2)
     return false;
   if ((n & 1LL) == 0)
     return n == 2;
-  for (long long d = 3; d * d <= n; d += 2) {
+  for (long long d = 3; d * d <= n; d += 2)
+  {
     if (n % d == 0)
       return false;
   }
@@ -51,22 +56,27 @@ static inline bool is_prime_ll(long long n) {
 }
 
 // Mod ops
-static inline int norm_mod(long long x) {
+static inline int norm_mod(long long x)
+{
   x %= MOD;
   if (x < 0)
     x += MOD;
   return (int)x;
 }
-static inline int mod_add(int a, int b) {
+static inline int mod_add(int a, int b)
+{
   return a + b >= MOD ? a + b - MOD : a + b;
 }
-static inline int mod_sub(int a, int b) {
+static inline int mod_sub(int a, int b)
+{
   return a - b < 0 ? a - b + MOD : a - b;
 }
 static inline int mod_mul(int a, int b) { return int(1LL * a * b % MOD); }
-static inline int mod_pow(int a, long long e) {
+static inline int mod_pow(int a, long long e)
+{
   int r = 1;
-  while (e) {
+  while (e)
+  {
     if (e & 1LL)
       r = mod_mul(r, a);
     a = mod_mul(a, a);
@@ -76,10 +86,12 @@ static inline int mod_pow(int a, long long e) {
 }
 static inline int mod_inv(int a) { return mod_pow(a, MOD - 2); } // MOD prime
 
-void solve() { // TODO: implement per test case solution.
+void solve()
+{ // TODO: implement per test case solution.
 }
 
-int main() {
+int main()
+{
   fastio();
   auto begin = chrono::steady_clock::now();
 
