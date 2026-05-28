@@ -82,6 +82,30 @@ spf[49] = 7
 Time Complexity  : O(n log log n)
 Space Complexity : O(n)
 */
+
+/*
+using linear sieve for SPF.
+vector<ll> linearSieve_SPF(ll n) {
+    vector<ll> spf(n + 1, 0);
+    vector<ll> primes;
+
+    for (ll i = 2; i <= n; ++i) {
+        if (spf[i] == 0) {
+            spf[i] = i;
+            primes.push_back(i);
+        }
+
+        for (ll p : primes) {
+            if (1LL * i * p > n || p > spf[i])
+                break;
+
+            spf[i * p] = p;
+        }
+    }
+
+    return spf;
+}
+*/
 vector<int> smallestPrimeFactor(int n)
 {
     vector<int> spf(n + 1);
@@ -135,4 +159,44 @@ vector<int> primeFactors(int n, vector<int> &spf)
     }
 
     return factors;
+}
+
+/*
+Euler Totient Function.
+Using Linear Seive.
+*/
+vector<int> linearSieve_Phi(int n)
+{ // Euler Totient Function
+    vector<int> primes;
+    vector<int> notprime(n + 1, 1);
+    vector<int> phi(n + 1);
+
+    notprime[0] = notprime[1] = 0;
+    phi[1] = 1;
+
+    for (int i = 2; i <= n; i++)
+    {
+        if (notprime[i] == 1)
+        {
+            primes.push_back(i);
+            phi[i] = i - 1; // i is prime
+        }
+
+        for (int j = 0; j < (int)primes.size() && i * primes[j] <= n; j++)
+        {
+            notprime[i * primes[j]] = 0;
+
+            if (i % primes[j] == 0)
+            {
+                phi[i * primes[j]] = phi[i] * primes[j];
+                break;
+            }
+            else
+            {
+                phi[i * primes[j]] = phi[i] * phi[primes[j]];
+            }
+        }
+    }
+
+    return phi;
 }
