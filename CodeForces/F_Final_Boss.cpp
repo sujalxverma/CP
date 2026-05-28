@@ -1,93 +1,66 @@
 #include "bits/stdc++.h"
 using namespace std;
+
+using i128 = __int128_t;
 using ll = long long;
 
+bool f(vector<i128> &a, vector<i128> &b, i128 d, i128 h) {
+    for (i128 i = 0; i < (i128)a.size(); i++) {
+        i128 v = (d + b[i] - 1) / b[i];
+        h -= v * a[i];
 
-/*
-1. Using binary search on answers.
-2. Consider mid to te the time taken to kill boss.
-3. for each attack , it will contribute T += (1 + (mid-1)/cost[i]) * dam[i];
-*/
-
-bool f(const vector<ll> &dam, const vector<ll> &cost, ll mid, ll H)
-{
-    __int128 T = 0; // use 128-bit accumulator to avoid overflow
-    for (size_t i = 0; i < dam.size(); ++i)
-    {
-        // number of uses by time mid: 1 + (mid-1)/cost[i]
-        ll uses = 1 + (mid - 1) / cost[i];
-        __int128 add = (__int128)uses * (__int128)dam[i];
-        T += add;
-        if (T >= H) return true; // early exit as soon as we reach H
-    }
-    return false;
-}
-
-void solve()
-{
-    ll h, n;
-    cin >> h >> n;
-    vector<ll> dam(n), cost(n);
-    for (auto &x : dam) cin >> x;
-    for (auto &x : cost) cin >> x;
-
-    ll s = 1;
-    ll e = (ll)1e18;
-    ll ans = 0;
-    while (s <= e)
-    {
-        ll m = s + (e - s) / 2;
-        if (f(dam, cost, m, h))
-        {
-            ans = m;
-            e = m - 1;
-        }
-        else
-        {
-            s = m + 1;
+        if (h <= 0) {
+            return true;
         }
     }
 
-    cout << ans << "\n";
+    return h <= 0;
 }
 
-
-/*
-1. Simulated the whole process.
-*/
-void code(){
-    ll h, n;
-    cin >> h >> n;
-    vector<ll> dam(n), cost(n);
-    for (auto &x : dam) cin >> x;
-    for (auto &x : cost) cin >> x;
-
-    set<pair<ll,ll>>p;
-    for(ll i = 0; i < n ; i++){
-        p.insert({1,i});
-    }
-    ll ans = 0;
-    while(h > 0){
-        auto val = *p.begin();
-        ll idx = val.second;
-        ll turn = val.first;
-        p.erase(val);
-        h -= dam[idx];
-        ans = turn;
-
-        p.insert({turn + cost[idx] , idx});
-
-
-    }
-    cout<<ans<<"\n";
-}
-
-int main()
-{
+int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    int t;
+
+    ll t;
     cin >> t;
-    while (t--) code();
+
+    while (t--) {
+        ll h, n;
+        cin >> h >> n;
+
+        vector<i128> a(n), b(n);
+
+        for (ll i = 0; i < n; i++) {
+            ll x;
+            cin >> x;
+            a[i] = x;
+        }
+
+        for (ll i = 0; i < n; i++) {
+            ll x;
+            cin >> x;
+            b[i] = x;
+        }
+
+        i128 H = h;
+
+        i128 ans = 0;
+        i128 s = 1;
+        i128 e = (i128)1e18;
+
+        while (s <= e) {
+            i128 d = s + (e - s) / 2;
+
+            if (f(a, b, d, H)) {
+                ans = d;
+                e = d - 1;
+            } else {
+                s = d + 1;
+            }
+        }
+
+        cout << (long long)ans << '\n';
+    }
+
     return 0;
 }

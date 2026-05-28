@@ -44,3 +44,13 @@ std::vector<int> compute_inverses(int n)
     }
     return inv;
 }
+
+long long nCr(int n, int r,
+              const vector<long long> &fact,
+              const vector<long long> &inv_fact)
+{
+    if (r < 0 || r > n)
+        return 0;
+
+    return fact[n] * inv_fact[r] % MOD * inv_fact[n - r] % MOD;
+}

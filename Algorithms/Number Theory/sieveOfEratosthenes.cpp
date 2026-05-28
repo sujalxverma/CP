@@ -3,6 +3,34 @@
 using namespace std;
 
 /*
+Linear Sieve : O(N)
+*/
+
+vector<int> linearSieve(int n)
+{
+    vector<int> primes;
+    vector<int> isPrime(n + 1, 1);
+
+    isPrime[0] = isPrime[1] = 0;
+
+    for (int i = 2; i <= n; i++)
+    {
+        if (isPrime[i])
+            primes.push_back(i);
+
+        for (int j = 0; j < (int)primes.size() && i * primes[j] <= n; j++)
+        {
+            isPrime[i * primes[j]] = 0;
+
+            if (i % primes[j] == 0)
+                break;
+        }
+    }
+
+    return primes;
+}
+
+/*
 Normal Sieve
 -------------
 Finds all prime numbers between 1 and n.
