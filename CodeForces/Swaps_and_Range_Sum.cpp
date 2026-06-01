@@ -1,27 +1,27 @@
 #include "bits/stdc++.h"
 using namespace std;
 struct Node {
-    long long mask; // change type as needed
+    long long val; // change type as needed
 
     Node(long long v = 0) {
-        mask = v;
+        val = v;
     }
 };
 
 struct SegTree {
-    int size;
-    int real_size;
+    long long size;
+    long long real_size;
     vector<Node> tree;
     Node NEUTRAL = Node(0); // neutral element for merge
 
     // merge two nodes
     // can be modified.
     Node merge(const Node &a, const Node &b) {
-        return Node(a.mask | b.mask); // example: sum segment tree
+        return Node(a.val + b.val); // example: sum segment tree
     }
 
     // initialize tree
-    void init(int n) {
+    void init(long long n) {
         real_size = n;
         size = 1;
         while (size < n)
@@ -30,31 +30,31 @@ struct SegTree {
     }
 
     // build from array
-    void build(vector<int> &arr, int node, int lx, int rx) {
+    void build(vector<long long> &arr, long long node, long long lx, long long rx) {
         if (rx - lx == 1) {
-            if (lx < (int)arr.size())
-                tree[node] = Node(1 << (arr[lx] - 'a'));
+            if (lx < (long long)arr.size())
+                tree[node] = Node(arr[lx]);
             return;
         }
 
-        int mid = (lx + rx) / 2;
+        long long mid = (lx + rx) / 2;
         build(arr, 2 * node + 1, lx, mid);
         build(arr, 2 * node + 2, mid, rx);
         tree[node] = merge(tree[2 * node + 1], tree[2 * node + 2]);
     }
 
-    void build(vector<int> &arr) {
+    void build(vector<long long> &arr) {
         build(arr, 0, 0, size);
     }
 
-    // point update: set position i to value v
-    void set(int i, int v, int node, int lx, int rx) {
+    // polong long update: set position i to value v
+    void set(long long i, long long v, long long node, long long lx, long long rx) {
         if (rx - lx == 1) {
-            tree[node] = Node(1 << (v - 'a'));
+            tree[node] = Node(v);
             return;
         }
 
-        int mid = (lx + rx) / 2;
+        long long mid = (lx + rx) / 2;
         if (i < mid)
             set(i, v, 2 * node + 1, lx, mid);
         else
@@ -63,58 +63,59 @@ struct SegTree {
         tree[node] = merge(tree[2 * node + 1], tree[2 * node + 2]);
     }
 
-    void set(int i, int v) {
+    void set(long long i, long long v) {
         set(i, v, 0, 0, size);
     }
 
     // range query [l, r), to include r => [l,r+1)
-    // int x -> current node of the tree.
-    Node query(int l, int r, int node, int lx, int rx) {
+    // long long x -> current node of the tree.
+    Node query(long long l, long long r, long long node, long long lx, long long rx) {
         if (rx <= l || r <= lx)
             return NEUTRAL;
         if (l <= lx && rx <= r)
             return tree[node];
 
-        int mid = (lx + rx) / 2;
+        long long mid = (lx + rx) / 2;
         Node left = query(l, r, 2 * node + 1, lx, mid);
         Node right = query(l, r, 2 * node + 2, mid, rx);
         return merge(left, right);
     }
 
-    Node query(int l, int r) {
+    Node query(long long l, long long r) {
         return query(l, r, 0, 0, size);
     }
 };
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    string s;
-    cin >> s;
-    int q;
-    cin >> q;
-    int n = (int)s.length();
-    SegTree st;
-    st.init(n);
-    for (int i = 0; i < n; i++) {
-        st.set(i, s[i]);
+
+    long long n, q;
+    cin >> n >> q;
+    vector<long long> a(n);
+    for (long long i = 0; i < n; i++) {
+        cin >> a[i];
     }
+    SegTree s;
+    s.init(n);
+    s.build(a);
 
     while (q--) {
-        int x;
+        long long x;
         cin >> x;
         if (x == 1) {
-            int l;
-            char v;
-            cin >> l >> v;
-            l--;
-            st.set(l, v);
+            long long idx;
+            cin >> idx;
+            idx--;
+            long long v1 = a[idx];
+            long long v2 = a[idx + 1];
+            s.set(idx, v2);
+            s.set(idx + 1, v1);
+            swap(a[idx], a[idx + 1]);
         } else {
-
-            int l, r;
+            long long l, r;
             cin >> l >> r;
             l--;
-            auto ans = st.query(l, r).mask;
-            cout << __builtin_popcount(ans) << "\n";
+            cout << s.query(l, r).val << "\n";
         }
     }
 

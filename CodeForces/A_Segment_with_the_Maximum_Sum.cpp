@@ -17,8 +17,7 @@ struct SegTree {
             max({a.seg, b.seg, a.suf + b.pref}),
             max(a.pref, a.sum + b.pref),
             max(b.suf, b.sum + a.suf),
-            a.sum + b.sum
-        };
+            a.sum + b.sum};
     }
 
     item make_item(ll v) {
@@ -26,29 +25,29 @@ struct SegTree {
             max(v, 0LL),
             max(v, 0LL),
             max(v, 0LL),
-            v
-        };
+            v};
     }
 
     void init(int n) {
         size = 1;
-        while (size < n) size <<= 1;
+        while (size < n)
+            size <<= 1;
         tree.assign(2 * size, NEUTRAL);
     }
 
-    void build(vector<ll>& a, int x, int lx, int rx) {
+    void build(vector<ll> &a, int x, int lx, int rx) {
         if (rx - lx == 1) {
             if (lx < (int)a.size())
                 tree[x] = make_item(a[lx]);
             return;
         }
         int m = (lx + rx) / 2;
-        build(a, 2*x+1, lx, m);
-        build(a, 2*x+2, m, rx);
-        tree[x] = merge(tree[2*x+1], tree[2*x+2]);
+        build(a, 2 * x + 1, lx, m);
+        build(a, 2 * x + 2, m, rx);
+        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
     }
 
-    void build(vector<ll>& a) {
+    void build(vector<ll> &a) {
         build(a, 0, 0, size);
     }
 
@@ -59,11 +58,11 @@ struct SegTree {
         }
         int m = (lx + rx) / 2;
         if (i < m)
-            set(i, v, 2*x+1, lx, m);
+            set(i, v, 2 * x + 1, lx, m);
         else
-            set(i, v, 2*x+2, m, rx);
+            set(i, v, 2 * x + 2, m, rx);
 
-        tree[x] = merge(tree[2*x+1], tree[2*x+2]);
+        tree[x] = merge(tree[2 * x + 1], tree[2 * x + 2]);
     }
 
     void set(int i, ll v) {

@@ -1,28 +1,35 @@
 #include "bits/stdc++.h"
-#include <chrono>
 using namespace std;
-using namespace std::chrono;
-using ll = long long;
+
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    auto start = high_resolution_clock::now();
-
-    int tc;
-    cin >> tc;
-    while (tc--) {
-        int n;
+    long long t;
+    cin >> t;
+    while (t--) {
+        long long n;
         cin >> n;
-        vector<ll> a(n);
-        for (auto &x : a) {
-            cin >> x;
+        vector<long long> a(n);
+        for (long long i = 0; i < n; i++) {
+            cin >> a[i];
         }
+        long long maxi = 0;
+        long long mini = 0;
+        // c -> c+a[i]
+        //  c -> abs(c + a[i])
+        long long c = 0;
+        for (long long i = 0; i < n; i++) {
+            long long c1 = maxi;
+            long long c2 = mini;
+            maxi = max({c1 + a[i], abs(c1 + a[i]), c2 + a[i], abs(c2 + a[i])});
+            mini = min({c1 + a[i], abs(c1 + a[i]), c2 + a[i], abs(c2 + a[i])});
+            if (maxi < mini) {
+                swap(mini, maxi);
+            }
+        }
+        cout << maxi << "\n";
     }
-
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    cerr << "Time taken: " << duration.count() << " microseconds\n";
 
     return 0;
 }

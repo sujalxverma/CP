@@ -1,0 +1,1 @@
+{"name":"Local: Swaps_and_Range_Sum","url":"/Users/sujalverma/Documents/Code/CP/CodeForces/Swaps_and_Range_Sum.cpp","tests":[{"id":1780301630917,"input":"4 4\n2 7 1 8\n1 2\n2 1 2\n1 1\n2 2 4\n","output":"3\n17"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/sujalverma/Documents/Code/CP/CodeForces/Swaps_and_Range_Sum.cpp","group":"local","local":true}
