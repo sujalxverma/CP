@@ -22,6 +22,78 @@ static inline int trailingzero(unsigned int x) { return __builtin_ctz(x); }
 static inline int parity(unsigned int x) { return __builtin_parity(x); }
 #endif
 
+// #define COMBINATORICS
+#ifdef COMBINATORICS
+struct Combinatorics
+{
+	static constexpr long long MOD = 1'000'000'007;
+	vector<long long> fact, invFact;
+
+	long long modpow(long long a, long long b)
+	{
+		long long res = 1;
+		while (b)
+		{
+			if (b & 1)
+				res = res * a % MOD;
+			a = a * a % MOD;
+			b >>= 1;
+		}
+		return res;
+	}
+
+	Combinatorics(int n)
+	{
+		fact.resize(n + 1);
+		invFact.resize(n + 1);
+
+		fact[0] = 1;
+		for (int i = 1; i <= n; i++)
+			fact[i] = fact[i - 1] * i % MOD;
+
+		invFact[n] = modpow(fact[n], MOD - 2);
+
+		for (int i = n; i > 0; i--)
+			invFact[i - 1] = invFact[i] * i % MOD;
+	}
+
+	// n!
+	long long factorial(int n)
+	{
+		return fact[n];
+	}
+
+	// nCr
+	long long nCr(int n, int r)
+	{
+		if (r < 0 || r > n)
+			return 0;
+		return fact[n] * invFact[r] % MOD * invFact[n - r] % MOD;
+	}
+
+	// nPr
+	long long nPr(int n, int r)
+	{
+		if (r < 0 || r > n)
+			return 0;
+		return fact[n] * invFact[n - r] % MOD;
+	}
+
+	// Catalan(n)
+	long long catalan(int n)
+	{
+		return nCr(2 * n, n) * modpow(n + 1, MOD - 2) % MOD;
+	}
+
+	// Stars and Bars:
+	// Number of ways to distribute k identical objects into n boxes
+	long long starsBars(int k, int n)
+	{
+		return nCr(k + n - 1, n - 1);
+	}
+};
+#endif
+
 // #define SEGMENTTREE
 #ifdef SEGMENTTREE
 struct Node

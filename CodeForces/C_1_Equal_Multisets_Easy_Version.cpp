@@ -22,12 +22,12 @@ static inline int trailingzero(unsigned int x) { return __builtin_ctz(x); }
 static inline int parity(unsigned int x) { return __builtin_parity(x); }
 #endif
 
-#define SEGMENTTREE
+// #define SEGMENTTREE
 #ifdef SEGMENTTREE
 struct Node {
-    vector<int> v;
-    Node(vector<int> v) {
-        this->v = v;
+    long long val;
+    Node(long long v = 0) {
+        val = v;
     }
 };
 
@@ -35,30 +35,10 @@ struct SegTree {
     int size;
     int real_size;
     vector<Node> tree;
-    Node NEUTRAL = Node({});
+    Node NEUTRAL = Node(0);
 
     Node merge(const Node &a, const Node &b) {
-        int i = 0;
-        int j = 0;
-        vector<int> c;
-        while (i < (int)a.v.size() && j < (int)b.v.size()) {
-            if (a.v[i] <= b.v[j]) {
-                c.push_back(a.v[i]);
-                i++;
-            } else {
-                c.push_back(b.v[j]);
-                j++;
-            }
-        }
-        while (i < (int)a.v.size()) {
-            c.push_back(a.v[i]);
-            i++;
-        }
-        while (j < (int)b.v.size()) {
-            c.push_back(b.v[j]);
-            j++;
-        }
-        return Node(c);
+        return Node(a.val + b.val);
     }
 
     void init(int n) {
@@ -72,7 +52,7 @@ struct SegTree {
     void build(vector<int> &arr, int node, int lx, int rx) {
         if (rx - lx == 1) {
             if (lx < (int)arr.size())
-                tree[node] = Node({arr[lx]});
+                tree[node] = Node(arr[lx]);
             return;
         }
 
@@ -88,7 +68,7 @@ struct SegTree {
 
     void set(int i, int v, int node, int lx, int rx) {
         if (rx - lx == 1) {
-            tree[node] = Node({v});
+            tree[node] = Node(v);
             return;
         }
 
@@ -105,42 +85,85 @@ struct SegTree {
         set(i, v, 0, 0, size);
     }
 
-    int query(int l, int r, int x, int node, int lx, int rx) {
-        if (rx <= l || r <= lx) {
-            return 0;
-        }
-        if (l <= lx && rx <= r) {
-            return (int)tree[node].v.size() - (upper_bound(begin(tree[node].v), end(tree[node].v), x) - begin(tree[node].v));
-        }
-        int m = (lx + rx) / 2;
-        return query(l, r, x, 2 * node + 1, lx, m) + query(l, r, x, 2 * node + 2, m, rx);
+    Node query(int l, int r, int node, int lx, int rx) {
+        if (rx <= l || r <= lx)
+            return NEUTRAL;
+        if (l <= lx && rx <= r)
+            return tree[node];
+
+        int mid = (lx + rx) / 2;
+        Node left = query(l, r, 2 * node + 1, lx, mid);
+        Node right = query(l, r, 2 * node + 2, mid, rx);
+        return merge(left, right);
     }
 
-    int query(int l, int r, int x) {
-        return query(l, r, x, 0, 0, size);
+    Node query(int l, int r) {
+        return query(l, r, 0, 0, size);
     }
 };
 #endif
 
 void solve() {
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
     vector<int> a(n);
     for (int i = 0; i < n; i++) {
         cin >> a[i];
     }
-    SegTree s;
-    s.init(n);
-    s.build(a);
-    int q;
-    cin >> q;
-    while (q--) {
-        int l, r, x;
-        cin >> l >> r >> x;
-        l--;
-        r--;
-        cout << s.query(l, r + 1, x) << "\n";
+    vector<int> b(n);
+    vector<int> f(n + 2, -1);
+    vector<vector<int>> idx(n + 2);
+    for (int i = 0; i < n; i++) {
+        cin >> b[i];
+        if (b[i] > -1) {
+            f[b[i]] = 1;
+            idx[b[i]].push_back(i);
+        }
     }
+    int i = 0;
+    int j = 0;
+    while (i < n && j < n) {
+        if (f[a[i]] == 1) {
+            i++;
+        } else if (f[a[i]] == -1) {
+            if (b[j] == -1) {
+                b[j] = a[i];
+                idx[b[j]].push_back(j);
+                i++;
+                j++;
+            } else {
+                j++;
+            }
+        }
+    }
+    // for (int i = 0; i < n; i++) {
+    //     cout << a[i] << " " << b[i] << "\n";
+    // }
+    for (int i = 1; i <= n; i++) {
+        if (idx[i].size() > 1) {
+            cout << "NO\n";
+            return;
+        }
+    }
+    for (int i = 0; i <= k - 1; i++) {
+        int id = idx[a[i]][0];
+        if (id >= 0 && id <= k - 1) {
+
+        } else {
+            cout << "NO\n";
+            return;
+        }
+    }
+    for (int i = n - 1; i >= n - k; i--) {
+        int id = idx[a[i]][0];
+        if (id <= n - 1 && id >= n - k) {
+
+        } else {
+            cout << "NO\n";
+            return;
+        }
+    }
+    cout << "YES\n";
 }
 
 int main() {
@@ -148,7 +171,7 @@ int main() {
     cin.tie(nullptr);
 
     int t = 1;
-    // cin >> t;
+    cin >> t;
     while (t--) {
         solve();
     }
