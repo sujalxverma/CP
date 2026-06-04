@@ -1153,3 +1153,92 @@ struct Trie
         curr->endWith--;
     }
 };
+
+// BST
+struct Node
+{
+    int val;
+    Node *left = nullptr;
+    Node *right = nullptr;
+};
+
+struct BST
+{
+    Node *root;
+    BST(int val) // root node created.
+    {
+        root = new Node();
+        root->val = val;
+    }
+
+    Node *createNode(int v)
+    {
+        Node *temp = new Node();
+        temp->val = v;
+        return temp;
+    }
+
+    Node *insert(Node *root, int val)
+    {
+        if (root == NULL)
+        {
+            return createNode(val);
+        }
+        if (root->val < val)
+        {
+            root->right = insert(root->right, val);
+        }
+        else
+        {
+            root->left = insert(root->left, val);
+        }
+        return root;
+    }
+    // Find the inorder successor
+    Node *minValueNode(Node *node)
+    {
+        Node *current = node;
+        // Find the leftmost leaf
+        while (current && current->left != nullptr)
+            current = current->left;
+        return current;
+    }
+
+    Node *deleteNode(Node *root, int val)
+    {
+        if (root == nullptr)
+        {
+            return root;
+        }
+        if (val < root->val)
+        {
+            root->left = deleteNode(root->left, val);
+        }
+        else if (val > root->val)
+        {
+            root->right = deleteNode(root->right, val);
+        }
+        else
+        {
+            // if node is with only one child or no child.
+            if (root->left == nullptr)
+            {
+                Node *temp = root->right;
+                delete (root);
+                return temp;
+            }
+            else if (root->right == nullptr)
+            {
+                Node *temp = root->left;
+                delete (root);
+                return temp;
+            }
+
+            // if the node has two children.
+            Node *temp = minValueNode(root->right);
+            root->val = temp->val;
+            root->right = deleteNode(root->right, temp->val);
+        }
+        return root;
+    }
+};
