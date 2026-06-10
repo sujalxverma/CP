@@ -1,6 +1,6 @@
 #include "bits/stdc++.h"
 using namespace std;
-using ll = long long;
+
 void solve() {
     int n;
     cin >> n;
@@ -10,97 +10,68 @@ void solve() {
         cin >> a[i];
         s.insert(a[i]);
     }
-    if ((int)s.size() == 1) {
+    if (s.size() == 1) {
         cout << "0\n";
         return;
     }
-    sort(begin(a), end(a));
-    vector<int> tg;
-    {
-        int v = a[0];
-        set<int> vis;
-        while (true) {
-            if (vis.count(v))
-                break;
-            vis.insert(v);
-            tg.push_back(v);
-            if (v == 1) {
-                if (!vis.count(2))
-                    tg.push_back(2);
-                break;
-            }
-            v = (v % 2 == 0) ? (v / 2) : (v + 1);
-        }
-    }
-
-    int nt = tg.size();
-    vector<int> mc(nt, 0);
-    vector<ll> ts(nt, 0);
-    vector<pair<int, int>> sp;
+    vector<int> nums;
     for (int i = 0; i < n; i++) {
-        if (sp.empty() || sp.back().first != a[i]) {
-            sp.push_back({a[i], 1});
-        } else {
-            sp.back().second++;
+        int v = a[i];
+        nums.push_back(v);
+        while (v > 1) {
+            v = (v & 1) ? v + 1 : v / 2;
+            nums.push_back(v);
         }
     }
-    for (auto &[val, freq] : sp) {
-        int v = val;
-        int step = 0;
-        bool visited_1 = false;
-        bool visited_2 = false;
+    // index compression.
+    sort(nums.begin(), nums.end());
+    nums.erase(unique(nums.begin(), nums.end()), nums.end());
 
-        unordered_map<int, int> lp;
-
-        while (true) {
-            if (v == 1) {
-                if (visited_1)
-                    break;
-                visited_1 = true;
-            }
-            if (v == 2) {
-                if (visited_2 && visited_1)
-                    break;
-                if (v == val && visited_2)
-                    break;
-                visited_2 = true;
-            }
-
-            if (!lp.count(v)) {
-                lp[v] = step;
-            }
-
-            v = (v % 2 == 0) ? (v / 2) : (v + 1);
-            step++;
-        }
-
-        for (int t_idx = 0; t_idx < nt; t_idx++) {
-            int target_val = tg[t_idx];
-            if (lp.count(target_val)) {
-                mc[t_idx] += freq;
-                ts[t_idx] += (1LL * lp[target_val] * freq);
-            }
-        }
-    }
-    ll cnt = 1e18;
-    for (int i = 0; i < nt; i++) {
-        if (mc[i] == n) {
-            cnt = min(cnt, ts[i]);
+    int m = (int)nums.size();
+    vector<pair<int, int>> cnt(m, {0, 0});
+    for (int i = 0; i < n; i++) {
+        set<int> s;
+        int v = a[i];
+        s.insert(v);
+        int count = 0;
+        auto idx = lower_bound(begin(nums), end(nums), v) - begin(nums);
+        // cnt[idx].first = max(count, cnt[idx].first);
+        cnt[idx].first += count;
+        cnt[idx].second++;
+        v = (v & 1) ? v + 1 : v / 2;
+        count++;
+        while (!s.count(v)) {
+            // v = (v & 1) ? v + 1 : v / 2;
+            // count++;
+            s.insert(v);
+            idx = lower_bound(begin(nums), end(nums), v) - begin(nums);
+            // cnt[idx].first = max(c/\ount, cnt[idx].first);
+            cnt[idx].first += count;
+            cnt[idx].second++;
+            v = (v & 1) ? v + 1 : v / 2;
+            count++;
         }
     }
 
-    cout << cnt << "\n";
+    int ans = 1e9;
+    for (int i = 0; i < m; i++) {
+        if (cnt[i].second == n) {
+            ans = min(ans, cnt[i].first);
+        }
+    }
+    // for (int i = 0; i < m; i++) {
+    //     cout << nums[i] << " " << cnt[i].first << " " << cnt[i].second << "\n";
+    // }
+    cout << ans << "\n";
 }
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
     int t;
     cin >> t;
     while (t--) {
         solve();
     }
-
     return 0;
 }
