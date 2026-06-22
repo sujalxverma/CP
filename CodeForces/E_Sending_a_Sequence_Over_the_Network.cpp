@@ -1,43 +1,38 @@
 #include "bits/stdc++.h"
-#include <chrono>
 using namespace std;
-using namespace std::chrono;
-vector<int> a;
-vector<char> dp;
-int t, n;
+
+void solve() {
+    int n;
+    cin >> n;
+    vector<int> a(n + 1);
+    for (int i = 1; i <= n; i++) {
+        cin >> a[i];
+    }
+    vector<int> dp(n + 5, 0);
+    dp[0] = 1;
+    for (int i = 1; i <= n; i++) {
+        int v = a[i];
+        // backward
+        if (i - v - 1 >= 0 && dp[i - v - 1] == 1) {
+            dp[i] = 1;
+        }
+        // forward
+        if (i + v <= n && dp[i - 1] == 1) {
+            dp[i + v] = 1;
+        }
+    }
+    cout << (dp[n] == 1 ? "YES\n" : "NO\n");
+}
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    auto start = high_resolution_clock::now();
-
+    int t;
     cin >> t;
     while (t--) {
-        cin >> n;
-        a.resize(n + 1);
-        for (int i = 1; i <= n; i++) {
-            cin >> a[i];
-        }
-        dp.assign(n + 1, 0);
-        dp[0] = 1;
-
-        for (int i = 1; i <= n; i++) {
-            if ((i - a[i]) >= 1 && dp[i - a[i] - 1]) {
-                dp[i] = 1;
-            }
-
-            if ((i + a[i]) <= n && dp[i - 1]) {
-                dp[i + a[i]] = 1;
-            }
-        }
-
-        cout << (dp[n] == 1 ? "YES\n" : "NO\n");
+        solve();
     }
-
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    // cerr << "Time taken: " << duration.count() << " microseconds\n";
 
     return 0;
 }

@@ -1,54 +1,31 @@
 #include "bits/stdc++.h"
-#include <chrono>
 using namespace std;
-using namespace std::chrono;
-long long MAXN;
-vector<long long> dp;
-vector<long long> f;
-long long help(long long idx) {
-    if (idx >= MAXN) {
-        return 0;
-    }
-
-    if (dp[idx] != -1) {
-        return dp[idx];
-    }
-
-    long long nottake = 0 + help(idx + 1);
-    long long take = idx * f[idx] + help(idx + 2);
-
-    return dp[idx] = max(nottake, take);
-}
-int main() {
+#define int long long
+int32_t main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
-    auto start = high_resolution_clock::now();
-
-    long long n;
+    int n;
     cin >> n;
-    vector<long long> v(n);
-    for (long long i = 0; i < n; i++) {
-        cin >> v[i];
+    unordered_map<int, int> mp;
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        mp[a[i]]++;
     }
-    sort(begin(v), end(v));
-    MAXN = v[n - 1] + 1;
-    f.resize(MAXN, 0);
-    dp.assign(MAXN + 1, 0);
-    for (long long i = 0; i < n; i++) {
-        f[v[i]]++;
+    sort(begin(a), end(a));
+    a.erase(unique(begin(a), end(a)), end(a));
+    int m = (int)a.size();
+    int M = *max_element(begin(a), end(a));
+    vector<int> dp(M + 1, 0);
+    dp[0] = 0;
+    if (a[0] == 1) {
+        dp[1] = mp[1];
+    } else {
+        dp[1] = 0;
     }
-    // cout << help(1) << "\n";
-    dp[MAXN - 1] = f[MAXN - 1] * (MAXN - 1);
-    for (int i = MAXN - 2; i >= 1; i--) {
-        dp[i] = max(dp[i + 1], f[i] * i + dp[i + 2]);
+    for (int i = 2; i <= M; i++) {
+        dp[i] = max(dp[i - 1], i * mp[i] + dp[i - 2]);
     }
-
-    cout << dp[1] << "\n";
-
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    cerr << "Time taken: " << duration.count() << " microseconds\n";
-
+    cout << dp[M] << "\n";
     return 0;
 }
