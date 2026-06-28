@@ -5,21 +5,30 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
-    long long n;
+    int n;
     cin >> n;
-    vector<long long> a(n);
-    for (auto &x : a) {
-        cin >> x;
+    vector<int> a(n + 1);
+    for (int i = 1; i <= n; i++) {
+        cin >> a[i];
     }
-    long long cnt = 0;
-    for (long long i = 1; i < n; i++) {
-        if (a[i - 1] >= a[i]) {
-            a[i] = a[i - 1] + 1;
-            cnt++;
+    vector<int> b;
+    for (int i = 1; i <= n; i++) {
+        if (a[i] > i - 1) {
+            b.push_back(a[i] - (i - 1));
         }
     }
 
-    cout << cnt << "\n";
+    vector<int> dp;
+    dp.push_back(b[0]);
+    for (int i = 1; i < (int)b.size(); i++) {
+        if (b[i] > dp.back()) {
+            dp.push_back(b[i]);
+        } else {
+            auto idx = lower_bound(begin(dp), end(dp), b[i]);
+            *idx = b[i];
+        }
+    }
 
+    cout << n - (int)dp.size() << "\n";
     return 0;
 }

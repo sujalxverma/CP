@@ -1,45 +1,58 @@
 #include "bits/stdc++.h"
-#include <chrono>
 using namespace std;
-using namespace std::chrono;
-using ll = long long;
+int bit_ceil(int x) {
+    if (x <= 1)
+        return 1;
+    return 1 << (32 - __builtin_clz(x - 1));
+}
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-    auto start = high_resolution_clock::now();
-    ll n;
+
+    int n;
     cin >> n;
-    ll value = 1;
-    vector<pair<ll, ll>> factors;
-    for (ll i = 2; i <= n; i++) {
+    int N = n;
+    if (n == 1) {
+        cout << "1 0\n";
+        return 0;
+    }
+    vector<int> f(1e6 + 10, 0);
+    for (int i = 2; i <= n; i++) {
         if (n % i == 0) {
-            value *= i;
-            ll s = 0;
             while (n % i == 0) {
-                s++;
+                f[i]++;
                 n = n / i;
             }
-            factors.push_back({i, s});
         }
     }
-    ll maxi = 0;
-    for (auto &[x, y] : factors) {
-        maxi = max(maxi, y);
+    if (n > 1) {
+        f[n]++;
     }
-    maxi = maxi + (maxi % 2);
-    ll count = 0;
-    for (auto &[x, y] : factors) {
-        count += maxi - y;
+    int value = 1;
+    int mx = 0;
+
+    for (int i = 2; i <= 1e6; i++) {
+        if (f[i] > 0) {
+            value *= i;
+            mx = max(mx, f[i]);
+        }
     }
 
-    if (count == 0) {
-        cout << n << " " << 0 << "\n";
-    } else {
-        cout << value << " " << count + factors
+    int target = bit_ceil(mx);
+
+    bool allEqual = true;
+    for (int i = 2; i <= 1e6; i++) {
+        if (f[i] > 0 && f[i] != target) {
+            allEqual = false;
+        }
     }
 
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    cerr << "Time taken: " << duration.count() << " microseconds\n";
+    int ops = (int)log2(target);
+
+    if (!allEqual)
+        ops++;
+
+    cout << value << " " << ops << "\n";
+
     return 0;
 }
