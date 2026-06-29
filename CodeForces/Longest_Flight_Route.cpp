@@ -1,19 +1,16 @@
 #include "bits/stdc++.h"
-#include <chrono>
 using namespace std;
-using namespace std::chrono;
-
-int main() {
+#define int long long
+int n, m;
+const int inf = -1e18; // neg
+vector<vector<int>> g;
+vector<int> dp;
+int32_t main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
-    auto start = high_resolution_clock::now();
-
-    int n, m;
     cin >> n >> m;
-    vector<vector<int>> g(n + 1);
-    vector<long long> dp(n + 1, -1e9);
-    vector<int> parent(n + 1, -1);
+    dp.resize(n + 1, inf);
+    g.resize(n + 1);
     vector<int> degree(n + 1, 0);
     for (int i = 0; i < m; i++) {
         int u, v;
@@ -24,72 +21,57 @@ int main() {
     vector<int> toposort;
     queue<int> q;
     for (int i = 1; i <= n; i++) {
-        if (degree[i] == 0) {
-            q.push(i);
-        }
+        if (degree[i] != 0)
+            continue;
+        q.push(i); // will start from the nodes, with no earlier dependencies.
     }
-    dp[1] = 0;
+    dp[1] = 1;
+    vector<int> path(n + 1, -1);
     while (!q.empty()) {
-        auto u = q.front();
+        int u = q.front();
         q.pop();
         toposort.push_back(u);
-        for (auto &v : g[u]) {
+        for (int v : g[u]) {
             degree[v]--;
             if (degree[v] == 0) {
-
                 q.push(v);
             }
         }
     }
 
+    // already its given, its a DAG.
+    // we only need to find dependency order, which is toposort.
     for (auto &u : toposort) {
-        if (dp[u] == -1e9) {
-            continue;
+        if (dp[u] == inf) { // possible case, 3 -> 1, so there is 3 before visiting 1.
+            continue;       // but we start from 1, so we discard all paths from 3.
         }
-
         for (auto &v : g[u]) {
-            if (dp[u] + 1 > dp[v]) {
-                dp[v] = 1 + dp[u];
-                parent[v] = u;
+            if (dp[v] < dp[u] + 1) {
+                dp[v] = dp[u] + 1;
+                path[v] = u;
             }
         }
     }
 
-    if (dp[n] == -1e9) {
-        // for (int i = 1; i <= n; i++) {
-        //     cout << i << " " << dp[i] << "\n";
-        // }
+    if (dp[n] == inf) {
         cout << "IMPOSSIBLE\n";
         return 0;
     }
-
-    // reconstruct path.
-    vector<int> path;
-
-    path.push_back(n);
-    auto node = n;
-    while (true) {
-        node = parent[node];
-        if (node == -1) {
-            break;
-        }
-        path.push_back(node);
+    vector<int> trace;
+    int v = n;
+    while (v != -1) {
+        trace.push_back(v);
+        v = path[v];
     }
-
-    reverse(begin(path), end(path));
-    if (path[0] != 1) {
+    if (trace.back() != 1) { // its plausible, that 1 and n are on different components.
         cout << "IMPOSSIBLE\n";
         return 0;
     }
-    cout << (int)path.size() << "\n";
-    for (auto &x : path) {
-        cout << x << " ";
+    cout << dp[n] << "\n";
+    for (int i = (int)trace.size() - 1; i >= 0; i--) {
+        cout << trace[i] << " ";
     }
     cout << "\n";
-
-    auto stop = high_resolution_clock::now();
-    auto dpuration = duration_cast<microseconds>(stop - start);
-    cerr << "Time taken: " << dpuration.count() << " microsecondps\n";
 
     return 0;
 }

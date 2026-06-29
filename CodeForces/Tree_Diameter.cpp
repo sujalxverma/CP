@@ -1,49 +1,49 @@
 #include "bits/stdc++.h"
-std::vector<std::vector<int>> g;
-
-std::pair<int, int> bfs(int node, int parent)
-{
-    std::queue<std::tuple<int, int, int>> q;
-    q.push({node, parent, 0});
-    int dia = node;
-    int dist = 0;
-
-    while (!q.empty())
-    {
-        auto [u, p, d] = q.front();
+using namespace std;
+vector<vector<int>> g;
+int n;
+pair<int, int> bfs(int s, int p) {
+    vector<int> dis(n + 1, 0);
+    vector<int> vis(n + 1, 0);
+    queue<int> q;
+    q.push(s);
+    vis[s] = 1;
+    while (!q.empty()) {
+        int u = q.front();
         q.pop();
-        if (d > dist)
-        {
-            dia = u;
-            dist = d;
-        }
-        for (auto v : g[u])
-        {
-            if (p != v)
-            {
-                q.push({v, u, d + 1});
-            }
+        for (int &v : g[u]) {
+            if (vis[v] == 1)
+                continue;
+            dis[v] = 1 + dis[u];
+            q.push(v);
+            vis[v] = 1;
         }
     }
-
-    return {dia, dist};
+    int node = -1;
+    int d = -1;
+    for (int i = 1; i <= n; i++) {
+        if (d < dis[i]) {
+            d = dis[i];
+            node = i;
+        }
+    }
+    return {d, node};
 }
 
-int main()
-{
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-    int n;
-    std::cin >> n;
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cin >> n;
     g.resize(n + 1);
-    for (int i = 0; i < n - 1; i++)
-    {
+    for (int i = 0; i < n - 1; i++) {
         int u, v;
-        std::cin >> u >> v;
+        cin >> u >> v;
         g[u].push_back(v);
         g[v].push_back(u);
     }
-    std::cout << bfs(bfs(1, -1).first, -1).second << "\n";
+    pair<int, int> p = bfs(1, -1);
+    pair<int, int> ans = bfs(p.second, -1);
+    std::cout << ans.first << "\n";
 
     return 0;
 }

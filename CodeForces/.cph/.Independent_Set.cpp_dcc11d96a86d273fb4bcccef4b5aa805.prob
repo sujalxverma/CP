@@ -1,0 +1,1 @@
+{"name":"Local: Independent_Set","url":"/Users/sujalverma/Documents/Code/CP/CodeForces/Independent_Set.cpp","tests":[{"id":1782749730472,"input":"10\n8 5\n10 8\n6 5\n1 5\n4 8\n2 10\n3 6\n9 2\n1 7\n","output":"157\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/sujalverma/Documents/Code/CP/CodeForces/Independent_Set.cpp","group":"local","local":true}
