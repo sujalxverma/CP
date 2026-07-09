@@ -1,44 +1,58 @@
-#include "bits/stdc++.h"
+#include <iostream>
+#include <vector>
 using namespace std;
+#define int long long
 int n;
-vector<int> dp1, dp2;
-// dp2[u] -> not taking any edge from u to any of its child.
-// dp1[u] -> taking only single edge from u to any of its child, which leads to max answer.
-vector<vector<int>> g;
+vector<vector<int>> tree;
+vector<vector<int>> dp;
+// dp[i][0] -> take node, dp[i][1] -> do not take node.
+
 void dfs(int u, int p) {
-    if (g[u].size() == 1) {
-        dp2[u] = 0;
-        dp1[u] = 0;
+    if (tree[u].size() == 0) { // leaf node
+        dp[u][0] = 0;
+        dp[u][1] = 0;
+        return;
     }
 
-    for (int v : g[u]) {
+    for (int &v : tree[u]) {
         if (p == v)
             continue;
         dfs(v, u);
-        dp2[u] += max(dp1[v], dp2[v]);
+        dp[u][1] += max(dp[v][0], dp[v][1]);
+        // dp[u][1] -> do not take node u.
+        // now i can either take child's best ans.
+        // either inlude child or not.
     }
-    for (int v : g[u]) {
+
+    // dp[u][1] -> means total edges in subtree of u, if node u is not taken.
+
+    for (int &v : tree[u]) {
         if (p == v)
             continue;
-        dp1[u] = max(dp1[u], (1 + dp2[v]) + (dp2[u] - (max(dp2[v], dp1[v]))));
+        // now i have to decide with edge to take, so that node u is part of.
+        // but talk, is that i can only take one child edge of u, otherwise say,
+        // if i take two edges, then in the matching set, then u comes two times.
+        dp[u][0] = max(dp[u][0], (dp[u][1] - max(dp[v][1], dp[v][0])) + (1 + dp[v][1]));
+        // max(dp[u][0] , take edge u->v)
     }
 }
-int main() {
+
+int32_t main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
 
     cin >> n;
-    g.resize(n + 1);
-    dp1.resize(n + 1, 0);
-    dp2.resize(n + 1, 0);
+    tree.resize(n + 1);
+    dp.resize(n + 1, vector<int>(2, 0));
     for (int i = 0; i < n - 1; i++) {
         int u, v;
         cin >> u >> v;
-        g[u].push_back(v);
-        g[v].push_back(u);
+        tree[u].push_back(v);
+        tree[v].push_back(u);
     }
     dfs(1, -1);
-    cout << max(dp1[1], dp2[1]) << "\n";
+
+    cout << max(dp[1][0], dp[1][1]) << "\n";
 
     return 0;
 }

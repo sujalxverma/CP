@@ -1,0 +1,1 @@
+{"name":"Local: Smithing_Skill","url":"/Users/sujalverma/Documents/Code/CP/CodeForces/Smithing_Skill.cpp","tests":[{"id":1782991340001,"input":"5 3\n9 6 7 5 5\n8 4 5 1 2\n10 4 7\n","output":"12\n"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/sujalverma/Documents/Code/CP/CodeForces/Smithing_Skill.cpp","group":"local","local":true}

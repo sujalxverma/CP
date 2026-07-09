@@ -206,7 +206,7 @@ struct SegTree
         real_size = n;
         size = 1;
         while (size < n)
-            size <<= 1;
+            size *= 2;
         tree.assign(2 * size, NEUTRAL);
     }
 
