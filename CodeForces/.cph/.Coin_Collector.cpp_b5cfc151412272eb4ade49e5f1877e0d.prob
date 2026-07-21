@@ -1,0 +1,1 @@
+{"name":"Local: Coin_Collector","url":"/Users/sujalverma/Documents/Code/CP/CodeForces/Coin_Collector.cpp","tests":[{"id":1784615801825,"input":"4 4\n4 5 2 7\n1 2\n2 1\n1 3\n2 4","output":"16"}],"interactive":false,"memoryLimit":1024,"timeLimit":3000,"srcPath":"/Users/sujalverma/Documents/Code/CP/CodeForces/Coin_Collector.cpp","group":"local","local":true}
