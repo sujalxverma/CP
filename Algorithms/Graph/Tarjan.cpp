@@ -7,10 +7,10 @@
 
 const int inf = 1e9;
 int n, m;
-vector<vector<int>> g;
-vector<int> coins;
-vector<int> scc;
-vector<int> low, disc;
+vector<vector<int>> g; // graph
+vector<int> coins;     // some value
+vector<int> scc;       // SCC
+vector<int> low, disc; // low[u] = inf , disc[u] = inf
 vector<int> onstack;
 stack<int> st;
 int timer = 0;
