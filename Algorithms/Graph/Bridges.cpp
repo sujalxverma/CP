@@ -46,6 +46,34 @@ void dfs(int v, int p = -1)
     }
 }
 
+// solves problem for multi edge, will simply work.
+void dfs2(int v, int parent_edge = -1)
+{
+    visited[v] = true;
+    tin[v] = low[v] = timer++;
+
+    for (auto [to, id] : adj[v])
+    {
+        // Ignore only the exact edge we came through.
+        if (id == parent_edge)
+            continue;
+
+        if (visited[to])
+        {
+            low[v] = min(low[v], tin[to]);
+        }
+        else
+        {
+            dfs2(to, id);
+
+            low[v] = min(low[v], low[to]);
+
+            if (low[to] > tin[v])
+                IS_BRIDGE(v, to);
+        }
+    }
+}
+
 void find_bridges()
 {
     timer = 0;
