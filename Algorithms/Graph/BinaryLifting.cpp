@@ -50,6 +50,25 @@ int kthAncestor(int v, int k)
     }
     return v;
 }
+/*
+ * Finding LCA of two nodes.
+ * But first make both nodes at same level, its possible that node u is at depth 3 and
+ * node 2 is at depth 6, so first jump node to depth 3.
+ */
+int LCA(int u, int v)
+{
+    if (u == v)
+        return u;
+    for (int i = floor(log2(n)); i >= 0; i--)
+    {
+        if (up[u][i] != up[v][i])
+        {
+            u = up[u][i];
+            v = up[v][i];
+        }
+    }
+    return (up[u][0] == -1 ? 1 : up[u][0]);
+}
 
 int main()
 {
