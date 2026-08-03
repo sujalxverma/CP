@@ -9,8 +9,10 @@ int timer = 0;
 vector<int> tin;
 vector<int> order;
 vector<int> depth;
+vector<int> dis;
 const int inf = 1e18;
-void dfs(int u, int p, int d) {
+void dfs(int u, int p, int d, int distance) {
+    dis[u] = distance;
     tin[u] = order.size(); // first occurrence in Euler tour
     order.push_back(u);
     depth.push_back(d);
@@ -18,7 +20,7 @@ void dfs(int u, int p, int d) {
     for (int v : g[u]) {
         if (v == p)
             continue;
-        dfs(v, u, d + 1);
+        dfs(v, u, d + 1, distance + 1);
         order.push_back(u);
         depth.push_back(d);
     }
@@ -99,15 +101,15 @@ int32_t main() {
     cin.tie(nullptr);
     cin >> n >> q;
     g.resize(n + 1);
-    for (int i = 2; i <= n; i++) {
-        int x;
-        cin >> x;
-        g[x].push_back(i);
-        g[i].push_back(x);
+    for (int i = 1; i <= n - 1; i++) {
+        int u, v;
+        cin >> u >> v;
+        g[u].push_back(v);
+        g[v].push_back(u);
     }
-
+    dis.resize(n + 1);
     tin.resize(n + 1, 0);
-    dfs(1, 1, 0);
+    dfs(1, 1, 0, 0);
     SegTree st;
     st.init((int)depth.size());
     st.build(depth);
@@ -118,84 +120,7 @@ int32_t main() {
             swap(u, v);
         }
         int idx = st.query(tin[u], tin[v] + 1).idx;
-        cout << order[idx] << "\n";
+        cout << dis[u] + dis[v] - 2 * dis[order[idx]] << "\n";
     }
     return 0;
 }
-
-// #include "bits/stdc++.h"
-// using namespace std;
-// int n, q;
-// vector<vector<int>> g;
-// vector<vector<int>> up; // sparse table
-// vector<int> depth;
-// // dfs call to fill up[node][0] = parent(node);
-// void dfs(int u, int p, int d) {
-//     up[u][0] = p;
-//     depth[u] = d;
-//     for (int &v : g[u]) {
-//         if (v == p)
-//             continue;
-//         dfs(v, u, d + 1);
-//     }
-// }
-// int LCA(int u, int v) {
-//     if (u == v)
-//         return u;
-//     for (int i = floor(log2(n)); i >= 0; i--) {
-//         if (up[u][i] != up[v][i]) {
-//             u = up[u][i];
-//             v = up[v][i];
-//         }
-//     }
-//     return (up[u][0] == -1 ? 1 : up[u][0]);
-// }
-
-// int main() {
-//     ios::sync_with_stdio(false);
-//     cin.tie(nullptr);
-//     cin >> n >> q;
-//     g.resize(n + 1);
-//     depth.resize(n + 1);
-//     vector<int> d(n + 1);
-//     d[1] = 1;
-//     for (int i = 2; i <= n; i++) {
-//         int x;
-//         cin >> x;
-//         d[i] = x;
-//         g[x].push_back(i);
-//         g[i].push_back(x);
-//     }
-//     up.assign(n + 1, vector<int>(floor(log2(n)) + 2, -1));
-//     dfs(1, -1, 0);
-//     for (int col = 1; col < floor(log2(n)) + 1; col++) {
-//         for (int row = 1; row <= n; row++) {
-//             if (up[row][col - 1] == -1) {
-//                 up[row][col] = -1;
-//             } else {
-//                 up[row][col] = up[up[row][col - 1]][col - 1];
-//             }
-//         }
-//     }
-//     for (int i = 0; i < q; i++) {
-//         int u, v;
-//         cin >> u >> v;
-//         int d1 = depth[u];
-//         int d2 = depth[v];
-//         if (d1 < d2) {
-//             int cnt = d2 - d1;
-//             for (int i = floor(log2(n)); i >= 0; i--) {
-//                 if (cnt & (1 << i))
-//                     v = up[v][i]; // lift v
-//             }
-//         } else {
-//             int cnt = d1 - d2;
-//             for (int i = floor(log2(n)); i >= 0; i--) {
-//                 if (cnt & (1 << i))
-//                     u = up[u][i]; // lift u
-//             }
-//         }
-//         cout << LCA(u, v) << "\n";
-//     }
-//     return 0;
-// }
