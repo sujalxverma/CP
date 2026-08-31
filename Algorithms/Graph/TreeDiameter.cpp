@@ -144,3 +144,31 @@ int treeDiameter(const vector<vector<int>> &g)
 
     return diameter; // number of edges
 }
+
+/* Generalised way to find tree diameter.
+int diameter = 0;
+
+int dfs(int u, int p) {
+    int mx1 = 0, mx2 = 0;
+
+    for (int v : g[u]) {
+        if (v == p) continue;
+
+        int h = dfs(v, u) + 1;
+
+        if (h > mx1) {
+            mx2 = mx1;
+            mx1 = h;
+        }
+        else if (h > mx2) {
+            mx2 = h;
+        }
+    }
+
+    // Longest path passing through u
+    diameter = max(diameter, mx1 + mx2);
+
+    // Return longest downward path from u
+    return mx1;
+}
+*/
