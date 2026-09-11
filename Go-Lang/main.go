@@ -6,11 +6,36 @@ import (
 	"sort"
 )
 
+// passing one function to another function as parameter
+func diff(a int, b int) int {
+	return a * b
+}
+func cal(f func(int, int) int) {
+	fmt.Println(f(10, 20))
+}
+
 // create struct
 type User struct {
 	Name      string
 	Age       int32
 	Promotion bool
+}
+
+// methods for this struct -> call it like, mystr.GetName()
+// its pass by value, so it will not change the original value of struct
+// if you want to change the original value, use pointer receiver
+// func (user *User) GetName() string {}
+func (user User) GetName() string {
+	return user.Name
+}
+
+// defer -> what it does is, it will execute "defer 3" at the end of the function,
+// after all other statements are executed
+func deferFunc() {
+	fmt.Println("defer 1")
+	fmt.Println("defer 2")
+	defer fmt.Println("defer 3")
+	fmt.Println("Hello World")
 }
 
 func main() {
