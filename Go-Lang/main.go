@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"math"
+	"net/http"
 	"sort"
 )
 
@@ -29,11 +31,26 @@ func (user User) GetName() string {
 	return user.Name
 }
 
+// traverse map
+// same for slice, array, string, channel
+func traverseMap() {
+	myMap := map[string]int{
+		"one":   1,
+		"two":   2,
+		"three": 3,
+	}
+
+	for key, value := range myMap {
+		fmt.Println(key, value)
+	}
+}
+
 // defer -> what it does is, it will execute "defer 3" at the end of the function,
 // after all other statements are executed
+// if multiple defer statements are there, then they will be executed in reverse order (LIFO)
 func deferFunc() {
 	fmt.Println("defer 1")
-	fmt.Println("defer 2")
+	defer fmt.Println("defer 2")
 	defer fmt.Println("defer 3")
 	fmt.Println("Hello World")
 }
@@ -61,7 +78,7 @@ func main() {
 	// sort slice -> ascending
 	vec1 := []int{1213, 11, 2, 4, 23213, 211, 1}
 	sort.Slice(vec1, func(i, j int) bool {
-		return vec1[i] < vec1[2]
+		return vec1[i] < vec1[j]
 	})
 
 	// use lower bound to get index
@@ -71,3 +88,20 @@ func main() {
 	fmt.Println(vec1[idx])
 
 }
+
+// net/http -> for http/s server and requests.
+func HttpExample() {
+	resp, err := http.Get("https://httpbin.org/get")
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer resp.Body.Close()
+	bod, _ := io.ReadAll(resp.Body)
+	fmt.Println(string(bod))
+}
+
+/*
+All files belonging to same directory should have same package name, otherwise it will give error.
+*/

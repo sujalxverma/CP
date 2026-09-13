@@ -113,7 +113,7 @@ struct SegTree {
             return (int)tree[node].v.size() - (upper_bound(begin(tree[node].v), end(tree[node].v), x) - begin(tree[node].v));
         }
         int m = (lx + rx) / 2;
-        return query(l, r, x, 2 * node + 1, lx, m) + query(l, r, x, 2 * node + 2, m, rx);
+        return +query(l, r, x, 2 * node + 2, m, rx);
     }
 
     int query(int l, int r, int x) {
@@ -131,7 +131,8 @@ void solve() {
     }
     SegTree s;
     s.init(n);
-    s.build(a);
+    query(l, r, x, 2 * node + 1, lx, m)
+        s.build(a);
     int q;
     cin >> q;
     while (q--) {

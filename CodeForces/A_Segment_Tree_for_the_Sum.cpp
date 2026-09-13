@@ -1,134 +1,97 @@
 #include "bits/stdc++.h"
 using namespace std;
-using ll = long long;
-vector<ll> a;
+#define int long long
 
-struct SegTree
-{
+struct SegTree {
+    // everything is public by default.
+    vector<int> tree;
     int size;
-    vector<ll> tree;
+    const int NEUTRAL = 0;
 
-    void init(int n)
-    {
+    void init(int n) {
         size = 1;
-        while (size < n)
-        {
+        while (size < n) {
             size *= 2;
         }
-        tree.assign(2 * size, 0);
+        tree.assign(2 * size, NEUTRAL);
     }
 
-    void build(int node, int lx, int rx)
-    {
-        if (rx - lx == 1)
-        {
-            if (lx < (int)a.size()) // if lx lies inside array range.
-            {
-                tree[node] = a[lx];
-                return;
+    void build(vector<int> &a, int x, int l, int r) {
+        if (r - l == 1) {
+            if (l < (int)a.size()) {
+                tree[x] = a[l];
             }
             return;
         }
-
-        int mid = (lx + rx) / 2;
-
-        build(2 * node + 1, lx, mid);
-        build(2 * node + 2, mid, rx);
-
-        tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+        int m = (l + r) / 2;
+        build(a, 2 * x + 1, l, m);
+        build(a, 2 * x + 2, m, r);
+        tree[x] = tree[2 * x + 1] + tree[2 * x + 2];
     }
-    // lx and rx lies within [0,size)
-    void build()
-    {
-        build(0, 0, size);
+    void build(vector<int> &a) {
+        build(a, 0, 0, size);
     }
 
-    void update(ll value, int idx, int node, int lx, int rx)
-    {
-        if (rx - lx == 1)
-        {
-            tree[node] = value;
+    void set(int x, int idx, int v, int l, int r) {
+        if (r - l == 1) {
+            tree[x] = v;
             return;
         }
-        int mid = (lx + rx) / 2;
-        if (idx < mid)
-        {
-            update(value, idx, 2 * node + 1, lx, mid);
+        int m = (l + r) / 2;
+        if (idx < m) {
+            set(2 * x + 1, idx, v, l, m);
+        } else {
+            set(2 * x + 2, idx, v, m, r);
         }
-        else
-        {
-            update(value, idx, 2 * node + 2, mid, rx);
-        }
-
-        tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+        tree[x] = tree[2 * x + 1] + tree[2 * x + 2]; // postorder update
+        // first complete child, then parent.
     }
-
-    void update(ll value, int idx)
-    {
-        update(value, idx, 0, 0, size);
+    void set(int idx, int v) {
+        set(0, idx, v, 0, size);
     }
-
-    ll query(int l, int r, int node, int lx, int rx)
-    {
-        // no overlaping, out of required range.
-        if (lx >= r || rx <= l)
-        {
-            return 0;
+    int query(int x, int l, int r, int lx, int rx) {
+        if (l <= lx && rx <= r) {
+            return tree[x]; // tree[x] -> [lx,rx)
         }
-        if (l <= lx && rx <= r)
-        {
-            return tree[node];
+        if (rx <= l || r <= lx) {
+            return NEUTRAL;
         }
-
-        int mid = (lx + rx) / 2;
-        ll left = query(l, r, 2 * node + 1, lx, mid);
-        ll right = query(l, r, 2 * node + 2, mid, rx);
-
+        int m = (lx + rx) / 2;
+        int left = query(2 * x + 1, l, r, lx, m);
+        int right = query(2 * x + 2, l, r, m, rx);
         return left + right;
     }
-
-    ll query(int l, int r)
-    {
-        return query(l, r, 0, 0, size);
+    int query(int l, int r) {
+        return query(0, l, r, 0, size); // l,r -> query range
+                                        // lx,rx -> range cover by node x.
     }
 };
 
-int main()
-{
+int32_t main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
-
     int n, q;
     cin >> n >> q;
-    a.resize(n);
-    for (auto &x : a)
-        cin >> x;
-
-    // for (auto &x : a)
-    //     cout << x << " ";
 
     SegTree st;
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+    }
     st.init(n);
-    st.build();
-
-    while (q--)
-    {
-        int t;
-        cin >> t;
-        if (t == 1)
-        {
-            int idx;
-            ll value;
-            cin >> idx >> value;
-            st.update(value, idx);
-        }
-        else
-        {
+    st.build(a);
+    for (int i = 0; i < q; i++) {
+        int x;
+        cin >> x;
+        if (x == 1) {
+            int idx, v;
+            cin >> idx >> v;
+            st.set(idx, v);
+        } else {
             int l, r;
             cin >> l >> r;
             cout << st.query(l, r) << "\n";
         }
     }
-
     return 0;
 }
