@@ -200,3 +200,20 @@ vector<int> linearSieve_Phi(int n)
 
     return phi;
 }
+
+/*
+ * Find all factors for each in range 1 to n.
+ * Naive approach is n*sqrt(n).
+ * But we use divisor sieve
+ */
+// TC : Nlog(N)
+// We want to count the number of divisors of a number. On another perspective,
+// we can instead start from the divisor then increment the count of all its multiples.
+// Do that for all divisors, we now have all divisor counts of all numbers up to n.Hurray.
+void divSieve(int n)
+{
+    int divisors[n + 1];
+    for (int i = 1; i <= n; ++i)
+        for (int j = i; j <= n; j += i)
+            ++divisors[j];
+}
