@@ -154,7 +154,6 @@ vector<int> primeFactors(int n, vector<int> &spf)
     {
         int p = spf[n];
         factors.push_back(p);
-
         n /= p;
     }
 
@@ -216,4 +215,9 @@ void divSieve(int n)
     for (int i = 1; i <= n; ++i)
         for (int j = i; j <= n; j += i)
             ++divisors[j];
+
+    int sumdiv[n + 1]; // to find sum of all divisors of a number.
+    for (int i = 1; i <= n; ++i)
+        for (int j = i; j <= n; j += i)
+            sumdiv[j] += i;
 }
